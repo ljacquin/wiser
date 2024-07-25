@@ -356,13 +356,127 @@ display: none;
 <div id="wiser-whitening-and-successive-least-squares-estimation-refinement-for-phenotype-estimation" class="section level1">
 <h1>WISER: WhItening and successive least Squares Estimation Refinement
 for phenotype estimation</h1>
+<div id="licence-status-and-metrics" class="section level5">
+<h5>Licence, status and metrics</h5>
+<p><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iOTYiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTGljZW5zZTogR1BMdjMiPjx0aXRsZT5MaWNlbnNlOiBHUEx2MzwvdGl0bGU+PGxpbmVhckdyYWRpZW50IGlkPSJzIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJyIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI1MSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjUxIiB3aWR0aD0iNDUiIGhlaWdodD0iMjAiIGZpbGw9IiMwMDdlYzYiLz48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMjY1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0MTAiPkxpY2Vuc2U8L3RleHQ+PHRleHQgeD0iMjY1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI0MTAiPkxpY2Vuc2U8L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjcyNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMzUwIj5HUEx2MzwvdGV4dD48dGV4dCB4PSI3MjUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjM1MCI+R1BMdjM8L3RleHQ+PC9nPjwvc3ZnPg==" alt="License: GPL v3" /></a> <a href><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IkxpZmVjeWNsZTogRXhwZXJpbWVudGFsIj48dGl0bGU+TGlmZWN5Y2xlOiBFeHBlcmltZW50YWw8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjE0MCIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L2NsaXBQYXRoPjxnIGNsaXAtcGF0aD0idXJsKCNyKSI+PHJlY3Qgd2lkdGg9IjU3IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iNTciIHdpZHRoPSI4MyIgaGVpZ2h0PSIyMCIgZmlsbD0iIzMzOTk5OSIvPjxyZWN0IHdpZHRoPSIxNDAiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMjk1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0NzAiPkxpZmVjeWNsZTwvdGV4dD48dGV4dCB4PSIyOTUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjQ3MCI+TGlmZWN5Y2xlPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI5NzUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjczMCI+RXhwZXJpbWVudGFsPC90ZXh0Pjx0ZXh0IHg9Ijk3NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNzMwIj5FeHBlcmltZW50YWw8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Lifecycle:Experimental" /></a> <a href="https://www.repostatus.org/#active"><svg id="svg_d6ded6e751db390903fc" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." width="116" height="20" role="img" aria-label="repo status: Active" viewBox="0 0 116 20"><title>repo status: Active</title><linearGradient id="svg_d6ded6e751db390903fc_s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"></stop><stop offset="1" stop-opacity=".1"></stop></linearGradient><clipPath id="svg_d6ded6e751db390903fc_r"><rect width="116" height="20" rx="3" fill="#fff" /></clipPath><g clip-path="url(#r)"><rect width="73" height="20" fill="#555" /><rect x="73" width="43" height="20" fill="#4c1" /><rect width="116" height="20" fill="url(#s)" /></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text aria-hidden="true" x="375" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="630">repo status</text><text x="375" y="140" transform="scale(.1)" fill="#fff" textLength="630">repo status</text><text aria-hidden="true" x="935" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="330">Active</text><text x="935" y="140" transform="scale(.1)" fill="#fff" textLength="330">Active</text></g></svg></a>
+<img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9InJlcG8gc2l6ZTogcmVwbyBub3QgZm91bmQiPjx0aXRsZT5yZXBvIHNpemU6IHJlcG8gbm90IGZvdW5kPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI1OSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjU5IiB3aWR0aD0iOTEiIGhlaWdodD0iMjAiIGZpbGw9IiNlMDVkNDQiLz48cmVjdCB3aWR0aD0iMTUwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjMwNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNDkwIj5yZXBvIHNpemU8L3RleHQ+PHRleHQgeD0iMzA1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI0OTAiPnJlcG8gc2l6ZTwvdGV4dD48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMTAzNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iODEwIj5yZXBvIG5vdCBmb3VuZDwvdGV4dD48dGV4dCB4PSIxMDM1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI4MTAiPnJlcG8gbm90IGZvdW5kPC90ZXh0PjwvZz48L3N2Zz4=" alt="GitHub repo size" /> <img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTU4IiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Imxhbmd1YWdlczogcmVwbyBub3QgZm91bmQiPjx0aXRsZT5sYW5ndWFnZXM6IHJlcG8gbm90IGZvdW5kPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxNTgiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI2NyIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjY3IiB3aWR0aD0iOTEiIGhlaWdodD0iMjAiIGZpbGw9IiNlMDVkNDQiLz48cmVjdCB3aWR0aD0iMTU4IiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjM0NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNTcwIj5sYW5ndWFnZXM8L3RleHQ+PHRleHQgeD0iMzQ1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI1NzAiPmxhbmd1YWdlczwvdGV4dD48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMTExNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iODEwIj5yZXBvIG5vdCBmb3VuZDwvdGV4dD48dGV4dCB4PSIxMTE1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI4MTAiPnJlcG8gbm90IGZvdW5kPC90ZXh0PjwvZz48L3N2Zz4=" alt="GitHub language count" /> <img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTUyIiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Imxhbmd1YWdlOiByZXBvIG5vdCBmb3VuZCI+PHRpdGxlPmxhbmd1YWdlOiByZXBvIG5vdCBmb3VuZDwvdGl0bGU+PGxpbmVhckdyYWRpZW50IGlkPSJzIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJyIj48cmVjdCB3aWR0aD0iMTUyIiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvY2xpcFBhdGg+PGcgY2xpcC1wYXRoPSJ1cmwoI3IpIj48cmVjdCB3aWR0aD0iNjEiIGhlaWdodD0iMjAiIGZpbGw9IiM1NTUiLz48cmVjdCB4PSI2MSIgd2lkdGg9IjkxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZTA1ZDQ0Ii8+PHJlY3Qgd2lkdGg9IjE1MiIgaGVpZ2h0PSIyMCIgZmlsbD0idXJsKCNzKSIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iVmVyZGFuYSxHZW5ldmEsRGVqYVZ1IFNhbnMsc2Fucy1zZXJpZiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgZm9udC1zaXplPSIxMTAiPjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIzMTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjUxMCI+bGFuZ3VhZ2U8L3RleHQ+PHRleHQgeD0iMzE1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI1MTAiPmxhbmd1YWdlPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIxMDU1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI4MTAiPnJlcG8gbm90IGZvdW5kPC90ZXh0Pjx0ZXh0IHg9IjEwNTUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjgxMCI+cmVwbyBub3QgZm91bmQ8L3RleHQ+PC9nPjwvc3ZnPg==" alt="GitHub top language" /> <img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTUyIiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImNvZGUgc2l6ZTogcmVwbyBub3QgZm91bmQiPjx0aXRsZT5jb2RlIHNpemU6IHJlcG8gbm90IGZvdW5kPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxNTIiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI2MSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjYxIiB3aWR0aD0iOTEiIGhlaWdodD0iMjAiIGZpbGw9IiNlMDVkNDQiLz48cmVjdCB3aWR0aD0iMTUyIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjMxNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNTEwIj5jb2RlIHNpemU8L3RleHQ+PHRleHQgeD0iMzE1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI1MTAiPmNvZGUgc2l6ZTwvdGV4dD48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMTA1NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iODEwIj5yZXBvIG5vdCBmb3VuZDwvdGV4dD48dGV4dCB4PSIxMDU1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI4MTAiPnJlcG8gbm90IGZvdW5kPC90ZXh0PjwvZz48L3N2Zz4=" alt="GitHub code size in bytes" /><br />
+<img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImRvd25sb2FkczogcmVwbyBub3QgZm91bmQiPjx0aXRsZT5kb3dubG9hZHM6IHJlcG8gbm90IGZvdW5kPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI2OSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjY5IiB3aWR0aD0iOTEiIGhlaWdodD0iMjAiIGZpbGw9IiNlMDVkNDQiLz48cmVjdCB3aWR0aD0iMTYwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjM1NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNTkwIj5kb3dubG9hZHM8L3RleHQ+PHRleHQgeD0iMzU1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI1OTAiPmRvd25sb2FkczwvdGV4dD48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMTEzNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iODEwIj5yZXBvIG5vdCBmb3VuZDwvdGV4dD48dGV4dCB4PSIxMTM1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI4MTAiPnJlcG8gbm90IGZvdW5kPC90ZXh0PjwvZz48L3N2Zz4=" alt="GitHub all releases" /> <img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9InN0YXJzOiByZXBvIG5vdCBmb3VuZCI+PHRpdGxlPnN0YXJzOiByZXBvIG5vdCBmb3VuZDwvdGl0bGU+PGxpbmVhckdyYWRpZW50IGlkPSJzIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJyIj48cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvY2xpcFBhdGg+PGcgY2xpcC1wYXRoPSJ1cmwoI3IpIj48cmVjdCB3aWR0aD0iMzciIGhlaWdodD0iMjAiIGZpbGw9IiM1NTUiLz48cmVjdCB4PSIzNyIgd2lkdGg9IjkxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZTA1ZDQ0Ii8+PHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIyMCIgZmlsbD0idXJsKCNzKSIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iVmVyZGFuYSxHZW5ldmEsRGVqYVZ1IFNhbnMsc2Fucy1zZXJpZiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgZm9udC1zaXplPSIxMTAiPjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIxOTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjI3MCI+c3RhcnM8L3RleHQ+PHRleHQgeD0iMTk1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSIyNzAiPnN0YXJzPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI4MTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjgxMCI+cmVwbyBub3QgZm91bmQ8L3RleHQ+PHRleHQgeD0iODE1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI4MTAiPnJlcG8gbm90IGZvdW5kPC90ZXh0PjwvZz48L3N2Zz4=" alt="GitHub stars" /></p>
+</div>
+<div id="languages-and-technologies" class="section level5">
+<h5>Languages and technologies</h5>
+<p><a href="https://www.r-project.org/"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTIuMjUiIGhlaWdodD0iMjgiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iUiI+PHRpdGxlPlI8L3RpdGxlPjxnIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+PHJlY3Qgd2lkdGg9IjUyLjI1IiBoZWlnaHQ9IjI4IiBmaWxsPSIjMjc2ZGMzIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjEwMCI+PGltYWdlIHg9IjkiIHk9IjciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCbWFXeHNQU0ozYUdsMFpTSWdjbTlzWlQwaWFXMW5JaUIyYVdWM1FtOTRQU0l3SURBZ01qUWdNalFpSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTG5jekxtOXlaeTh5TURBd0wzTjJaeUkrUEhScGRHeGxQbEk4TDNScGRHeGxQanh3WVhSb0lHUTlJazB4TWlBeUxqYzBObU10Tmk0Mk1qY2dNQzB4TWlBekxqVTVPUzB4TWlBNExqQXpOeUF3SURNdU9EazNJRFF1TVRRMElEY3VNVFEwSURrdU5qUWdOeTQ0T0ZZeE5pNHlObU10TWk0NU1qUXRMamt4TlMwMExqa3lOUzB5TGpjMU5TMDBMamt5TlMwMExqZzNOeUF3TFRNdU1ETTFJRFF1TURnMExUVXVORGswSURrdU1USXROUzQwT1RRZ05TNHdNemdnTUNBNExqYzFOeUF4TGpZNE15QTRMamMxTnlBMUxqUTVOQ0F3SURFdU9UYzJMUzQ1T1RrZ015NHpOemt0TWk0Mk5qSWdOQzR5TnpJdU1Ea3VNRFkyTGpFM05DNHhNamd1TWpVNExqSXhOaTR4TmprdU1UUTVMakkxTGpNMk15NHpOekl1TlRRMElESXVNVEk0TFRFdU5EVWdNeTQwTkMwekxqUXpOeUF6TGpRMExUVXVOak14SURBdE5DNDBOQzAxTGpNM015MDRMakF6T0MweE1pMDRMakF6T0hwdExUSXVNVEV4SURRdU9UbDJNVE11TlRFMmJEUXVNRGt6TFM0d01ESXRMakF3TWkwMUxqSTVNV2d4TGpGakxqSXlOU0F3SUM0ek1qRXVNRFkyTGpVME9TNHlOUzR5TnpJdU1qSXVOekUxTGprNE1pNDNNVFV1T1RneWJESXVNVFkwSURRdU1EWXpJRFF1TmpJM0xTNHdNREl0TWk0NE5qUXROQzQ0TWpaekxTNHdPRFl0TGpFNU15MHVNalkxTFM0ek9ETmhNaTR5TWlBeUxqSXlJREFnTURBdExqVTRNaTB1TkRFMll5MHVOREl5TFM0eU1UUXRNUzR4TkRrdExqUXpOQzB4TGpFME9TMHVORE0wY3pNdU5UYzRMUzR5TmpRZ015NDFOemd0TXk0NE1qWmpNQzB6TGpVMk1pMHpMamMwTkMwekxqWXpMVE11TnpRMExUTXVOak42YlRRdU1USTNJREl1T1ROc01pNDBOemd1TURBeWN6RXVNVFE1TFM0d05qSWdNUzR4TkRrZ01TNHhNamRqTUNBeExqRTJOUzB4TGpFME9TQXhMakUzTFRFdU1UUTVJREV1TVRkb0xUSXVORGM0ZW0weExqYzFOQ0EyTGpFeE9XTXRMalE1TkM0d05Ea3RNUzR3TVRJdU1EYzVMVEV1TlRRdU1EZzRkakV1T0RBM1lURTJMall5TWlBeE5pNDJNaklnTUNBd01ESXVNemN0TGpRM00yd3RMalEzTVMwdU9Ea3hjeTB1TVRBNExTNHhPRE10TGpJME9DMHVNemswWXkwdU1ETTVMUzR3TlRRdExqQTRMUzR3T1RndExqRXhNUzB1TVRNM2VpSXZQand2YzNablBnPT0iLz48dGV4dCB0cmFuc2Zvcm09InNjYWxlKC4xKSIgeD0iMzYxLjI1IiB5PSIxNzUiIHRleHRMZW5ndGg9IjgyLjUiIGZpbGw9IiNmZmYiIGZvbnQtd2VpZ2h0PSJib2xkIj5SPC90ZXh0PjwvZz48L3N2Zz4=" alt="R Badge" /></a></p>
+</div>
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>The WISER package</p>
+<p>The <code>wiser</code> package offers <em>user-friendly</em> advanced
+tools for more accurate phenotypic estimation, by leveraging genetic
+covariance information in the estimation of fixed effects. By employing
+a whitening transformation followed by successive least squares
+estimation, <code>wiser</code> refines fixed effect estimates and
+eliminates biases, leading to improved phenotypic estimation. This
+approach is particularly beneficial in complex experimental designs
+where genetic and environmental factors are intricately linked.
+<code>wiser</code> includes methods for computing whitening matrices,
+fixed effects, residuals, and estimating phenotypes. Additionally, the
+package offers robust variance component estimation using approximate
+bayesian computation (ABC), ensuring stability and reliability of
+estimations.</p>
+<p>The phenotypic estimation performed by <code>wiser</code> for a
+vector <span class="math inline">\(v = (v_1, v_2, \ldots,
+v_q)&#39;\)</span> of <span class="math inline">\(q\)</span> phenotypes,
+which approximates a vector <span class="math inline">\(u = (u_1, u_2,
+\ldots, u_q)&#39;\)</span> of genetic values for <span class="math inline">\(q\)</span> genotypes, is carried out as
+follows:</p>
+<p><span class="math display">\[
+\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2
+= (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \ (1)
+\]</span></p>
+<p>where :</p>
+<ul>
+<li><p><span class="math inline">\(Z\)</span> is the incidence matrix
+that links the <span class="math inline">\(q\)</span> phenotypes, which
+approximate the genetic values of <span class="math inline">\(q\)</span>
+genotypes, to the individual phenotypic measurements repeated for each
+genotype in the experimental design.</p></li>
+<li><p><span class="math inline">\(\hat{\xi}\)</span> is the vector of
+estimated residuals obtained after removing the fixed effects, adjusted
+for the genetic covariance between individuals in the experimental
+design.</p></li>
+</ul>
+<p>In this setting, the vector <span class="math inline">\(\hat{\xi}\)</span> is estimated as follows :</p>
+<p><span class="math display">\[
+\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \ (2)
+\]</span></p>
+<p>where :</p>
+<ul>
+<li><p><span class="math inline">\(Y = (Y_1,Y_2, \dots,
+Y_n)&#39;\)</span> is the vector of <span class="math inline">\(n\)</span> individual phenotypic measurements in
+the experimental design, with repeated measurements for each
+genotype.</p></li>
+<li><p><span class="math inline">\(\tilde{X} (= WX)\)</span> is the
+transformed (whitened) design matrix that links the estimated fixed
+effects, adjusted for genetic covariance, to the individual phenotypic
+measurements.</p></li>
+<li><p><span class="math inline">\(\hat{\beta} = (\hat{\beta}_1,
+\hat{\beta}_2, \ldots ,\hat{\beta}_l)&#39; =
+(\tilde{X}&#39;\tilde{X})^{-1}\tilde{X}&#39;Y\)</span> is the vector of
+<span class="math inline">\(l\)</span> estimated fixed effects, adjusted
+for genetic covariance between individuals in the experimental
+design.</p></li>
+<li><p><span class="math inline">\(W\)</span> is an <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> whitening matrix. By default, <span class="math inline">\(W = L^{-1}\)</span> in <code>wiser</code>, where
+<span class="math inline">\(L\)</span> is a full-rank lower triangular
+matrix obtained via the Cholesky decomposition of the genetic covariance
+matrix <span class="math inline">\(\Sigma_u =
+\sigma^2_uZKZ&#39;\)</span> of the vector <span class="math inline">\(U
+= Zu = (U_1,U_2, \ldots, U_n)\)</span>, which corresponds to the vector
+of individual genetic effects in the experimental design. The Cholesky
+decomposition is given by <span class="math inline">\(\Sigma_u =
+LL&#39;\)</span>. It is assumed that <span class="math inline">\(u \sim
+\mathcal{N}_q(0,\sigma^2_uK)\)</span>, where <span class="math inline">\(K\)</span> is the genetic covariance matrix
+between the genotypes estimated using SNP marker data.</p></li>
+<li><p><span class="math inline">\(X\)</span> is the original design
+matrix that links fixed effects to the individual phenotypic
+measurements in the experimental design.</p></li>
+</ul>
+<p>In <code>wiser</code>, the matrix <span class="math inline">\(K\)</span> is estimated using SNP markers and is
+also known as the genomic covariance matrix or the Gram matrix. Three
+kernel functions are provided to build <span class="math inline">\(K\)</span>: <code>linear</code>,
+<code>gaussian</code>, and <code>identity</code>. Among these, the
+<code>identity</code> kernel is not recommended due to its poor
+performance for genomic prediction. In contrast, the <code>linear</code>
+kernel has shown the best practical performance in this context. The
+<code>identity</code> kernel is primarily used for benchmarking
+purposes, as detailed in Jacquin <span class="math inline">\(\textit{et
+al.}\)</span> (2024). Specifically, the <code>identity</code> kernel
+facilitates the assessment of the impact of including versus excluding
+the covariance structure, as well as evaluating the effects of different
+methods for computing the covariance structure.</p>
+<div id="remarks" class="section level4">
+<h4>Remarks :</h4>
+<p>The rationale for transforming <span class="math inline">\(X\)</span>
+into <span class="math inline">\(\tilde{X}\)</span> through whitening,
+to correct for genetic covariance among individuals in the estimation of
+fixed effects, is comprehensively addressed in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2024). In contrast, the
+chosen approach of successive ordinary least squares (OLS) in
+<code>wiser</code> avoids making assumptions about the properties of
+<span class="math inline">\(\beta\)</span> and <span class="math inline">\(v\)</span>.</p>
+<p>Specifically, <code>wiser</code> does not assume that <span class="math inline">\(v\)</span> is a random vector drawn from a
+distribution with a specified covariance matrix. This approach prevents
+enforcing an unnecessary covariance structure during the estimation of
+<span class="math inline">\(v\)</span>, which could be detrimental. For
+example, assuming <span class="math inline">\(v \sim
+\mathcal{N}_q(0,\sigma^2_vI_q)\)</span> is often unrealistic and would
+lead to using a decorrelated covariance structure in the best linear
+unbiased predictor (BLUP) of <span class="math inline">\(v\)</span>.
+Furthermore, and crucially, the successive OLS procedure ensures that
+the estimated residuals or <span class="math inline">\(v\)</span> are
+not linked to the SNP marker data as shown in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2024).</p>
+</div>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>You can install the latest version of the WISER package with:</p>
+<p>You can install the latest version of the <code>wiser</code> package
+with:</p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
 library(devtools)
 install_github(&quot;ljacquin/wiser&quot;)</code></pre>

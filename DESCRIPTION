@@ -1,10 +1,13 @@
 Package: wiser
+Type: Package
 Title: WhItening and successive least Squares Estimation Refinement for phenotype estimation
-Version: 0.0.0.9000
+Version: 1.0
 Authors@R: person("Laval", "Jacquin", email = "jacquin.julien@gmail.com", role = c("aut", "cre"))
 Author: Laval Jacquin [aut, cre]
 Maintainer: Laval Jacquin <jacquin.julien@gmail.com>
-Description: This package .
+Description: This package implements the WISER methodology (Whitening and Successive Least Squares Estimation Refinement) for phenotype estimation. The WISER approach adjusts fixed effects for genetic covariance using a whitening transformation, followed by successive least squares estimation. It aims to improve the estimation of phenotypic values by leveraging genetic covariance structures, eliminating biases, and refining fixed effect estimates. Key functionalities include the computation of the whitening matrix via Cholesky decomposition, estimation of fixed effects, residual calculation, and phenotype estimation. The package also includes methods for variance component estimation using approximate bayesian computation (ABC) to enhance stability and robustness of the predictions.
+Depends: R (>= 4.3.3)
+Imports: MASS,stats,kernlab,foreach,parallel,doParallel,doRNG,matrixcalc,Matrix,tidyr,future,future.apply,stringr,Rfast,whitening
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
