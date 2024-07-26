@@ -30,9 +30,9 @@ where :
 
 * $Z$ is the incidence matrix that links the $q$ phenotypes, which approximate the genetic values of $q$ genotypes, to the individual phenotypic measurements repeated for each genotype in the experimental design.
 
-* $\hat{\xi}$ is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
+* `$ \hat{\xi} $` is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
 
-In this setting, the vector $\hat{\xi}$ is estimated as follows :
+In this setting, the vector `$ \hat{\xi} $` is estimated as follows :
 
 $$
 \hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
