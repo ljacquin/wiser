@@ -388,8 +388,8 @@ which approximates a vector <span class="math inline">\(u = (u_1, u_2,
 \ldots, u_q)&#39;\)</span> of genetic values for <span class="math inline">\(q\)</span> genotypes, is carried out as
 follows:</p>
 <p><span class="math display">\[
-\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \widehat{\xi} -
-Zv||^2_2 = (Z&#39;Z)^{-1}Z&#39;\widehat{\xi} \ \ \ \
+\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2
+= (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \
 \]</span></p>
 <p>where :</p>
 <ul>
@@ -398,14 +398,14 @@ that links the <span class="math inline">\(q\)</span> phenotypes, which
 approximate the genetic values of <span class="math inline">\(q\)</span>
 genotypes, to the individual phenotypic measurements repeated for each
 genotype in the experimental design.</p></li>
-<li><p><span class="math inline">\(^{\xi}\)</span> is the vector of
+<li><p><span class="math inline">\(\hat{h}\)</span> is the vector of
 estimated residuals obtained after removing the fixed effects, adjusted
 for the genetic covariance between individuals in the experimental
 design.</p></li>
 </ul>
-<p>In this setting, the vector <span class="math inline">\(^{\xi}\)</span> is estimated as follows :</p>
+<p>In this setting, the vector <span class="math inline">\(\hat{h}\)</span> is estimated as follows :</p>
 <p><span class="math display">\[
-\widehat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
+\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
 \]</span></p>
 <p>where :</p>
 <ul>
