@@ -389,7 +389,7 @@ which approximates a vector <span class="math inline">\(u = (u_1, u_2,
 follows:</p>
 <p><span class="math display">\[
 \hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2
-= (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \ (1)
+= (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \
 \]</span></p>
 <p>where :</p>
 <ul>
@@ -405,7 +405,7 @@ design.</p></li>
 </ul>
 <p>In this setting, the vector <span class="math inline">\(\hat{\xi}\)</span> is estimated as follows :</p>
 <p><span class="math display">\[
-\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \ (2)
+\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
 \]</span></p>
 <p>where :</p>
 <ul>
@@ -483,7 +483,7 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 </div>
 <div id="key-features" class="section level2">
 <h2>Key Features</h2>
-<pre><code>* Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
+<pre><code>- **Whitening Methods**: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
 - Fixed and Random Effects Modeling: Computing transformed variables and obtaining OLS estimates for fixed effects, integrating random genetic covariance in the estimation process.
 - Covariance Regularization: Regularizing covariance matrices to ensure strict positive definiteness.
 - Variance Component Estimation: Estimating variance components using ABC.

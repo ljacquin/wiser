@@ -23,7 +23,7 @@ The ```wiser``` package offers *user-friendly* advanced tools for more accurate 
 The phenotypic estimation performed by `wiser` for a vector $v = (v_1, v_2, \ldots, v_q)'$ of $q$ phenotypes, which approximates a vector $u = (u_1, u_2, \ldots, u_q)'$ of genetic values for $q$ genotypes, is carried out as follows:
 
 $$
-\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2 = (Z'Z)^{-1}Z'\hat{\xi} \ \ \ \ (1)
+\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2 = (Z'Z)^{-1}Z'\hat{\xi} \ \ \ \
 $$ 
 
 where :
@@ -35,7 +35,7 @@ where :
 In this setting, the vector $\hat{\xi}$ is estimated as follows :
 
 $$
-\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \ (2)
+\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
 $$ 
 
 where :
@@ -70,7 +70,7 @@ install_github("ljacquin/wiser")
 
 ## Key Features
 
-    * Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
+    - **Whitening Methods**: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
     - Fixed and Random Effects Modeling: Computing transformed variables and obtaining OLS estimates for fixed effects, integrating random genetic covariance in the estimation process.
     - Covariance Regularization: Regularizing covariance matrices to ensure strict positive definiteness.
     - Variance Component Estimation: Estimating variance components using ABC.
