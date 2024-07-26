@@ -403,7 +403,7 @@ vector of estimated residuals obtained after removing the fixed effects,
 adjusted for the genetic covariance between individuals in the
 experimental design.</p></li>
 </ul>
-<p>In this setting, the vector <span class="math inline">\(\mathbf{\hat{\xi}}\)</span> is estimated as
+<p>In this setting, the vector <span class="math inline">\(\overset{\wedge}{\xi}\)</span> is estimated as
 follows :</p>
 <p><span class="math display">\[
 \hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
@@ -509,8 +509,11 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 <h2>Examples</h2>
 <div id="estimating-phenotypes-with-wiser" class="section level3">
 <h3>Estimating phenotypes with WISER</h3>
-<p>Here’s a simple example illustrating the use of</p>
-<pre class="r"><code></code></pre>
+<p>Here’s a simple example illustrating the use of the
+<code>estimate_wiser_phenotype</code> function to estimate
+phenotypes:</p>
+<pre class="r"><code># load library
+library(wiser)</code></pre>
 </div>
 </div>
 <div id="authors-and-references" class="section level2">
