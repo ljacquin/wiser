@@ -114,7 +114,7 @@ compute_transformed_vars_and_ols_estimates <- function(
       sig_mat_ <- sigma2_u * crossprod(t(z_mat), tcrossprod(k_mat, z_mat))
       sig_mat_ <- regularize_covariance(sig_mat_, alpha_ = 0.01)
       # regularize_covariance() adds α * trace(Σ) * I_n to the diagonal of Σ
-      # to ensure its positive semi definiteness (PSD)
+      # to ensure its strict positive definiteness 
 
       if (whitening_method == "Cholesky") {
         # compute w_mat = L^−1 from Cholesky decomposition
