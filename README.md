@@ -32,7 +32,7 @@ where :
 
 * $\overset{\wedge}{\xi}$ is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
 
-In this setting, the vector $\hat{\mathbf{\xi}}$ is estimated as follows :
+In this setting, the vector $\mathbf{\hat{\xi}}$ is estimated as follows :
 
 $$
 \hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
