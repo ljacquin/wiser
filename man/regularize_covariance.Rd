@@ -2,7 +2,7 @@
 \alias{regularize_covariance}
 \title{Regularize a covariance matrix}
 \description{
-  Regularizes a covariance matrix by adding a small positive value to the diagonal to ensure positive semi-definiteness.
+  Regularizes a covariance matrix by adding a small strict positive value to the diagonal to ensure strict positive definiteness.
 }
 \usage{
   regularize_covariance(cov_mat_, alpha_ = 1e-2)

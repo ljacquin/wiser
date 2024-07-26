@@ -18,7 +18,7 @@
 
 ## Overview
 
-The ```wiser``` package offers *user-friendly* advanced tools for more accurate phenotypic estimation, by leveraging genetic covariance information in the estimation of fixed effects. By employing a whitening transformation followed by successive least squares estimation, ```wiser``` refines fixed effect estimates and eliminates biases, leading to improved phenotypic estimation. This approach is particularly beneficial in complex experimental designs where genetic and environmental factors are intricately linked. ```wiser``` includes methods for computing whitening matrices, fixed effects, residuals, and estimating phenotypes. Additionally, the package offers robust variance component estimation using approximate bayesian computation (ABC), ensuring stability and reliability of estimations. 
+The ```wiser``` package offers *user-friendly* advanced tools for more accurate phenotypic estimation, by leveraging genetic covariance information in the estimation of fixed effects. By employing a whitening transformation followed by successive ordinary least squares (OLS) estimation, ```wiser``` refines fixed effect estimates and eliminates biases, leading to improved phenotypic estimation. This approach is particularly beneficial in complex experimental designs where genetic and environmental factors are intricately linked. ```wiser``` includes methods for computing whitening matrices, fixed effects, residuals, and estimating phenotypes. Additionally, the package offers robust variance component estimation using approximate bayesian computation (ABC), ensuring stability and reliability of estimations. 
 
 The phenotypic estimation performed by `wiser` for a vector $v = (v_1, v_2, \ldots, v_q)'$ of $q$ phenotypes, which approximates a vector $u = (u_1, u_2, \ldots, u_q)'$ of genetic values for $q$ genotypes, is carried out as follows:
 
@@ -70,9 +70,27 @@ install_github("ljacquin/wiser")
 
 ## Key Features
 
+    * Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
+    - Fixed and Random Effects Modeling: Computing transformed variables and obtaining OLS estimates for fixed effects, integrating random genetic covariance in the estimation process.
+    - Covariance Regularization: Regularizing covariance matrices to ensure strict positive definiteness.
+    - Variance Component Estimation: Estimating variance components using ABC.
+    - Phenotype Simulation: Simulating phenotypic data based on fixed and random effects.
+    - Distance Computation: Calculating the squared L2 norm distance between observed and simulated phenotypic values.
+
 
 ## Main Functions
 
+    - estimate_wiser_phenotype: Estimates phenotypic values approximating genetic values using whitening methods.
+    - compute_transformed_vars_and_ols_estimates: Computes transformed fixed effects variables and obtains OLS estimates for the fixed effects parameters associated to these transformed variables.
+    - abc_variance_component_estimation: Computes variance components using ABC.
+    - squared_l2_norm: Computes the squared L2 norm distance between two numeric vectors.
+    - simulate_y: Simulates phenotypic data based on fixed effects, random effects, and residual variance components.
+    - regularize_covariance: Regularizes a covariance matrix by adding a small strict positive value to the diagonal.
+    - simulate_and_compute_squared_l2_norm: Simulates phenotypic values and computes the squared L2 norm distance between simulated and observed values.
+    - kl_divergence_: Computes the Kullback-Leibler divergence between two covariance matrices.
+    - log_det: Computes the logarithm of the determinant of a matrix.
+    - match_indices: Matches indices between phenotypic data and a given matrix.
+    - trace_mat: Computes the trace of a matrix.
 
 ## Examples
 
