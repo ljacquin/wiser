@@ -389,7 +389,7 @@ which approximates a vector <span class="math inline">\(u = (u_1, u_2,
 follows:</p>
 <p><span class="math display">\[
 \hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2
-= (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \ (1)
+= (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \
 \]</span></p>
 <p>where :</p>
 <ul>
@@ -405,7 +405,7 @@ design.</p></li>
 </ul>
 <p>In this setting, the vector <span class="math inline">\(\hat{\xi}\)</span> is estimated as follows :</p>
 <p><span class="math display">\[
-\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \ (2)
+\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
 \]</span></p>
 <p>where :</p>
 <ul>
@@ -427,12 +427,12 @@ design.</p></li>
 <span class="math inline">\(L\)</span> is a full-rank lower triangular
 matrix obtained via the Cholesky decomposition of the genetic covariance
 matrix <span class="math inline">\(\Sigma_u =
-\sigma^2_uZKZ&#39;\)</span> of the vector <span class="math inline">\(U
+\sigma^2_uZKZ&#39;\)</span>, of the vector <span class="math inline">\(U
 = Zu = (U_1,U_2, \ldots, U_n)\)</span>, which corresponds to the vector
 of individual genetic effects in the experimental design. The Cholesky
 decomposition is given by <span class="math inline">\(\Sigma_u =
-LL&#39;\)</span>. It is assumed that <span class="math inline">\(u \sim
-\mathcal{N}_q(0,\sigma^2_uK)\)</span>, where <span class="math inline">\(K\)</span> is the genetic covariance matrix
+LL&#39;\)</span>, and it is assumed that <span class="math inline">\(u
+\sim \mathcal{N}_q(0,\sigma^2_uK)\)</span>, where <span class="math inline">\(K\)</span> is the genetic covariance matrix
 between the genotypes estimated using SNP marker data.</p></li>
 <li><p><span class="math inline">\(X\)</span> is the original design
 matrix that links fixed effects to the individual phenotypic
@@ -483,7 +483,7 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 </div>
 <div id="key-features" class="section level2">
 <h2>Key Features</h2>
-<pre><code>* Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
+<pre><code>- Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
 - Fixed and Random Effects Modeling: Computing transformed variables and obtaining OLS estimates for fixed effects, integrating random genetic covariance in the estimation process.
 - Covariance Regularization: Regularizing covariance matrices to ensure strict positive definiteness.
 - Variance Component Estimation: Estimating variance components using ABC.
