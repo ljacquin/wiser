@@ -23,19 +23,19 @@ The ```wiser``` package offers *user-friendly* advanced tools for more accurate 
 The phenotypic estimation performed by `wiser` for a vector $v = (v_1, v_2, \ldots, v_q)'$ of $q$ phenotypes, which approximates a vector $u = (u_1, u_2, \ldots, u_q)'$ of genetic values for $q$ genotypes, is carried out as follows:
 
 $$
-\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2 = (Z'Z)^{-1}Z'\hat{\xi} \ \ \ \
+\hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \widehat{\xi} - Zv||^2_2 = (Z'Z)^{-1}Z'\widehat{\xi} \ \ \ \
 $$ 
 
 where :
 
 * $Z$ is the incidence matrix that links the $q$ phenotypes, which approximate the genetic values of $q$ genotypes, to the individual phenotypic measurements repeated for each genotype in the experimental design.
 
-* `$ \hat{\xi} $` is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
+* $\widehat{\xi}$ is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
 
-In this setting, the vector `$ \hat{\xi} $` is estimated as follows :
+In this setting, the vector $\widehat{\xi}$ is estimated as follows :
 
 $$
-\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
+\widehat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
 $$ 
 
 where :
