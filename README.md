@@ -30,9 +30,9 @@ where :
 
 * $Z$ is the incidence matrix that links the $q$ phenotypes, which approximate the genetic values of $q$ genotypes, to the individual phenotypic measurements repeated for each genotype in the experimental design.
 
-* $\hat{\xi}$ is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
+* \(\hat{\xi}\) is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
 
-In this setting, the vector $\hat{\xi}$ is estimated as follows :
+In this setting, the vector \(\hat{\xi}\) is estimated as follows :
 
 $$
 \hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
@@ -46,7 +46,7 @@ where :
 
 * $\hat{\beta} = (\hat{\beta}_1, \hat{\beta}_2, \ldots ,\hat{\beta}_l)' = (\tilde{X}'\tilde{X})^{-1}\tilde{X}'Y$ is the vector of $l$ estimated fixed effects, adjusted for genetic covariance between individuals in the experimental design.
 
-* $W$ is an $n$ x $n$ whitening matrix. By default, $W = L^{-1}$ in ```wiser```, where $L$ is a full-rank lower triangular matrix obtained via the Cholesky decomposition of the genetic covariance matrix $\Sigma_u = \sigma^2_uZKZ'$ of the vector $U = Zu = (U_1,U_2, \ldots, U_n)$, which corresponds to the vector of individual genetic effects in the experimental design. The Cholesky decomposition is given by $\Sigma_u = LL'$. It is assumed that $u \sim \mathcal{N}_q(0,\sigma^2_uK)$, where $K$ is the genetic covariance matrix between the genotypes estimated using SNP marker data.
+* $W$ is an $n$ x $n$ whitening matrix. By default, $W = L^{-1}$ in ```wiser```, where $L$ is a full-rank lower triangular matrix obtained via the Cholesky decomposition of the genetic covariance matrix $\Sigma_u = \sigma^2_uZKZ'$, of the vector $U = Zu = (U_1,U_2, \ldots, U_n)$, which corresponds to the vector of individual genetic effects in the experimental design. The Cholesky decomposition is given by $\Sigma_u = LL'$, and it is assumed that $u \sim \mathcal{N}_q(0,\sigma^2_uK)$, where $K$ is the genetic covariance matrix between the genotypes estimated using SNP marker data.
 
 * $X$ is the original design matrix that links fixed effects to the individual phenotypic measurements in the experimental design.
 
@@ -70,7 +70,7 @@ install_github("ljacquin/wiser")
 
 ## Key Features
 
-    - **Whitening Methods**: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
+    - Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
     - Fixed and Random Effects Modeling: Computing transformed variables and obtaining OLS estimates for fixed effects, integrating random genetic covariance in the estimation process.
     - Covariance Regularization: Regularizing covariance matrices to ensure strict positive definiteness.
     - Variance Component Estimation: Estimating variance components using ABC.
