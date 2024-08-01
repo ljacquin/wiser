@@ -14,6 +14,9 @@
 \value{
   A data frame of raw phenotypic data with rows matched to the genotypes in the matrix.
 }
+\author{
+  Laval Jacquin, \email{jacquin.julien@gmail.com}
+}
 \examples{
   # Example usage
   # matched_df <- match_indices(raw_pheno_df, mat_)

@@ -13,6 +13,9 @@
 \value{
   A numeric value representing the trace of the matrix.
 }
+\author{
+  Laval Jacquin, \email{jacquin.julien@gmail.com}
+}
 \examples{
   # Example usage
   # trace_value <- trace_mat(matrix_)

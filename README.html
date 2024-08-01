@@ -505,15 +505,56 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 - match_indices: Matches indices between phenotypic data and a given matrix.
 - trace_mat: Computes the trace of a matrix.</code></pre>
 </div>
-<div id="examples" class="section level2">
-<h2>Examples</h2>
+<div id="example" class="section level2">
+<h2>Example</h2>
 <div id="estimating-phenotypes-with-wiser" class="section level3">
 <h3>Estimating phenotypes with WISER</h3>
 <p>Here’s a simple example illustrating the use of the
 <code>estimate_wiser_phenotype</code> function to estimate
 phenotypes:</p>
-<pre class="r"><code># load library
-library(wiser)</code></pre>
+<pre class="r"><code># -- load wiser library and data subsets from the refpop dataset
+# load library 
+library(wiser)
+
+# load raw individual phenotypic measurements (for subset of 80 genotypes from refpop data)
+data(&quot;refpop_raw_indiv_pheno_data_subset&quot;)
+head(refpop_raw_indiv_pheno_data_subset)
+
+# load SNP marker data (for subset of 80 genotypes from refpop data)
+data(&quot;refpop_geno_data_subset&quot;)
+head(refpop_geno_data_subset)[,1:10]
+
+# -- estimate wiser phenotype for a specified trait,i.e. Flowering_begin here
+# define trait
+trait_ &lt;- &quot;Flowering_begin&quot;
+
+# apply wiser estimation function
+pheno_obj &lt;- estimate_wiser_phenotype(
+  geno_df = refpop_geno_data_subset,
+  raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
+  trait_ = trait_,
+  fixed_effects_vars = c(
+    &quot;Envir&quot;, &quot;Country&quot;, &quot;Year&quot;,
+    &quot;Row&quot;, &quot;Position&quot;, &quot;Management&quot;
+  ),
+  random_effects_vars = &quot;Genotype&quot;,
+  compute_row_and_position_as_factors = T,
+  kernel_type = &quot;linear&quot;,
+  whitening_method = &quot;Cholesky&quot;
+)
+
+# -- plot the density for the estimated phenotypes
+dev.new()
+plot(density(pheno_obj$v_hat), main = paste0(trait_, &quot; v_hat&quot;))
+
+# -- get the estimated fixed effects, from the whitening process and OLS and variance components from ABC
+
+# estimated fixed effects (from whitening and OLS)
+print(pheno_obj$beta_hat)
+
+# estimated variance components (from ABC)
+print(pheno_obj$var_comp_abc_obj)
+</code></pre>
 </div>
 </div>
 <div id="authors-and-references" class="section level2">

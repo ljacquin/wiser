@@ -14,6 +14,9 @@
 \value{
   A numeric value representing the squared L2 norm distance between the observed and simulated vectors.
 }
+\author{
+  Laval Jacquin, \email{jacquin.julien@gmail.com}
+}
 \examples{
   # Example usage
   # distance <- squared_l2_norm(y, y_sim)

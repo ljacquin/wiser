@@ -13,6 +13,9 @@
 \value{
   A numeric value representing the logarithm of the determinant of the matrix.
 }
+\author{
+  Laval Jacquin, \email{jacquin.julien@gmail.com}
+}
 \examples{
   # Example usage
   # log_d <- log_det(Sigma)

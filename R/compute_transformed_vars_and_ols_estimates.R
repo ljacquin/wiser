@@ -1,9 +1,14 @@
 # function which computes transformed fixed variables and least squares
 compute_transformed_vars_and_ols_estimates <- function(
     geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
+    compute_row_and_position_as_factors,
     sigma2_u, sigma2_e, kernel_type,
     rate_decay_kernel,
-    whitening_method) {
+    whitening_method,
+    regularization_method,
+    alpha_frob_,
+    percent_eig_,
+    non_zero_precision_eig_) {
   tryCatch(
     {
       # remove all rows with na w.r.t to trait_
@@ -24,9 +29,6 @@ compute_transformed_vars_and_ols_estimates <- function(
         k_mat <- tcrossprod(scale(apply(geno_df, 2, as.numeric),
           center = T, scale = F
         ))
-      } else if (kernel_type == "gaussian") {
-        kernel_function <- rbfdot(sigma = (1 / ncol(geno_df)) * rate_decay_kernel)
-        k_mat <- kernelMatrix(kernel_function, geno_df)
       } else {
         # kernel identity is not recommended due to constrained hypothesis about
         # genotypes independence which may lead to low precision
@@ -47,7 +49,14 @@ compute_transformed_vars_and_ols_estimates <- function(
       # convert fixed effects variables to factors, and remove
       # buffer for management if exists
       for (fix_eff_var_ in fixed_effects_vars) {
-        raw_pheno_df[, fix_eff_var_] <- as.factor(raw_pheno_df[, fix_eff_var_])
+        if ((fix_eff_var_ == "Row" || fix_eff_var_ == "Position") &&
+          !compute_row_and_position_as_factors) {
+          raw_pheno_df[, fix_eff_var_] <- raw_pheno_df[, fix_eff_var_]
+        } else {
+          raw_pheno_df[, fix_eff_var_] <- as.factor(
+            raw_pheno_df[, fix_eff_var_]
+          )
+        }
         if ("BUFFER" %in% raw_pheno_df[, fix_eff_var_]) {
           raw_pheno_df <- raw_pheno_df[
             raw_pheno_df[, fix_eff_var_] != "BUFFER",
@@ -80,14 +89,20 @@ compute_transformed_vars_and_ols_estimates <- function(
 
       # add incidence matrices (without intercept) for other fixed effects to list
       for (fix_eff_var_ in fixed_effects_vars[-1]) {
-        list_x_mat[[fix_eff_var_]] <- model.matrix(
-          as.formula(paste0("~", fix_eff_var_, " - 1")),
-          data = raw_pheno_df
-        )
-        colnames(list_x_mat[[fix_eff_var_]]) <- str_replace_all(
-          colnames(list_x_mat[[fix_eff_var_]]),
-          pattern = fix_eff_var_, replacement = paste0(fix_eff_var_, "_")
-        )
+        if ((fix_eff_var_ == "Row" || fix_eff_var_ == "Position") &&
+          !compute_row_and_position_as_factors) {
+          list_x_mat[[fix_eff_var_]] <- raw_pheno_df[, fix_eff_var_]
+          names(list_x_mat[[fix_eff_var_]]) <- fix_eff_var_
+        } else {
+          list_x_mat[[fix_eff_var_]] <- model.matrix(
+            as.formula(paste0("~", fix_eff_var_, " - 1")),
+            data = raw_pheno_df
+          )
+          colnames(list_x_mat[[fix_eff_var_]]) <- str_replace_all(
+            colnames(list_x_mat[[fix_eff_var_]]),
+            pattern = fix_eff_var_, replacement = paste0(fix_eff_var_, "_")
+          )
+        }
       }
       x_mat <- do.call(cbind, list_x_mat)
       x_mat <- apply(x_mat, 2, as.numeric)
@@ -110,15 +125,31 @@ compute_transformed_vars_and_ols_estimates <- function(
       z_mat <- do.call(cbind, list_z_mat)
       z_mat <- apply(z_mat, 2, as.numeric)
 
-      # compute Σ (sig_mat_) and its Cholesky decomposition, i.e. Σ = LL'
+      # compute Σu, i.e. sig_mat_ here
       sig_mat_ <- sigma2_u * crossprod(t(z_mat), tcrossprod(k_mat, z_mat))
-      sig_mat_ <- regularize_covariance(sig_mat_, alpha_ = 0.01)
-      # regularize_covariance() adds α * trace(Σ) * I_n to the diagonal of Σ
-      # to ensure its strict positive definiteness 
 
+      # regularize covariance matrix, by adding a strictly positive value to the
+      # diagonal of Σ, to ensure its positive definiteness
+      if (regularization_method == "mean_small_eigenvalues") {
+        sig_mat_ <- regularize_covariance_mean_small_eigenvalues(
+          sig_mat_, k_mat, sigma2_u, percent_eig_, non_zero_precision_eig_
+        )
+      } else if (regularization_method == "mean_eigenvalues") {
+        sig_mat_ <- regularize_covariance_mean_eigenvalues(
+          sig_mat_
+        )
+      } else if (regularization_method == "frobenius_norm") {
+        sig_mat_ <- regularize_covariance_frobenius_norm(
+          sig_mat_, alpha_frob_
+        )
+      }
+
+      # compute whitening matrix, either from cholesky decomposition,
+      # i.e. Σ = LL', or ZCA-cor
       if (whitening_method == "Cholesky") {
         # compute w_mat = L^−1 from Cholesky decomposition
-        w_mat <- Matrix::solve(t(cholesky(sig_mat_, parallel = T)))
+        L <- t(cholesky(sig_mat_, parallel = T))
+        w_mat <- forwardsolve(L, diag(nrow(L)))
       } else {
         # compute w_mat from ZCA-cor
         w_mat <- whiteningMatrix(sig_mat_, method = "ZCA-cor")
