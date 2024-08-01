@@ -125,6 +125,7 @@ pheno_obj <- estimate_wiser_phenotype(
     "Row", "Position", "Management"
   ),
   random_effects_vars = "Genotype",
+  compute_row_and_position_as_factors = T,
   kernel_type = "linear",
   whitening_method = "Cholesky"
 )

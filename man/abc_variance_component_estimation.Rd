@@ -30,6 +30,9 @@
   \item{accepted_params}{A data frame of accepted variance component parameters.}
   \item{rejection_threshold}{The rejection threshold based on the quantile threshold.}
 }
+\author{
+  Laval Jacquin, \email{jacquin.julien@gmail.com}
+}
 \examples{
   # Example usage
   # result <- abc_variance_component_estimation(y, x_mat, z_mat, k_mat, beta_hat,

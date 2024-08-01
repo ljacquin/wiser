@@ -23,6 +23,9 @@
   \item{sigma2_e}{The sampled variance component for residuals.}
   \item{dist_y_y_sim}{The squared L2 norm distance between observed and simulated phenotypic values.}
 }
+\author{
+  Laval Jacquin, \email{jacquin.julien@gmail.com}
+}
 \examples{
   # Example usage
   # result <- simulate_and_compute_squared_l2_norm(y, x_mat, z_mat, k_mat, beta_hat,

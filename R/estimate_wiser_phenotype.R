@@ -4,6 +4,7 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
                                        "Envir", "Country", "Year",
                                        "Row", "Position", "Management"
                                      ),
+                                     compute_row_and_position_as_factors = T,
                                      random_effects_vars = "Genotype",
                                      init_sigma2_u = 1,
                                      init_sigma2_e = 1,
@@ -13,17 +14,26 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
                                      nb_iter_abc = 1,
                                      kernel_type = "linear",
                                      rate_decay_kernel = 0.1,
-                                     whitening_method = "Cholesky") {
+                                     whitening_method = "Cholesky",
+                                     regularization_method = "frobenius_norm",
+                                     alpha_frob_ = 0.01,
+                                     percent_eig_ = 0.05,
+                                     non_zero_precision_eig_ = 1e-5) {
   tryCatch(
     {
       # compute transformed variables associated to fixed effects and least-squares
       # to estimate these
       transform_and_ls_obj <- compute_transformed_vars_and_ols_estimates(
         geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
+        compute_row_and_position_as_factors,
         sigma2_u = init_sigma2_u,
         sigma2_e = init_sigma2_e,
         kernel_type, rate_decay_kernel,
-        whitening_method
+        whitening_method,
+        regularization_method,
+        alpha_frob_,
+        percent_eig_,
+        non_zero_precision_eig_
       )
 
       # get an upper bound for sigma2_u et sigma2_e priors
@@ -48,10 +58,15 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
         # compute variance components again with abc using new estimates
         transform_and_ls_obj <- compute_transformed_vars_and_ols_estimates(
           geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
+          compute_row_and_position_as_factors,
           sigma2_u = var_comp_abc_obj$sigma2_u_hat_mean,
           sigma2_e = var_comp_abc_obj$sigma2_e_hat_mean,
           kernel_type, rate_decay_kernel,
-          whitening_method
+          whitening_method,
+          regularization_method,
+          alpha_frob_,
+          percent_eig_,
+          non_zero_precision_eig_
         )
       }
 
@@ -61,7 +76,7 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
       beta_hat <- transform_and_ls_obj$beta_hat
 
       # compute phenotypic values using ols
-      v_hat <- Matrix::solve(t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$z_mat) %*%
+      v_hat <- ginv(t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$z_mat) %*%
         t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$xi_hat
 
       return(list(
