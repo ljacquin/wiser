@@ -11,7 +11,6 @@ abc_variance_component_estimation <- function(y, x_mat, z_mat, k_mat, beta_hat,
   df_results <- foreach(
     sim_num = 1:n_sim_abc,
     .export = c(
-      "y", "x_mat", "z_mat", "k_mat", "beta_hat", "prior_sigma2_u", "prior_sigma2_e",
       "simulate_y", "squared_l2_norm", "simulate_and_compute_squared_l2_norm"
     ),
     .packages = c("MASS"),

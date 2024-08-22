@@ -17,6 +17,6 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # log_d <- log_det(Sigma)
 }

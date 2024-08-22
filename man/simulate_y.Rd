@@ -22,6 +22,6 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # y_sim <- simulate_y(x_mat, z_mat, beta_hat, sigma2_u, sigma2_e, k_mat)
 }

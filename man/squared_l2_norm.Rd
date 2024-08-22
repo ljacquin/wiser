@@ -18,6 +18,6 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # distance <- squared_l2_norm(y, y_sim)
 }

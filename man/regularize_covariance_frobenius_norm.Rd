@@ -31,7 +31,7 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   cov_mat_ <- matrix(c(1, 0.5, 0.5, 1), nrow = 2)
   alpha_frob_ <- 0.01
   regularized_cov_mat <- regularize_covariance_frobenius_norm(cov_mat_, alpha_frob_)

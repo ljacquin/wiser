@@ -44,7 +44,7 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   mat <- matrix(c(1, 2, 3, 4), nrow = 2)
   frobenius_norm(mat)
 }

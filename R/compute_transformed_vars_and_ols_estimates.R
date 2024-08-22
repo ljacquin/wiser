@@ -1,14 +1,17 @@
-# function which computes transformed fixed variables and least squares
 compute_transformed_vars_and_ols_estimates <- function(
     geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
     compute_row_and_position_as_factors,
     sigma2_u, sigma2_e, kernel_type,
-    rate_decay_kernel,
     whitening_method,
     regularization_method,
     alpha_frob_,
     percent_eig_,
-    non_zero_precision_eig_) {
+    non_zero_precision_eig_,
+    parallelized_cholesky_,
+    reduce_raw_dataset_size_,
+    nrow_lim_raw_dataset_zca_cor,
+    nrow_lim_raw_dataset_pca_cor,
+    nrow_lim_raw_dataset_chol) {
   tryCatch(
     {
       # remove all rows with na w.r.t to trait_
@@ -46,12 +49,38 @@ compute_transformed_vars_and_ols_estimates <- function(
       # get common geontype between raw_pheno_df and geno_df
       raw_pheno_df <- match_indices(raw_pheno_df, k_mat)
 
+      # should raw dataset size be reduced wrt to selected whitening method ?
+      if (reduce_raw_dataset_size_) {
+        set.seed(123)
+        if (whitening_method == "ZCA-cor") {
+          raw_pheno_df <- as.data.frame(
+            reduce_dataset_based_on_genotypes(
+              df_ = raw_pheno_df,
+              nrow_lim = nrow_lim_raw_dataset_zca_cor
+            )
+          )
+        } else if (whitening_method == "PCA-cor") {
+          raw_pheno_df <- as.data.frame(
+            reduce_dataset_based_on_genotypes(
+              df_ = raw_pheno_df,
+              nrow_lim = nrow_lim_raw_dataset_pca_cor
+            )
+          )
+        } else {
+          raw_pheno_df <- as.data.frame(
+            reduce_dataset_based_on_genotypes(
+              df_ = raw_pheno_df,
+              nrow_lim = nrow_lim_raw_dataset_chol
+            )
+          )
+        }
+      }
+
       # convert fixed effects variables to factors, and remove
       # buffer for management if exists
       for (fix_eff_var_ in fixed_effects_vars) {
         if ((fix_eff_var_ == "Row" || fix_eff_var_ == "Position") &&
           !compute_row_and_position_as_factors) {
-          raw_pheno_df[, fix_eff_var_] <- raw_pheno_df[, fix_eff_var_]
         } else {
           raw_pheno_df[, fix_eff_var_] <- as.factor(
             raw_pheno_df[, fix_eff_var_]
@@ -68,6 +97,16 @@ compute_transformed_vars_and_ols_estimates <- function(
 
       # get raw phenotypes associated to common genotypes
       y <- raw_pheno_df[, trait_]
+
+      # remove fixed effects with no variance or unique level for factors
+      fixed_effects_vars <- find_columns_with_multiple_unique_values(
+        raw_pheno_df[, fixed_effects_vars]
+      )
+      # if country is no more in fixed effects then environment equals year as
+      # fixed effect, hence the latter must be removed due to perfect colinearity
+      if (!("Country" %in% fixed_effects_vars)) {
+        fixed_effects_vars <- setdiff(fixed_effects_vars, "Year")
+      }
 
       # get incidence matrices for fixed and random effects
       # NB. column of ones is added for intercept associated to fixed effects
@@ -144,15 +183,22 @@ compute_transformed_vars_and_ols_estimates <- function(
         )
       }
 
-      # compute whitening matrix, either from cholesky decomposition,
-      # i.e. Σ = LL', or ZCA-cor
-      if (whitening_method == "Cholesky") {
-        # compute w_mat = L^−1 from Cholesky decomposition
-        L <- t(cholesky(sig_mat_, parallel = T))
-        w_mat <- forwardsolve(L, diag(nrow(L)))
-      } else {
+      # compute whitening matrix, either from ZCA-cor or cholesky
+      # decomposition (i.e. Σ = LL' )
+      if (whitening_method == "ZCA-cor") {
         # compute w_mat from ZCA-cor
         w_mat <- whiteningMatrix(sig_mat_, method = "ZCA-cor")
+      } else if (whitening_method == "PCA-cor") {
+        # compute w_mat from ZCA-cor
+        w_mat <- whiteningMatrix(sig_mat_, method = "PCA-cor")
+      } else {
+        # compute w_mat = L^−1 from Cholesky decomposition
+        if (parallelized_cholesky_) {
+          L <- t(cholesky(sig_mat_, parallel = T))
+        } else {
+          L <- t(cholesky(sig_mat_, parallel = F))
+        }
+        w_mat <- forwardsolve(L, diag(nrow(L)))
       }
 
       # NB. intercept is already present in x_mat and x_mat_tilde

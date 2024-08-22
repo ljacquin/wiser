@@ -18,6 +18,6 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # matched_df <- match_indices(raw_pheno_df, mat_)
 }

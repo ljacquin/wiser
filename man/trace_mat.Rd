@@ -17,6 +17,6 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # trace_value <- trace_mat(matrix_)
 }
