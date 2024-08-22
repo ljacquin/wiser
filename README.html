@@ -385,8 +385,8 @@ estimations.</p>
 vector <span class="math inline">\(v = (v_1, v_2, \ldots,
 v_q)&#39;\)</span> of <span class="math inline">\(q\)</span> phenotypes,
 which approximates a vector <span class="math inline">\(u = (u_1, u_2,
-\ldots, u_q)&#39;\)</span> of genetic values for <span class="math inline">\(q\)</span> genotypes, is carried out as
-follows:</p>
+\ldots, u_q)&#39;\)</span> of genetic values for <span class="math inline">\(q\)</span> genotypes, is carried out as follows
+:</p>
 <p><span class="math display">\[
 \hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2
 = (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \
@@ -404,7 +404,7 @@ adjusted for the genetic covariance between individuals in the
 experimental design.</p></li>
 </ul>
 <p>In this setting, the vector <span class="math inline">\(\overset{\wedge}{\xi}\)</span> is estimated as
-follows :</p>
+follows:</p>
 <p><span class="math display">\[
 \hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
 \]</span></p>
@@ -510,7 +510,7 @@ as shown in Jacquin <span class="math inline">\(\textit{et al.}\)</span>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>You can install the latest version of the <code>wiser</code> package
-with:</p>
+with :</p>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
 library(devtools)
 install_github(&quot;ljacquin/wiser&quot;)</code></pre>
@@ -541,8 +541,8 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 <div id="estimating-phenotypes-with-wiser" class="section level3">
 <h3>Estimating phenotypes with WISER</h3>
 <p>Here’s a simple example illustrating the use of the
-<code>estimate_wiser_phenotype</code> function to estimate
-phenotypes:</p>
+<code>estimate_wiser_phenotype</code> function to estimate phenotypes
+:</p>
 <pre class="r"><code># -- load wiser library and data subsets from the refpop dataset
 # load library 
 library(wiser)
@@ -598,8 +598,8 @@ print(pheno_obj$var_comp_abc_obj)
 <div id="authors-and-references" class="section level2">
 <h2>Authors and References</h2>
 <ul>
-<li>Author: Laval Jacquin</li>
-<li>Maintainer: Laval Jacquin <a href="mailto:jacquin.julien@gmail.com" class="email">jacquin.julien@gmail.com</a></li>
+<li>Author : Laval Jacquin</li>
+<li>Maintainer : Laval Jacquin <a href="mailto:jacquin.julien@gmail.com" class="email">jacquin.julien@gmail.com</a></li>
 </ul>
 </div>
 <div id="references" class="section level2">
