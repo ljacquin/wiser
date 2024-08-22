@@ -34,7 +34,7 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # result <- abc_variance_component_estimation(y, x_mat, z_mat, k_mat, beta_hat,
   #                                              prior_sigma2_u, prior_sigma2_e,
   #                                              n_sim_abc = 100, seed_abc = 123,

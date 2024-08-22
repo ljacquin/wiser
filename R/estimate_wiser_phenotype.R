@@ -13,12 +13,16 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
                                      quantile_threshold_abc = 0.05,
                                      nb_iter_abc = 1,
                                      kernel_type = "linear",
-                                     rate_decay_kernel = 0.1,
-                                     whitening_method = "Cholesky",
+                                     whitening_method = "ZCA-cor",
                                      regularization_method = "frobenius_norm",
                                      alpha_frob_ = 0.01,
                                      percent_eig_ = 0.05,
-                                     non_zero_precision_eig_ = 1e-5) {
+                                     non_zero_precision_eig_ = 1e-5,
+                                     parallelized_cholesky_ = T,
+                                     reduce_raw_dataset_size_ = T,
+                                     nrow_lim_raw_dataset_zca_cor = 10e3,
+                                     nrow_lim_raw_dataset_pca_cor = 10e3,
+                                     nrow_lim_raw_dataset_chol = 40e3) {
   tryCatch(
     {
       # compute transformed variables associated to fixed effects and least-squares
@@ -28,12 +32,17 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
         compute_row_and_position_as_factors,
         sigma2_u = init_sigma2_u,
         sigma2_e = init_sigma2_e,
-        kernel_type, rate_decay_kernel,
+        kernel_type,
         whitening_method,
         regularization_method,
         alpha_frob_,
         percent_eig_,
-        non_zero_precision_eig_
+        non_zero_precision_eig_,
+        parallelized_cholesky_,
+        reduce_raw_dataset_size_,
+        nrow_lim_raw_dataset_zca_cor,
+        nrow_lim_raw_dataset_pca_cor,
+        nrow_lim_raw_dataset_chol
       )
 
       # get an upper bound for sigma2_u et sigma2_e priors
@@ -61,12 +70,17 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
           compute_row_and_position_as_factors,
           sigma2_u = var_comp_abc_obj$sigma2_u_hat_mean,
           sigma2_e = var_comp_abc_obj$sigma2_e_hat_mean,
-          kernel_type, rate_decay_kernel,
+          kernel_type,
           whitening_method,
           regularization_method,
           alpha_frob_,
           percent_eig_,
-          non_zero_precision_eig_
+          non_zero_precision_eig_,
+          parallelized_cholesky_,
+          reduce_raw_dataset_size_,
+          nrow_lim_raw_dataset_zca_cor,
+          nrow_lim_raw_dataset_pca_cor,
+          nrow_lim_raw_dataset_chol
         )
       }
 

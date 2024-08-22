@@ -36,7 +36,7 @@ Here, \eqn{\mathbf{I}} denotes the identity matrix of the same dimensions as \eq
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   cov_mat_ <- matrix(c(1, 0.5, 0.5, 1), nrow = 2)
   regularized_cov_mat <- regularize_covariance_mean_eigenvalues(cov_mat_)
   print(regularized_cov_mat)

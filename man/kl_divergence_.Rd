@@ -35,7 +35,7 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   Sigma_1 <- matrix(c(1, 0.5, 0.5, 1), nrow = 2)
   Sigma_2 <- matrix(c(1, 0.3, 0.3, 1), nrow = 2)
   alpha_frob_ <- 0.01

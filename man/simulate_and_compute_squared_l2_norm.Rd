@@ -27,7 +27,7 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # result <- simulate_and_compute_squared_l2_norm(y, x_mat, z_mat, k_mat, beta_hat,
   #                                                prior_sigma2_u = c(1e-2, 1),
   #                                                prior_sigma2_e = c(1e-2, 1))

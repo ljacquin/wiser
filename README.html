@@ -416,62 +416,95 @@ the experimental design, with repeated measurements for each
 genotype.</p></li>
 <li><p><span class="math inline">\(\tilde{X} (= WX)\)</span> is the
 transformed (whitened) design matrix that links the estimated fixed
-effects, adjusted for genetic covariance, to the individual phenotypic
-measurements.</p></li>
+effects, adjusted for genetic covariance in the experimental design, to
+the individual phenotypic measurements.</p></li>
 <li><p><span class="math inline">\(\hat{\beta} = (\hat{\beta}_1,
 \hat{\beta}_2, \ldots ,\hat{\beta}_l)&#39; =
 (\tilde{X}&#39;\tilde{X})^{-1}\tilde{X}&#39;Y\)</span> is the vector of
 <span class="math inline">\(l\)</span> estimated fixed effects, adjusted
 for genetic covariance between individuals in the experimental
 design.</p></li>
-<li><p><span class="math inline">\(W\)</span> is an <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> whitening matrix. By default, <span class="math inline">\(W = L^{-1}\)</span> in <code>wiser</code>, where
-<span class="math inline">\(L\)</span> is a full-rank lower triangular
-matrix obtained via the Cholesky decomposition of the genetic covariance
-matrix <span class="math inline">\(\Sigma_u =
-\sigma^2_uZKZ&#39;\)</span>, of the vector <span class="math inline">\(U
-= Zu = (U_1,U_2, \ldots, U_n)\)</span>, which corresponds to the vector
-of individual genetic effects in the experimental design. The Cholesky
-decomposition is given by <span class="math inline">\(\Sigma_u =
-LL&#39;\)</span>, and it is assumed that <span class="math inline">\(u
-\sim \mathcal{N}_q(0,\sigma^2_uK)\)</span>, where <span class="math inline">\(K\)</span> is the genetic covariance matrix
-between the genotypes estimated using SNP marker data.</p></li>
+<li><p><span class="math inline">\(W\)</span> is an <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> whitening matrix, built using SNP
+marker data, which eliminates the genetic covariance structure between
+individuals during the fixed effects estimation process.</p></li>
 <li><p><span class="math inline">\(X\)</span> is the original design
 matrix that links fixed effects to the individual phenotypic
 measurements in the experimental design.</p></li>
 </ul>
-<p>In <code>wiser</code>, the matrix <span class="math inline">\(K\)</span> is estimated using SNP markers and is
-also known as the genomic covariance matrix or the Gram matrix. Three
-kernel functions are provided to build <span class="math inline">\(K\)</span>: <code>linear</code>,
-<code>gaussian</code>, and <code>identity</code>. Among these, the
-<code>identity</code> kernel is not recommended due to its poor
-performance for genomic prediction. In contrast, the <code>linear</code>
-kernel has shown the best practical performance in this context. The
-<code>identity</code> kernel is primarily used for benchmarking
-purposes, as detailed in Jacquin <span class="math inline">\(\textit{et
-al.}\)</span> (2024). Specifically, the <code>identity</code> kernel
-facilitates the assessment of the impact of including versus excluding
-the covariance structure, as well as evaluating the effects of different
-methods for computing the covariance structure.</p>
+<p>In the <code>wiser</code> framework, the whitening matrix <span class="math inline">\(W\)</span> can be constructed using three
+different procedures: zero-phase component correlation analysis
+(<code>ZCA-cor</code>), principal component correlation analysis
+(<code>PCA-cor</code>) and cholesky (<code>Cholesky</code>). Let <span class="math inline">\(\Sigma_u = \sigma^2_uZKZ&#39;\)</span> represent
+the genetic covariance matrix for the vector <span class="math inline">\(U = Zu = (U_1,U_2, \ldots, U_n)\)</span>, which
+corresponds to the vector of individual genetic effects in the
+experimental design. It is assumed that <span class="math inline">\(u
+\sim \mathcal{N}_q(0,\sigma^2_uK)\)</span>, where <span class="math inline">\(K\)</span> is the genetic covariance matrix
+between genotypes estimated from SNP marker data. Define <span class="math inline">\(R_u = V^{-\frac{1}{2}} \Sigma_u
+V^{-\frac{1}{2}}\)</span> as the correlation matrix associated with
+<span class="math inline">\(\Sigma_u\)</span>, where <span class="math inline">\(V=diag(\Sigma_u)\)</span> is a diagonal matrix
+containing the variances <span class="math inline">\(\bigl
+(\sigma^2_{U_i} \bigr )_{1 \leq i \leq n}\)</span> on its diagonal.
+Since <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span> are symmetric and positive
+semi-definite, they have the following spectral decompositions: <span class="math inline">\(\Sigma_u = U \Lambda U&#39;\)</span> and <span class="math inline">\(R_u = G \Theta G&#39;\)</span>, where <span class="math inline">\(U\)</span> and <span class="math inline">\(G\)</span> are orthogonal eigenvectors matrices
+for <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span>, respectively (i.e. <span class="math inline">\(UU&#39;=U&#39;U=I_n\)</span> and <span class="math inline">\(GG&#39;=G&#39;G=I_n\)</span>), while <span class="math inline">\(\Lambda\)</span> and <span class="math inline">\(\Theta\)</span> are diagonal matrices of positive
+eigenvalues for <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span>, respectively. The inverse square
+root matrices of <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span> are given by <span class="math inline">\(\Sigma_u^{-\frac{1}{2}} = U \Lambda^{-\frac{1}{2}}
+U&#39;\)</span> and <span class="math inline">\(R_u^{-\frac{1}{2}} = G
+\Theta^{-\frac{1}{2}} G&#39;\)</span>. These satisfy <span class="math inline">\(\Sigma_u^{-1}=\Sigma_u^{-\frac{1}{2}}\Sigma_u^{-\frac{1}{2}}\)</span>
+and <span class="math inline">\(R_u^{-1} =
+R_u^{-\frac{1}{2}}R_u^{-\frac{1}{2}}\)</span>). According to Kessy <span class="math inline">\(\textit{et al.}\)</span> (2015), the whitening
+matrices associated to <code>ZCA-cor</code>, <code>PCA-cor</code> and
+<code>Cholesky</code> are given by :</p>
+<p><span class="math display">\[
+\begin{cases}
+  W^{ZCA-cor} = R_u^{-\frac{1}{2}}V^{-\frac{1}{2}} = G
+\Theta^{-\frac{1}{2}} G&#39;V^{-\frac{1}{2}} = G \big[
+\Theta^{-\frac{1}{2}} G&#39;V^{-\frac{1}{2}} \big]\\      
+  W^{PCA-cor} = \Theta^{-\frac{1}{2}} G&#39;V^{-\frac{1}{2}}\\
+  W^{Cholesky} = L^{-1} \\
+\end{cases}
+\]</span></p>
+<p>where <span class="math inline">\(L\)</span> is derived from the
+Cholesky decomposition of <span class="math inline">\(\Sigma_u =
+LL&#39;\)</span>. The <code>PCA-cor</code> whitening procedure can be
+seen as standardizing variables using <span class="math inline">\(V^{-\frac{1}{2}}\)</span>, followed by a rotation
+using the transposed correlation eigenmatrix <span class="math inline">\(G&#39;\)</span>, and then scaling using the
+inverted correlation singular values matrix <span class="math inline">\(\Theta^{-\frac{1}{2}}\)</span>.
+<code>ZCA-cor</code> whiteningextends this by applying an additional
+rotation <span class="math inline">\(G\)</span> to revert to the
+original basis of the standardized variables. Each whitening method is
+optimal according to specific criteria. For instance,
+<code>ZCA-cor</code> is unique in ensuring that the whitened variables
+retain the maximum correlation with the original variables. Details of
+these criteria and the optimality of each method are discussed in Kessy
+<span class="math inline">\(\textit{et al.}\)</span> (2015).</p>
+<p>In <code>wiser</code>, two kernel functions are also provided to
+build <span class="math inline">\(K\)</span>: <code>linear</code> and
+<code>identity</code>. The <code>identity</code> kernel is generally
+discouraged due to its poor performance in genomic prediction. On the
+other hand, the <code>linear</code> kernel has demonstrated superior
+practical performance in this context. The <code>identity</code> kernel
+is mainly used for benchmarking, as detailed in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2024), to assess the
+impact of including versus excluding the covariance structure.</p>
 <div id="remarks" class="section level4">
 <h4>Remarks :</h4>
 <p>The rationale for transforming <span class="math inline">\(X\)</span>
 into <span class="math inline">\(\tilde{X}\)</span> through whitening,
-to correct for genetic covariance among individuals in the estimation of
-fixed effects, is comprehensively addressed in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2024). In contrast, the
+to adjust for genetic covariance among individuals when estimating fixed
+effects, is comprehensively addressed in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2024). In contrast, the
 chosen approach of successive ordinary least squares (OLS) in
 <code>wiser</code> avoids making assumptions about the properties of
-<span class="math inline">\(\beta\)</span> and <span class="math inline">\(v\)</span>.</p>
-<p>Specifically, <code>wiser</code> does not assume that <span class="math inline">\(v\)</span> is a random vector drawn from a
-distribution with a specified covariance matrix. This approach prevents
-enforcing an unnecessary covariance structure during the estimation of
-<span class="math inline">\(v\)</span>, which could be detrimental. For
-example, assuming <span class="math inline">\(v \sim
-\mathcal{N}_q(0,\sigma^2_vI_q)\)</span> is often unrealistic and would
-lead to using a decorrelated covariance structure in the best linear
-unbiased predictor (BLUP) of <span class="math inline">\(v\)</span>.
-Furthermore, and crucially, the successive OLS procedure ensures that
-the estimated residuals or <span class="math inline">\(v\)</span> are
-not linked to the SNP marker data as shown in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2024).</p>
+<span class="math inline">\(\beta\)</span> and <span class="math inline">\(v\)</span>. Specifically, <code>wiser</code> does
+not assume that <span class="math inline">\(v\)</span> is a random
+vector drawn from a distribution with a specified covariance matrix.
+This approach prevents enforcing an unnecessary covariance structure
+during the estimation of <span class="math inline">\(v\)</span>, which
+could be detrimental. For example, assuming <span class="math inline">\(v \sim \mathcal{N}_q(0,\sigma^2_vI_q)\)</span> is
+often unrealistic and would lead to using a decorrelated covariance
+structure in the best linear unbiased predictor (BLUP) of <span class="math inline">\(v\)</span>. Furthermore, and crucially, the
+successive OLS procedure ensures that the estimated residuals or <span class="math inline">\(v\)</span> are not linked to the SNP marker data
+as shown in Jacquin <span class="math inline">\(\textit{et al.}\)</span>
+(2024).</p>
 </div>
 </div>
 <div id="installation" class="section level2">
@@ -484,9 +517,10 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 </div>
 <div id="key-features" class="section level2">
 <h2>Key Features</h2>
-<pre><code>- Whitening Methods: Applying Cholesky decomposition or ZCA-cor whitening to adjust for genetic covariance.
-- Fixed and Random Effects Modeling: Computing transformed variables and obtaining OLS estimates for fixed effects, integrating random genetic covariance in the estimation process.
-- Covariance Regularization: Regularizing covariance matrices to ensure strict positive definiteness.
+<pre><code>- Whitening Methods: Applying ZCA-cor, PCA-cor or Cholesky whitening to adjust for genetic covariance.
+- Fixed and Random Effects Modeling: Computing transformed (whitened) fixed effects variables and obtaining OLS estimates for their associated parameters, which are adjusted for genetic covariance in the experimental design.
+- Optimize Whitening and Regularization: Optimizing the choice of the whitening method, and the Frobenius norm associated regularization parameter, through k-folds cross-validation.
+- Genetic Covariance Matrix Regularization: Regularizing the genetic covariance matrix to ensure its positive definiteness and numerical stability.
 - Variance Component Estimation: Estimating variance components using ABC.
 - Phenotype Simulation: Simulating phenotypic data based on fixed and random effects.
 - Distance Computation: Calculating the squared L2 norm distance between observed and simulated phenotypic values.</code></pre>
@@ -494,16 +528,13 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 <div id="main-functions" class="section level2">
 <h2>Main Functions</h2>
 <pre><code>- estimate_wiser_phenotype: Estimates phenotypic values approximating genetic values using whitening methods.
-- compute_transformed_vars_and_ols_estimates: Computes transformed fixed effects variables and obtains OLS estimates for the fixed effects parameters associated to these transformed variables.
+- compute_transformed_vars_and_ols_estimates: Computes transformed (whitened) fixed effects variables and obtains OLS estimates for their associated parameters.
+- optimize_whitening_and_regularization: Optimizes the selection of the whitening method and regularization parameter for phenotype estimation, using grid search over specified combinations of whitening methods, regularization parameters, and prediction methods, using k-fold cross-validation.
+- regularize_covariance_mean_small_eigenvalues: Regularizes a covariance matrix by using the mean of the smallest eigenvalues, up to a specified percentage of the total number of eigenvalues, to ensure positive definiteness.
+- regularize_covariance_mean_eigenvalues: Regularizes a covariance matrix using the mean of its eigenvalues to ensure positive definiteness.
+- regularize_covariance_frobenius_norm: Regularizes a covariance matrix based on Frobenius norm and an associated regularization parameter to ensure positive definiteness.
 - abc_variance_component_estimation: Computes variance components using ABC.
-- squared_l2_norm: Computes the squared L2 norm distance between two numeric vectors.
-- simulate_y: Simulates phenotypic data based on fixed effects, random effects, and residual variance components.
-- regularize_covariance: Regularizes a covariance matrix by adding a small strict positive value to the diagonal.
-- simulate_and_compute_squared_l2_norm: Simulates phenotypic values and computes the squared L2 norm distance between simulated and observed values.
-- kl_divergence_: Computes the Kullback-Leibler divergence between two covariance matrices.
-- log_det: Computes the logarithm of the determinant of a matrix.
-- match_indices: Matches indices between phenotypic data and a given matrix.
-- trace_mat: Computes the trace of a matrix.</code></pre>
+- simulate_and_compute_squared_l2_norm: Simulates phenotypic values and computes the squared L2 norm distance between simulated and observed values.</code></pre>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
@@ -528,19 +559,26 @@ head(refpop_geno_data_subset)[,1:10]
 # define trait
 trait_ &lt;- &quot;Flowering_begin&quot;
 
-# apply wiser estimation function
-pheno_obj &lt;- estimate_wiser_phenotype(
+# get optimal whitening method and regularization parameter using k-folds CV
+opt_white_reg_par &lt;- optimize_whitening_and_regularization(
   geno_df = refpop_geno_data_subset,
   raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-  trait_ = trait_,
+  trait_,
+  whitening_method_grid = c(&quot;ZCA-cor&quot;, &quot;PCA-cor&quot;, &quot;Cholesky&quot;),
+  alpha_frob_grid = c(0.01, 0.1)
+)
+opt_white_reg_par
+
+# apply wiser estimation function using optimized whitening method and regularization parameter
+pheno_obj &lt;- estimate_wiser_phenotype(geno_df, raw_pheno_df, trait_,
   fixed_effects_vars = c(
     &quot;Envir&quot;, &quot;Country&quot;, &quot;Year&quot;,
     &quot;Row&quot;, &quot;Position&quot;, &quot;Management&quot;
   ),
-  random_effects_vars = &quot;Genotype&quot;,
   compute_row_and_position_as_factors = T,
-  kernel_type = &quot;linear&quot;,
-  whitening_method = &quot;Cholesky&quot;
+  random_effects_vars = &quot;Genotype&quot;,
+  whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
+  alpha_frob_ = opt_white_reg_par$opt_alpha_frob
 )
 
 # -- plot the density for the estimated phenotypes
@@ -566,6 +604,8 @@ print(pheno_obj$var_comp_abc_obj)
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
+<p>Kessy, A., Lewin, A., &amp; Strimmer, K. (2018). Optimal whitening
+and decorrelation. The American Statistician, 72(4), 309-314.</p>
 </div>
 </div>
 

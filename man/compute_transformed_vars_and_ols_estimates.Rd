@@ -6,10 +6,16 @@
 }
 \usage{
 compute_transformed_vars_and_ols_estimates(
-  geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
-  compute_row_and_position_as_factors, sigma2_u, sigma2_e, kernel_type,
-  rate_decay_kernel, whitening_method, regularization_method, alpha_frob_,
-  percent_eig_, non_zero_precision_eig_
+  geno_df, raw_pheno_df,
+  fixed_effects_vars, random_effects_vars,
+  trait_, compute_row_and_position_as_factors,
+  sigma2_u, sigma2_e, kernel_type, whitening_method,
+  regularization_method, alpha_frob_,
+  percent_eig_, non_zero_precision_eig_,
+  parallelized_cholesky_, reduce_raw_dataset_size_,
+  nrow_lim_raw_dataset_zca_cor,
+  nrow_lim_raw_dataset_pca_cor,
+  nrow_lim_raw_dataset_chol
 )
 }
 \arguments{
@@ -21,13 +27,17 @@ compute_transformed_vars_and_ols_estimates(
   \item{compute_row_and_position_as_factors}{A logical value indicating whether to treat "Row" and "Position" as factors.}
   \item{sigma2_u}{A numeric value for the variance component of random effects.}
   \item{sigma2_e}{A numeric value for the variance component of residuals.}
-  \item{kernel_type}{A character string specifying the kernel type ("linear", "gaussian", or "identity").}
-  \item{rate_decay_kernel}{A numeric value for the rate decay parameter used in the Gaussian kernel.}
-  \item{whitening_method}{A character string specifying the whitening method ("Cholesky" or "ZCA-cor").}
-  \item{regularization_method}{A character string specifying the regularization method ("mean_small_eigenvalues", "mean_eigenvalues", or "frobenius_norm").}
+  \item{kernel_type}{A character string specifying the kernel type ("linear" or "identity").}
+  \item{whitening_method}{A character string specifying the whitening method ("ZCA-cor", "PCA-cor" or "Cholesky").}
+  \item{regularization_method}{A character string specifying the regularization method ("mean_small_eigenvalues", "mean_eigenvalues" or "frobenius_norm").}
   \item{alpha_frob_}{A numeric value for the Frobenius norm regularization parameter.}
   \item{percent_eig_}{A numeric value between 0 and 1 representing the percentage of the smallest strictly positive eigenvalues to be considered.}
   \item{non_zero_precision_eig_}{A small positive value used to filter out near-zero eigenvalues.}
+  \item{parallelized_cholesky_}{A logical value indicating whether to use parallelized Cholesky decomposition.}
+  \item{reduce_raw_dataset_size_}{A logical value indicating whether to reduce the size of the raw dataset based on the whitening method.}
+  \item{nrow_lim_raw_dataset_zca_cor}{An integer specifying the maximum number of rows in the raw dataset when using the ZCA-cor whitening method.}
+  \item{nrow_lim_raw_dataset_pca_cor}{An integer specifying the maximum number of rows in the raw dataset when using the PCA-cor whitening method.}
+  \item{nrow_lim_raw_dataset_chol}{An integer specifying the maximum number of rows in the raw dataset when using the Cholesky whitening method.}
 }
 \value{
   A list containing:
@@ -42,7 +52,7 @@ compute_transformed_vars_and_ols_estimates(
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-# Example usage
+# example usage
 if(requireNamespace("mixOmics", quietly = TRUE)) {
 # -- load wiser library and data subsets from the refpop dataset
 # load library
@@ -68,12 +78,11 @@ result <- compute_transformed_vars_and_ols_estimates(
   compute_row_and_position_as_factors = T,
   sigma2_u = 1, sigma2_e = 1,
   kernel_type = 'linear',
-  rate_decay_kernel = 0.1,
-  whitening_method = 'Cholesky',
+  whitening_method = 'ZCA-cor',
   regularization_method = 'frobenius_norm',
   alpha_frob_ = 0.01,
-  percent_eig_ = 0.05,
-  non_zero_precision_eig_ = 1e-5
+  reduce_raw_dataset_size_ = T,
+  nrow_lim_raw_dataset_zca_cor = 5e3
   )
   print(result)
 } else {

@@ -1,8 +1,8 @@
 \name{regularize_covariance_mean_small_eigenvalues}
 \alias{regularize_covariance_mean_small_eigenvalues}
-\title{Regularize a covariance matrix using the mean of a percentage of its smallest eigenvalues to ensure positive definiteness }
+\title{Regularizes a covariance matrix by using the mean of the smallest eigenvalues, up to a specified percentage of the total number of eigenvalues, to ensure positive definiteness.}
 \description{
-  Regularizes a covariance matrix to ensure it is positive definite by adding a positive value \code{delta} to the diagonal. The value of \code{delta} is computed as the mean of a percentage of its smallest strictly positive eigenvalues, scaled by \code{sigma2_u}.
+  Regularizes a covariance matrix to ensure it is positive definite by adding a positive value \code{delta} to the diagonal. The value of \code{delta} is computed as the mean of the smallest eigenvalues, up to a specified percentage of the total number of eigenvalues, scaled by \code{sigma2_u}.
 }
 \usage{
   regularize_covariance_mean_small_eigenvalues(
@@ -14,7 +14,7 @@
   \item{cov_mat_}{A covariance matrix between individuals to be regularized.}
   \item{k_mat}{A Gram matrix, or genomic covariance matrix, used to compute the eigenvalues for regularization.}
   \item{sigma2_u}{A scalar value representing the variance component associated with \code{k_mat}.}
-  \item{percent_eig_}{A numeric value between 0 and 1 representing the percentage of the smallest strictly positive eigenvalues to be considered, e.g. 0.05 represents the first 5\% of the smallest strictly positive eigenvalues}
+  \item{percent_eig_}{A numeric value between 0 and 1 representing the percentage of the total number of eigenvalues associated to the smallest strictly positive ones, e.g. 0.05 represents 5\% of the total number of eigenvalues associated to the smallest strictly positive ones.}
   \item{non_zero_precision_eig_}{A small positive value used to filter out near-zero eigenvalues.}
 }
 
@@ -31,9 +31,9 @@
 
   where \eqn{\lambda_i} are the eigenvalues of \code{cov_mat_}
 
-  2. Compute \eqn{\delta} as the mean of the \eqn{N_{s}} smallest strictly positive eigenvalues, associated to the first \code{percent_eig_}\% of them:
+  2. Compute \eqn{\delta} as the mean of the \eqn{N_{s}} smallest strictly positive eigenvalues, associated to \code{percent_eig_}\% of the total number of eigenvalues :
 
-  \deqn{\text{Mean of the } N_s \text{ smallest strictly positive eigenvalues} = \frac{1}{N} \sum_{i=1}^{N} \lambda_i}
+  \deqn{\delta = \frac{1}{N_s} \sum_{i=1}^{N_s} \lambda_i}
 
   3. Compute the regularized covariance matrix \eqn{\Sigma_{\text{reg}}} by adding this mean value to the diagonal of \eqn{\Sigma}:
 
@@ -45,7 +45,7 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # Example usage
+  # example usage
   # simulate a covariance matrix
   set.seed(123)
   n <- 5
