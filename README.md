@@ -20,7 +20,7 @@
 
 The ```wiser``` package offers *user-friendly* advanced tools for more accurate phenotypic estimation, by leveraging genetic covariance information in the estimation of fixed effects. By employing a whitening transformation followed by successive ordinary least squares (OLS) estimation, ```wiser``` refines fixed effect estimates and eliminates biases, leading to improved phenotypic estimation. This approach is particularly beneficial in complex experimental designs where genetic and environmental factors are intricately linked. ```wiser``` includes methods for computing whitening matrices, fixed effects, residuals, and estimating phenotypes. Additionally, the package offers robust variance component estimation using approximate bayesian computation (ABC), ensuring stability and reliability of estimations. 
 
-The phenotypic estimation performed by `wiser` for a vector $v = (v_1, v_2, \ldots, v_q)'$ of $q$ phenotypes, which approximates a vector $u = (u_1, u_2, \ldots, u_q)'$ of genetic values for $q$ genotypes, is carried out as follows:
+The phenotypic estimation performed by `wiser` for a vector $v = (v_1, v_2, \ldots, v_q)'$ of $q$ phenotypes, which approximates a vector $u = (u_1, u_2, \ldots, u_q)'$ of genetic values for $q$ genotypes, is carried out as follows :
 
 $$
 \hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2 = (Z'Z)^{-1}Z'\hat{\xi} \ \ \ \
@@ -32,7 +32,7 @@ where :
 
 * $\overset{\wedge}{\xi}$ is the vector of estimated residuals obtained after removing the fixed effects, adjusted for the genetic covariance between individuals in the experimental design.
 
-In this setting, the vector $\overset{\wedge}{\xi}$ is estimated as follows :
+In this setting, the vector $\overset{\wedge}{\xi}$ is estimated as follows:
 
 $$
 \hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
@@ -71,7 +71,7 @@ The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust
 
 ## Installation
 
-You can install the latest version of the ```wiser``` package with:
+You can install the latest version of the ```wiser``` package with :
 
 ```R
 install.packages("devtools")
@@ -104,7 +104,7 @@ install_github("ljacquin/wiser")
 
 ### Estimating phenotypes with WISER
 
-Here's a simple example illustrating the use of the ```estimate_wiser_phenotype``` function to estimate phenotypes:
+Here's a simple example illustrating the use of the ```estimate_wiser_phenotype``` function to estimate phenotypes :
 
 ```R
 # -- load wiser library and data subsets from the refpop dataset
@@ -161,8 +161,8 @@ print(pheno_obj$var_comp_abc_obj)
 
 ## Authors and References
 
-* Author: Laval Jacquin
-* Maintainer: Laval Jacquin jacquin.julien@gmail.com
+* Author : Laval Jacquin
+* Maintainer : Laval Jacquin jacquin.julien@gmail.com
 
 ## References
 Kessy, A., Lewin, A., & Strimmer, K. (2018). Optimal whitening and decorrelation. The American Statistician, 72(4), 309-314.
