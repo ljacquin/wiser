@@ -25,10 +25,10 @@
     C = c(3, 3, 3),
     D = c(4, 5, 6)
   )
-  
+
   # find columns with multiple unique values
   multiple_value_columns <- find_columns_with_multiple_unique_values(df)
-  
+
   # print the result
   print(multiple_value_columns) # Expected output: "B" "D"
 }

@@ -1,10 +1,14 @@
-# function which computes phenotypes approximating genetic values using whitening
-estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
+estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
                                      fixed_effects_vars = c(
                                        "Envir", "Country", "Year",
                                        "Row", "Position", "Management"
                                      ),
-                                     compute_row_and_position_as_factors = T,
+                                     fixed_effects_vars_computed_as_factor = c(
+                                       "Envir", "Country", "Year",
+                                       "Row", "Position", "Management"
+                                     ),
+                                     site_var = "Country",
+                                     fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
                                      random_effects_vars = "Genotype",
                                      init_sigma2_u = 1,
                                      init_sigma2_e = 1,
@@ -18,7 +22,7 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
                                      alpha_frob_ = 0.01,
                                      percent_eig_ = 0.05,
                                      non_zero_precision_eig_ = 1e-5,
-                                     parallelized_cholesky_ = T,
+                                     parallelized_cholesky = T,
                                      reduce_raw_dataset_size_ = T,
                                      nrow_lim_raw_dataset_zca_cor = 10e3,
                                      nrow_lim_raw_dataset_pca_cor = 10e3,
@@ -28,8 +32,12 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
       # compute transformed variables associated to fixed effects and least-squares
       # to estimate these
       transform_and_ls_obj <- compute_transformed_vars_and_ols_estimates(
-        geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
-        compute_row_and_position_as_factors,
+        omic_df, raw_pheno_df, trait_,
+        fixed_effects_vars,
+        fixed_effects_vars_computed_as_factor,
+        site_var,
+        fixed_effects_vars_computed_as_factor_by_site,
+        random_effects_vars,
         sigma2_u = init_sigma2_u,
         sigma2_e = init_sigma2_e,
         kernel_type,
@@ -38,7 +46,7 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
         alpha_frob_,
         percent_eig_,
         non_zero_precision_eig_,
-        parallelized_cholesky_,
+        parallelized_cholesky,
         reduce_raw_dataset_size_,
         nrow_lim_raw_dataset_zca_cor,
         nrow_lim_raw_dataset_pca_cor,
@@ -66,8 +74,12 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
         )
         # compute variance components again with abc using new estimates
         transform_and_ls_obj <- compute_transformed_vars_and_ols_estimates(
-          geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
-          compute_row_and_position_as_factors,
+          omic_df, raw_pheno_df, trait_,
+          fixed_effects_vars,
+          fixed_effects_vars_computed_as_factor,
+          site_var,
+          fixed_effects_vars_computed_as_factor_by_site,
+          random_effects_vars,
           sigma2_u = var_comp_abc_obj$sigma2_u_hat_mean,
           sigma2_e = var_comp_abc_obj$sigma2_e_hat_mean,
           kernel_type,
@@ -76,7 +88,7 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
           alpha_frob_,
           percent_eig_,
           non_zero_precision_eig_,
-          parallelized_cholesky_,
+          parallelized_cholesky,
           reduce_raw_dataset_size_,
           nrow_lim_raw_dataset_zca_cor,
           nrow_lim_raw_dataset_pca_cor,
@@ -84,7 +96,10 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
         )
       }
 
-      # get estimated components after abc
+      # get estimated and/or modified components after abc
+
+      # extract marker data in case of modification
+      omic_df <- transform_and_ls_obj$omic_df
 
       # extract estimated fixed effects
       beta_hat <- transform_and_ls_obj$beta_hat
@@ -93,10 +108,35 @@ estimate_wiser_phenotype <- function(geno_df, raw_pheno_df, trait_,
       v_hat <- ginv(t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$z_mat) %*%
         t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$xi_hat
 
-      return(list(
-        "var_comp_abc_obj" = var_comp_abc_obj,
-        "beta_hat" = beta_hat,
+      # save wiser fixed effects estimates in a data frame
+      wiser_pheno_df <- data.frame(
+        "Genotype" = str_replace_all(
+          colnames(transform_and_ls_obj$z_mat),
+          pattern = "Genotype_",
+          replacement = ""
+        ),
         "v_hat" = v_hat
+      )
+
+      # save wiser phenotypes in a data frame
+      wiser_fix_eff_df <- data.frame(
+        "fixed_effect_var" = colnames(transform_and_ls_obj$x_mat),
+        "beta_hat_var" = beta_hat
+      )
+
+      return(list(
+        "wiser_omic_data" = omic_df,
+        "sig_mat_u" = transform_and_ls_obj$sig_mat_,
+        "w_mat" = transform_and_ls_obj$w_mat,
+        "wiser_fixed_effect_estimates" = wiser_fix_eff_df,
+        "wiser_abc_variance_component_estimates" = var_comp_abc_obj,
+        "wiser_phenotypes" = wiser_pheno_df,
+        "wiser_z_mat" = transform_and_ls_obj$z_mat,
+        "wiser_x_mat" = transform_and_ls_obj$x_mat,
+        "wiser_x_mat_tilde" = transform_and_ls_obj$x_mat_tilde,
+        "wiser_xi_hat" = transform_and_ls_obj$xi_hat,
+        "wiser_y_hat" = transform_and_ls_obj$y_hat,
+        "wiser_y" = transform_and_ls_obj$y
       ))
     },
     error = function(e) {

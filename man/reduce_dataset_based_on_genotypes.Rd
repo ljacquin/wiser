@@ -26,10 +26,10 @@
     Trait1 = rnorm(300),
     Trait2 = rnorm(300)
   )
-  
+
   # reduce the dataset size based on genotype counts
-  df_reduced <- reduce_dataset_based_on_genotypes(df, nrow_lim = 100, min_samples = 5)
-  
+  df_reduced <- reduce_dataset_based_on_genotypes(df, nrow_lim = 100, min_samples = 3)
+
   # print the reduced dataset
   print(df_reduced)
 }
