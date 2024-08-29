@@ -1,218 +1,114 @@
 compute_transformed_vars_and_ols_estimates <- function(
-    geno_df, raw_pheno_df, fixed_effects_vars, random_effects_vars, trait_,
-    compute_row_and_position_as_factors,
+    omic_df, raw_pheno_df, trait_,
+    fixed_effects_vars,
+    fixed_effects_vars_computed_as_factor,
+    site_var,
+    fixed_effects_vars_computed_as_factor_by_site,
+    random_effects_vars,
     sigma2_u, sigma2_e, kernel_type,
     whitening_method,
     regularization_method,
     alpha_frob_,
     percent_eig_,
     non_zero_precision_eig_,
-    parallelized_cholesky_,
+    parallelized_cholesky,
     reduce_raw_dataset_size_,
     nrow_lim_raw_dataset_zca_cor,
     nrow_lim_raw_dataset_pca_cor,
     nrow_lim_raw_dataset_chol) {
   tryCatch(
     {
-      # remove all rows with na w.r.t to trait_
-      raw_pheno_df <- raw_pheno_df %>% drop_na(all_of(trait_))
-
-      # define variables of interest
-      sel_vars_ <- c(fixed_effects_vars, random_effects_vars, trait_)
-
-      # get only variables of interest from raw_pheno_df
-      raw_pheno_df <- raw_pheno_df[, sel_vars_]
-      raw_pheno_df <- na.omit(raw_pheno_df)
-
-      # compute Gram matrix (i.e. genomic covariance matrix)
-      geno_names <- rownames(geno_df)
-      geno_df <- apply(geno_df, 2, as.numeric)
-
-      if (kernel_type == "linear") {
-        k_mat <- tcrossprod(scale(apply(geno_df, 2, as.numeric),
-          center = T, scale = F
-        ))
-      } else {
-        # kernel identity is not recommended due to constrained hypothesis about
-        # genotypes independence which may lead to low precision
-        k_mat <- as.matrix(diag(nrow(geno_df)))
-      }
-
-      # test positive definiteness and force it if necessary
-      if (!is.positive.definite(k_mat, tol = 1e-8)) {
-        k_mat <- as.matrix(nearPD(k_mat)$mat)
-      }
-
-      # assign genotype rownames and colnames to k_mat
-      colnames(k_mat) <- rownames(k_mat) <- geno_names
-
-      # get common geontype between raw_pheno_df and geno_df
-      raw_pheno_df <- match_indices(raw_pheno_df, k_mat)
+      # get raw phenotypes and omic data based on common genotypes
+      raw_data_obj <-
+        raw_pheno_and_marker_based_on_trait_common_genotypes(
+          raw_pheno_df,
+          omic_df,
+          trait_,
+          fixed_effects_vars,
+          random_effects_vars
+        )
+      raw_pheno_df <- raw_data_obj$raw_pheno_df
+      omic_df <- raw_data_obj$omic_df
 
       # should raw dataset size be reduced wrt to selected whitening method ?
       if (reduce_raw_dataset_size_) {
-        set.seed(123)
-        if (whitening_method == "ZCA-cor") {
-          raw_pheno_df <- as.data.frame(
-            reduce_dataset_based_on_genotypes(
-              df_ = raw_pheno_df,
-              nrow_lim = nrow_lim_raw_dataset_zca_cor
-            )
-          )
-        } else if (whitening_method == "PCA-cor") {
-          raw_pheno_df <- as.data.frame(
-            reduce_dataset_based_on_genotypes(
-              df_ = raw_pheno_df,
-              nrow_lim = nrow_lim_raw_dataset_pca_cor
-            )
-          )
-        } else {
-          raw_pheno_df <- as.data.frame(
-            reduce_dataset_based_on_genotypes(
-              df_ = raw_pheno_df,
-              nrow_lim = nrow_lim_raw_dataset_chol
-            )
-          )
-        }
+        raw_pheno_df <- reduce_dataset_based_on_selected_whitening(
+          whitening_method,
+          raw_pheno_df,
+          nrow_lim_raw_dataset_zca_cor,
+          nrow_lim_raw_dataset_pca_cor,
+          nrow_lim_raw_dataset_chol
+        )
       }
 
-      # convert fixed effects variables to factors, and remove
-      # buffer for management if exists
-      for (fix_eff_var_ in fixed_effects_vars) {
-        if ((fix_eff_var_ == "Row" || fix_eff_var_ == "Position") &&
-          !compute_row_and_position_as_factors) {
-        } else {
-          raw_pheno_df[, fix_eff_var_] <- as.factor(
-            raw_pheno_df[, fix_eff_var_]
-          )
-        }
-        if ("BUFFER" %in% raw_pheno_df[, fix_eff_var_]) {
-          raw_pheno_df <- raw_pheno_df[
-            raw_pheno_df[, fix_eff_var_] != "BUFFER",
-          ]
-        }
-      }
-      # droplevels in order to remove levels which don't exist anymore
-      raw_pheno_df <- droplevels(raw_pheno_df)
+      # computes fixed effect vars as factors for those declared as
+      raw_pheno_df <- compute_fixed_effect_vars_declared_as_factors(
+        raw_pheno_df,
+        fixed_effects_vars,
+        fixed_effects_vars_computed_as_factor,
+        site_var,
+        fixed_effects_vars_computed_as_factor_by_site
+      )
 
-      # get raw phenotypes associated to common genotypes
-      y <- raw_pheno_df[, trait_]
+      # get omic data associated to common genotypes
+      omic_df <- omic_df[rownames(omic_df) %in% unique(raw_pheno_df$Genotype), ]
+
+      # compute Gram matrix (e.g. genomic covariance matrix)
+      k_mat <- compute_gram_matrix(omic_df, kernel_type)
 
       # remove fixed effects with no variance or unique level for factors
       fixed_effects_vars <- find_columns_with_multiple_unique_values(
         raw_pheno_df[, fixed_effects_vars]
       )
-      # if country is no more in fixed effects then environment equals year as
-      # fixed effect, hence the latter must be removed due to perfect colinearity
-      if (!("Country" %in% fixed_effects_vars)) {
-        fixed_effects_vars <- setdiff(fixed_effects_vars, "Year")
-      }
 
       # get incidence matrices for fixed and random effects
       # NB. column of ones is added for intercept associated to fixed effects
-
-      # define list of incidence matrices for fixed effects
-      list_x_mat <- vector("list", length(fixed_effects_vars))
-      names(list_x_mat) <- fixed_effects_vars
-
-      # add incidence matrix for first fixed effect to list of matrices
-      fix_eff_var_ <- fixed_effects_vars[1]
-      list_x_mat[[fix_eff_var_]] <- model.matrix(
-        as.formula(paste0("~", fix_eff_var_)),
-        data = raw_pheno_df
+      incid_obj <- compute_incidence_matrices_fixed_and_random_effects(
+        fixed_effects_vars,
+        fixed_effects_vars_computed_as_factor,
+        random_effects_vars,
+        raw_pheno_df
       )
-      colnames(list_x_mat[[fix_eff_var_]]) <- str_replace_all(
-        colnames(list_x_mat[[fix_eff_var_]]),
-        pattern = fix_eff_var_, replacement = paste0(fix_eff_var_, "_")
-      )
-
-      # add incidence matrices (without intercept) for other fixed effects to list
-      for (fix_eff_var_ in fixed_effects_vars[-1]) {
-        if ((fix_eff_var_ == "Row" || fix_eff_var_ == "Position") &&
-          !compute_row_and_position_as_factors) {
-          list_x_mat[[fix_eff_var_]] <- raw_pheno_df[, fix_eff_var_]
-          names(list_x_mat[[fix_eff_var_]]) <- fix_eff_var_
-        } else {
-          list_x_mat[[fix_eff_var_]] <- model.matrix(
-            as.formula(paste0("~", fix_eff_var_, " - 1")),
-            data = raw_pheno_df
-          )
-          colnames(list_x_mat[[fix_eff_var_]]) <- str_replace_all(
-            colnames(list_x_mat[[fix_eff_var_]]),
-            pattern = fix_eff_var_, replacement = paste0(fix_eff_var_, "_")
-          )
-        }
-      }
-      x_mat <- do.call(cbind, list_x_mat)
-      x_mat <- apply(x_mat, 2, as.numeric)
-
-      # define list of incidence matrices for random effects
-      list_z_mat <- vector("list", length(random_effects_vars))
-      names(list_z_mat) <- random_effects_vars
-
-      # add incidence matrices for random effects to list
-      for (rand_eff_var in random_effects_vars) {
-        list_z_mat[[rand_eff_var]] <- model.matrix(
-          as.formula(paste0("~", rand_eff_var, " - 1")),
-          data = raw_pheno_df
-        )
-        colnames(list_z_mat[[rand_eff_var]]) <- str_replace_all(
-          colnames(list_z_mat[[rand_eff_var]]),
-          pattern = rand_eff_var, replacement = paste0(rand_eff_var, "_")
-        )
-      }
-      z_mat <- do.call(cbind, list_z_mat)
-      z_mat <- apply(z_mat, 2, as.numeric)
+      x_mat <- incid_obj$x_mat
+      z_mat <- incid_obj$z_mat
 
       # compute Σu, i.e. sig_mat_ here
       sig_mat_ <- sigma2_u * crossprod(t(z_mat), tcrossprod(k_mat, z_mat))
 
-      # regularize covariance matrix, by adding a strictly positive value to the
-      # diagonal of Σ, to ensure its positive definiteness
-      if (regularization_method == "mean_small_eigenvalues") {
-        sig_mat_ <- regularize_covariance_mean_small_eigenvalues(
-          sig_mat_, k_mat, sigma2_u, percent_eig_, non_zero_precision_eig_
-        )
-      } else if (regularization_method == "mean_eigenvalues") {
-        sig_mat_ <- regularize_covariance_mean_eigenvalues(
-          sig_mat_
-        )
-      } else if (regularization_method == "frobenius_norm") {
-        sig_mat_ <- regularize_covariance_frobenius_norm(
-          sig_mat_, alpha_frob_
-        )
-      }
+      # compute the whitening matrix for Σu based on the selected
+      # whitening method
+      w_mat <- compute_whitening_matrix_for_sig_mat_(
+        whitening_method,
+        regularization_method,
+        parallelized_cholesky,
+        sig_mat_, k_mat, sigma2_u,
+        percent_eig_,
+        non_zero_precision_eig_,
+        alpha_frob_
+      )
 
-      # compute whitening matrix, either from ZCA-cor or cholesky
-      # decomposition (i.e. Σ = LL' )
-      if (whitening_method == "ZCA-cor") {
-        # compute w_mat from ZCA-cor
-        w_mat <- whiteningMatrix(sig_mat_, method = "ZCA-cor")
-      } else if (whitening_method == "PCA-cor") {
-        # compute w_mat from ZCA-cor
-        w_mat <- whiteningMatrix(sig_mat_, method = "PCA-cor")
-      } else {
-        # compute w_mat = L^−1 from Cholesky decomposition
-        if (parallelized_cholesky_) {
-          L <- t(cholesky(sig_mat_, parallel = T))
-        } else {
-          L <- t(cholesky(sig_mat_, parallel = F))
-        }
-        w_mat <- forwardsolve(L, diag(nrow(L)))
-      }
-
+      # whiten x_mat using w_mat
       # NB. intercept is already present in x_mat and x_mat_tilde
       x_mat_tilde <- w_mat %*% x_mat
 
+      # get raw phenotypes associated to common genotypes
+      y <- raw_pheno_df[, trait_]
+
       # get ols estimates for fixed effects and xi
       beta_hat <- ginv(t(x_mat_tilde) %*% x_mat_tilde) %*% t(x_mat_tilde) %*% y
-      xi_hat <- y - x_mat_tilde %*% beta_hat
+      y_hat <- x_mat_tilde %*% beta_hat
+      xi_hat <- y - y_hat
 
       return(list(
+        "omic_df" = omic_df,
+        "sig_mat_u" = sig_mat_,
+        "w_mat" = w_mat,
         "x_mat" = x_mat,
+        "x_mat_tilde" = x_mat_tilde,
         "z_mat" = z_mat,
         "k_mat" = k_mat,
         "beta_hat" = beta_hat,
+        "y_hat" = y_hat,
         "xi_hat" = xi_hat,
         "y" = y
       ))

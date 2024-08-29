@@ -1,9 +1,15 @@
 optimize_whitening_and_regularization <- function(
-    geno_df, raw_pheno_df, trait_,
+    omic_df, raw_pheno_df, trait_,
     fixed_effects_vars = c(
       "Envir", "Country", "Year",
       "Row", "Position", "Management"
     ),
+    fixed_effects_vars_computed_as_factor = c(
+      "Envir", "Country", "Year",
+      "Row", "Position", "Management"
+    ),
+    site_var = "Country",
+    fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
     random_effects_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
     whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
@@ -11,10 +17,14 @@ optimize_whitening_and_regularization <- function(
     alpha_frob_grid = c(0.01, 0.1),
     reduce_raw_dataset_size_ = T,
     nrow_lim_raw_dataset_ = 5e3,
-    parallelized_cholesky_ = T,
+    parallelized_cholesky = T,
     k_folds_ = 5) {
   # remove all rows with na w.r.t to trait_
   raw_pheno_df <- raw_pheno_df %>% drop_na(all_of(trait_))
+
+  # get raw phenotypes and marker data based on common genotypes
+  raw_pheno_df <- match_indices(raw_pheno_df, omic_df)
+  omic_df <- omic_df[rownames(omic_df) %in% raw_pheno_df$Genotype, ]
 
   # define variables of interest
   sel_vars_ <- c(fixed_effects_vars, random_effects_vars, trait_)
@@ -42,19 +52,59 @@ optimize_whitening_and_regularization <- function(
     pred_method = prediction_method
   )
 
+  # pre-compute unique wiser object for unique combinations
+  wiser_cache <- list()
+  unique_combinations <- unique(grid_[, c("whitening_method", "alpha_frob")])
+
+  for (j in 1:nrow(unique_combinations)) {
+    method <- unique_combinations$whitening_method[j]
+    alpha <- unique_combinations$alpha_frob[j]
+
+    wiser_obj <- estimate_wiser_phenotype(
+      omic_df, raw_pheno_df, trait_,
+      fixed_effects_vars,
+      fixed_effects_vars_computed_as_factor,
+      site_var,
+      fixed_effects_vars_computed_as_factor_by_site,
+      random_effects_vars,
+      whitening_method = method,
+      regularization_method = regularization_method_,
+      alpha_frob_ = alpha,
+      reduce_raw_dataset_size_ = FALSE
+    )
+
+    cache_key <- paste(method, alpha, sep = "_")
+    wiser_cache[[cache_key]] <- wiser_obj
+  }
+
   # configure parallelization
   plan(multisession, workers = parallel::detectCores())
 
-  df_results <- future_lapply(1:nrow(grid_),
-    future.seed = F,
+  df_results <- future_lapply(
+    1:nrow(grid_),
+    future.seed = T,
     function(i) {
-      mean_pa <- perform_kfold_cv_wiser(
-        geno_df, raw_pheno_df, trait_,
-        whitening_method = grid_$whitening_method[i],
-        reg_method = regularization_method_,
-        alpha_frob = grid_$alpha_frob[i],
-        pred_method = grid_$pred_method[i],
-        k_folds = k_folds_
+      mean_pa <- tryCatch(
+        {
+          perform_kfold_cv_wiser(
+            omic_df, raw_pheno_df, trait_,
+            fixed_effects_vars,
+            fixed_effects_vars_computed_as_factor,
+            site_var,
+            fixed_effects_vars_computed_as_factor_by_site,
+            random_effects_vars,
+            whitening_method = grid_$whitening_method[i],
+            reg_method = regularization_method_,
+            alpha_frob = grid_$alpha_frob[i],
+            pred_method = grid_$pred_method[i],
+            k_folds = k_folds_,
+            wiser_cache = wiser_cache
+          )
+        },
+        error = function(e) {
+          cat("Error during iteration", i, ":", e$message, "\n")
+          return(NA)
+        }
       )
       data.frame(
         "whitening_method" = grid_$whitening_method[i],
@@ -73,7 +123,7 @@ optimize_whitening_and_regularization <- function(
 
   # get optimal whitening method based on mean pa for each prediction method
   df_opt_ <- data.frame()
-  for (method_ in prediction_method) {
+  for (method_ in df_results$prediction_method) {
     df_res_method_ <- df_results[
       df_results$prediction_method == method_,
     ]

@@ -35,7 +35,7 @@ where :
 In this setting, the vector $\overset{\wedge}{\xi}$ is estimated as follows:
 
 $$
-\hat{\xi} = Y - \tilde{X}\hat{\beta} = WX\hat{\beta} \ \ \ \
+\hat{\xi} = Y - \tilde{X}\hat{\beta} = Y - WX\hat{\beta} \ \ \ \
 $$ 
 
 where :
@@ -44,14 +44,13 @@ where :
 
 * $\tilde{X} (= WX)$ is the transformed (whitened) design matrix that links the estimated fixed effects, adjusted for genetic covariance in the experimental design, to the individual phenotypic measurements.
 
-* $\hat{\beta} = (\hat{\beta}_1, \hat{\beta}_2, \ldots ,\hat{\beta}_l)' = (\tilde{X}'\tilde{X})^{-1}\tilde{X}'Y$ is the vector of $l$ estimated fixed effects, adjusted for genetic covariance between individuals in the experimental design.
+* $\hat{\beta} = (\hat{\beta}_1, \hat{\beta}_2, \ldots ,\hat{\beta}_l)' = \underset{\beta \in \mathbb{R}^l}{argmin} || Y - \tilde{X}\beta||^2_2 = (\tilde{X}'\tilde{X})^{-1}\tilde{X}'Y$ is the vector of $l$ estimated fixed effects, adjusted for genetic covariance between individuals in the experimental design.
 
-* $W$ is an $n$ x $n$ whitening matrix, built using SNP marker data, which eliminates the genetic covariance structure between individuals during the fixed effects estimation process.
+* $W$ is an $n$ x $n$ whitening matrix built using omic data (e.g. SNP markers, metabolites, or wavelength reflectances), which eliminates the genetic covariance structure between individuals during the fixed effects estimation process.
 
 * $X$ is the original design matrix that links fixed effects to the individual phenotypic measurements in the experimental design.
 
-
-In the ```wiser``` framework, the whitening matrix $W$ can be constructed using three different procedures: zero-phase component correlation analysis (```ZCA-cor```), principal component correlation analysis (```PCA-cor```) and cholesky (```Cholesky```). Let $\Sigma_u = \sigma^2_uZKZ'$ represent the genetic covariance matrix for the vector $U = Zu = (U_1,U_2, \ldots, U_n)$, which corresponds to the vector of individual genetic effects in the experimental design. It is assumed that $u \sim \mathcal{N_q}(0,\sigma^2_uK)$, where $K$ is the genetic covariance matrix between genotypes estimated from SNP marker data. Define $R_u = V^{-\frac{1}{2}} \Sigma_u V^{-\frac{1}{2}}$ as the correlation matrix associated with $\Sigma_u$, where $V=diag(\Sigma_u)$ is a diagonal matrix containing the variances $\bigl (\sigma^2_{U_i} \bigr )_{1 \leq i \leq n}$ on its diagonal. Since $\Sigma_u$ and $R_u$ are symmetric and positive semi-definite, they have the following spectral decompositions: $\Sigma_u = U \Lambda U'$ and $R_u = G \Theta G'$, where $U$ and $G$ are orthogonal eigenvectors matrices for $\Sigma_u$ and $R_u$, respectively (i.e. $UU'=U'U=I_n$ and $GG'=G'G=I_n$), while $\Lambda$ and $\Theta$ are diagonal matrices of positive eigenvalues for $\Sigma_u$ and $R_u$, respectively. The inverse square root matrices of $\Sigma_u$ and $R_u$ are given by $\Sigma_u^{-\frac{1}{2}} = U \Lambda^{-\frac{1}{2}} U'$ and $R_u^{-\frac{1}{2}} = G \Theta^{-\frac{1}{2}} G'$. These satisfy $\Sigma_u^{-1}=\Sigma_u^{-\frac{1}{2}}\Sigma_u^{-\frac{1}{2}}$ and  $R_u^{-1} = R_u^{-\frac{1}{2}}R_u^{-\frac{1}{2}}$). According to Kessy $\textit{et al.}$ (2015), the whitening matrices associated to  ```ZCA-cor```, ```PCA-cor``` and ```Cholesky``` are given by :
+In the ```wiser``` framework, the whitening matrix $W$ can be constructed using three different procedures: zero-phase component correlation analysis (```ZCA-cor```), principal component correlation analysis (```PCA-cor```) and cholesky (```Cholesky```). Let $\Sigma_u = \sigma^2_uZKZ'$ represent the genetic covariance matrix for the vector $U = Zu = (U_1,U_2, \ldots, U_n)$, which corresponds to the vector of individual genetic effects in the experimental design. It is assumed that $u \sim \mathcal{N}_q(0,\sigma^2_uK)$, where $K$ is the genetic covariance matrix between genotypes estimated from omic data. Define $R_u = V^{-\frac{1}{2}} \Sigma_u V^{-\frac{1}{2}}$ as the correlation matrix associated with $\Sigma_u$, where $V=diag(\Sigma_u)$ is a diagonal matrix containing the variances $\bigl (\sigma^2_{U_i} \bigr )_{1 \leq i \leq n}$ on its diagonal. Since $\Sigma_u$ and $R_u$ are symmetric and positive semi-definite, they have the following spectral decompositions: $\Sigma_u = U \Lambda U'$ and $R_u = G \Theta G'$, where $U$ and $G$ are orthogonal eigenvectors matrices for $\Sigma_u$ and $R_u$, respectively (i.e. $UU'=U'U=I_n$ and $GG'=G'G=I_n$), while $\Lambda$ and $\Theta$ are diagonal matrices of positive eigenvalues for $\Sigma_u$ and $R_u$, respectively. The inverse square root matrices of $\Sigma_u$ and $R_u$ are given by $\Sigma_u^{-\frac{1}{2}} = U \Lambda^{-\frac{1}{2}} U'$ and $R_u^{-\frac{1}{2}} = G \Theta^{-\frac{1}{2}} G'$. These satisfy $\Sigma_u^{-1}=\Sigma_u^{-\frac{1}{2}}\Sigma_u^{-\frac{1}{2}}$ and  $R_u^{-1} = R_u^{-\frac{1}{2}}R_u^{-\frac{1}{2}}$). According to Kessy $\textit{et al.}$ (2015), the whitening matrices associated to  ```ZCA-cor```, ```PCA-cor``` and ```Cholesky``` are given by :
 
 $$
 \begin{cases}
@@ -67,7 +66,7 @@ In ```wiser```, two kernel functions are also provided to build $K$: ```linear``
 
 #### Remarks :
 
-The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust for genetic covariance among individuals when estimating fixed effects, is comprehensively addressed in Jacquin $\textit{et al.}$ (2024). In contrast, the chosen approach of successive ordinary least squares (OLS) in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental. For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$. Furthermore, and crucially, the successive OLS procedure ensures that the estimated residuals or $v$ are not linked to the SNP marker data as shown in Jacquin $\textit{et al.}$ (2024).
+The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust for genetic covariance among individuals when estimating fixed effects, is comprehensively addressed in Jacquin $\textit{et al.}$ (2024). In contrast, the chosen approach of successive ordinary least squares (OLS) in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental. For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$. Furthermore, and crucially, the successive OLS procedure ensures that the estimated residuals or $v$ are not linked to the omic data as shown in Jacquin $\textit{et al.}$ (2024).
 
 ## Installation
 
@@ -81,24 +80,24 @@ install_github("ljacquin/wiser")
 
 ## Key Features
 
-    - Whitening Methods: Applying ZCA-cor, PCA-cor or Cholesky whitening to adjust for genetic covariance.
-    - Fixed and Random Effects Modeling: Computing transformed (whitened) fixed effects variables and obtaining OLS estimates for their associated parameters, which are adjusted for genetic covariance in the experimental design.
-    - Optimize Whitening and Regularization: Optimizing the choice of the whitening method, and the Frobenius norm associated regularization parameter, through k-folds cross-validation.
-    - Genetic Covariance Matrix Regularization: Regularizing the genetic covariance matrix to ensure its positive definiteness and numerical stability.
-    - Variance Component Estimation: Estimating variance components using ABC.
-    - Phenotype Simulation: Simulating phenotypic data based on fixed and random effects.
-    - Distance Computation: Calculating the squared L2 norm distance between observed and simulated phenotypic values.
+    ▸ Phenotype Estimation: Estimate phenotypic values that closely approximate genetic values by leveraging advanced whitening techniques. This approach enhances the modeling of both genetic and environmental effects, as well as their interactions, leading to more precise and reliable phenotype estimation for each genotype.
+    ▸ Whitening Methods: Implement advanced techniques like ZCA-cor, PCA-cor, and Cholesky whitening to adjust for genetic covariance in fixed effects estimation. This process effectively accounts for genetic relationships between individuals in the experimental design.
+    ▸ Fixed and Random Effects Modeling: Transform fixed effects variables using whitening techniques and obtain OLS fixed effect estimates, which fully accounting for genetic covariance in the experimental design.    
+    ▸ Optimal Whitening and Regularization: Automatically select the best whitening method and regularization parameter using k-fold cross-validation for precise phenotype estimation.
+    ▸ Genetic Covariance Matrix Regularization: Stabilize genetic covariance matrices through innovative regularization methods, ensuring they remain positive definite.
+    ▸ Efficient Variance Component Estimation: Use Approximate Bayesian Computation (ABC) to accurately estimate variance components in complex experimental designs.
+    ▸ Phenotype Simulation and Distance Metrics: Simulate phenotypic data based on estimated model parameters and compute distances like the squared L2 norm to compare observed and simulated outcomes.
 
 ## Main Functions
 
-    - estimate_wiser_phenotype: Estimates phenotypic values approximating genetic values using whitening methods.
-    - compute_transformed_vars_and_ols_estimates: Computes transformed (whitened) fixed effects variables and obtains OLS estimates for their associated parameters.
-    - optimize_whitening_and_regularization: Optimizes the selection of the whitening method and regularization parameter for phenotype estimation, using grid search over specified combinations of whitening methods, regularization parameters, and prediction methods, using k-fold cross-validation.
-    - regularize_covariance_mean_small_eigenvalues: Regularizes a covariance matrix by using the mean of the smallest eigenvalues, up to a specified percentage of the total number of eigenvalues, to ensure positive definiteness.
-    - regularize_covariance_mean_eigenvalues: Regularizes a covariance matrix using the mean of its eigenvalues to ensure positive definiteness.
-    - regularize_covariance_frobenius_norm: Regularizes a covariance matrix based on Frobenius norm and an associated regularization parameter to ensure positive definiteness.
-    - abc_variance_component_estimation: Computes variance components using ABC.
-    - simulate_and_compute_squared_l2_norm: Simulates phenotypic values and computes the squared L2 norm distance between simulated and observed values.
+    ▸ estimate_wiser_phenotype: Estimates phenotypic values approximating genetic values using whitening methods.
+    ▸ optimize_whitening_and_regularization: Finds the optimal combination of whitening method and regularization parameter through cross-validation for phenotype prediction.
+    ▸ compute_transformed_vars_and_ols_estimates: Computes transformed (whitened) fixed effects variables and obtains OLS estimates for their associated parameters.
+    ▸ regularize_covariance_frobenius_norm: Regularizes a covariance matrix based on Frobenius norm and an associated regularization parameter to ensure positive definiteness.
+    ▸ regularize_covariance_mean_small_eigenvalues: Regularizes a covariance matrix by using the mean of the smallest eigenvalues, up to a specified percentage of the total number of eigenvalues, to ensure positive definiteness.
+    ▸ regularize_covariance_mean_eigenvalues: Regularizes a covariance matrix using the mean of its eigenvalues to ensure positive definiteness.
+    ▸ abc_variance_component_estimation: Implements ABC to estimate variance components, critical for genetic analysis.
+    ▸ simulate_and_compute_squared_l2_norm: Simulates phenotypic data and evaluates the fit by computing the squared L2 norm distance between observed and simulated values.
 
 ## Example
 
@@ -107,7 +106,8 @@ install_github("ljacquin/wiser")
 Here's a simple example illustrating the use of the ```estimate_wiser_phenotype``` function to estimate phenotypes :
 
 ```R
-# -- load wiser library and data subsets from the refpop dataset
+# ✅ load wiser library and data subsets from the refpop dataset
+
 # load library 
 library(wiser)
 
@@ -119,43 +119,52 @@ head(refpop_raw_indiv_pheno_data_subset)
 data("refpop_geno_data_subset")
 head(refpop_geno_data_subset)[,1:10]
 
-# -- estimate wiser phenotype for a specified trait,i.e. Flowering_begin here
+# ✅ estimate wiser phenotype for a specified trait,i.e. Flowering_begin here
+
 # define trait
 trait_ <- "Flowering_begin"
 
 # get optimal whitening method and regularization parameter using k-folds CV
 opt_white_reg_par <- optimize_whitening_and_regularization(
-  geno_df = refpop_geno_data_subset,
+  omic_df = refpop_geno_data_subset,
   raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-  trait_,
+  trait_ = trait_,
   whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
   alpha_frob_grid = c(0.01, 0.1)
 )
-opt_white_reg_par
+print(opt_white_reg_par)
 
 # apply wiser estimation function using optimized whitening method and regularization parameter
-pheno_obj <- estimate_wiser_phenotype(geno_df, raw_pheno_df, trait_,
-  fixed_effects_vars = c(
-    "Envir", "Country", "Year",
-    "Row", "Position", "Management"
-  ),
-  compute_row_and_position_as_factors = T,
+wiser_obj <- estimate_wiser_phenotype(
+  omic_df = refpop_geno_data_subset,
+  raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
+  trait_ = trait_,
+  fixed_effects_vars = c("Envir", "Country", "Year",
+                         "Row", "Position", "Management"),
+  fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year",
+                                             "Row", "Position", "Management"),
+  site_var = "Country",
+  fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
   random_effects_vars = "Genotype",
+  kernel_type = "linear",
   whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
   alpha_frob_ = opt_white_reg_par$opt_alpha_frob
-)
+ )
+# 📌 whitening_method = "ZCA-cor" and alpha_frob_ = 0.01 gives good results generally, hence using 
+# optimize_whitening_and_regularization() is not always necessary, specially for huge datasets
 
-# -- plot the density for the estimated phenotypes
+# ✅ plot and print wiser objects
+
+# plot the density for the estimated phenotypes
 dev.new()
-plot(density(pheno_obj$v_hat), main = paste0(trait_, " v_hat"))
+plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
 
-# -- get the estimated fixed effects, from the whitening process and OLS and variance components from ABC
-
+# get the estimated fixed effects from the whitening process and OLS, and variance components from ABC
 # estimated fixed effects (from whitening and OLS)
-print(pheno_obj$beta_hat)
+print(wiser_obj$wiser_fixed_effect_estimates)
 
 # estimated variance components (from ABC)
-print(pheno_obj$var_comp_abc_obj)
+print(wiser_obj$wiser_abc_variance_component_estimates)
 
 ```
 
