@@ -1,5 +1,4 @@
 [<img src="img/wiser.png"/>]()
-
 # WISER: WhItening and successive least Squares Estimation Refinement for phenotype estimation
 
 ##### Licence, status and metrics
