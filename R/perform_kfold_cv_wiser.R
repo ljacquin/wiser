@@ -35,6 +35,7 @@ perform_kfold_cv_wiser <- function(omic_df, raw_pheno_df, trait_,
 
   # set seed for reproducibility and get set of indices
   set.seed(123)
+  options(future.globals.maxSize = 6 * 1024^3)
   idx <- 1:nrow(omic_df)
 
   # create folds for k-folds cv

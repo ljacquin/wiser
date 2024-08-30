@@ -55,6 +55,7 @@ optimize_whitening_and_regularization <- function(
   # pre-compute unique wiser object for unique combinations
   wiser_cache <- list()
   unique_combinations <- unique(grid_[, c("whitening_method", "alpha_frob")])
+  options(future.globals.maxSize = 6 * 1024^3)
 
   for (j in 1:nrow(unique_combinations)) {
     method <- unique_combinations$whitening_method[j]
