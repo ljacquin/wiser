@@ -15,7 +15,7 @@
                          pred_method, k_folds, wiser_cache)
 }
 \arguments{
-  \item{omic_df}{A data frame containing the omic data (e.g., genomic data), where rows represent genotypes and columns represent markers.}
+  \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data with observations across different environments and conditions.}
   \item{trait_}{A character string specifying the trait of interest to be analyzed.}
   \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be included in the model.}

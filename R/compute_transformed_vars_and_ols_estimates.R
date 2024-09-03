@@ -57,9 +57,12 @@ compute_transformed_vars_and_ols_estimates <- function(
       k_mat <- compute_gram_matrix(omic_df, kernel_type)
 
       # remove fixed effects with no variance or unique level for factors
-      fixed_effects_vars <- find_columns_with_multiple_unique_values(
-        raw_pheno_df[, fixed_effects_vars]
-      )
+      if (!is.null(ncol(raw_pheno_df[, fixed_effects_vars])) &&
+        ncol(raw_pheno_df[, fixed_effects_vars]) > 1) {
+        fixed_effects_vars <- find_columns_with_multiple_unique_values(
+          raw_pheno_df[, fixed_effects_vars]
+        )
+      }
 
       # get incidence matrices for fixed and random effects
       # NB. column of ones is added for intercept associated to fixed effects
@@ -77,7 +80,7 @@ compute_transformed_vars_and_ols_estimates <- function(
 
       # compute the whitening matrix for Σu based on the selected
       # whitening method
-      w_mat <- compute_whitening_matrix_for_sig_mat_(
+      white_obj <- compute_whitening_matrix_for_sig_mat_(
         whitening_method,
         regularization_method,
         parallelized_cholesky,
@@ -86,6 +89,8 @@ compute_transformed_vars_and_ols_estimates <- function(
         non_zero_precision_eig_,
         alpha_frob_
       )
+      w_mat <- white_obj$w_mat
+      sig_mat_ <- white_obj$sig_mat_
 
       # whiten x_mat using w_mat
       # NB. intercept is already present in x_mat and x_mat_tilde

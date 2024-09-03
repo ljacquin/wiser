@@ -24,8 +24,8 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
                                      non_zero_precision_eig_ = 1e-5,
                                      parallelized_cholesky = T,
                                      reduce_raw_dataset_size_ = T,
-                                     nrow_lim_raw_dataset_zca_cor = 10e3,
-                                     nrow_lim_raw_dataset_pca_cor = 10e3,
+                                     nrow_lim_raw_dataset_zca_cor = 20e3,
+                                     nrow_lim_raw_dataset_pca_cor = 20e3,
                                      nrow_lim_raw_dataset_chol = 40e3) {
   tryCatch(
     {

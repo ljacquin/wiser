@@ -23,7 +23,7 @@
   )
 }
 \arguments{
-  \item{omic_df}{A data frame containing omic data, with genotypes as rows and markers as columns.}
+  \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{raw_pheno_df}{A data frame containing raw phenotypic data with observations across different environments and conditions.}
   \item{trait_}{A character string specifying the target trait to be analyzed and optimized.}
   \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be included in the model. Default is \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}

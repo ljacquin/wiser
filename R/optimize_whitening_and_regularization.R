@@ -55,7 +55,6 @@ optimize_whitening_and_regularization <- function(
   # pre-compute unique wiser object for unique combinations
   wiser_cache <- list()
   unique_combinations <- unique(grid_[, c("whitening_method", "alpha_frob")])
-  options(future.globals.maxSize = 6 * 1024^3)
 
   for (j in 1:nrow(unique_combinations)) {
     method <- unique_combinations$whitening_method[j]
@@ -148,6 +147,11 @@ optimize_whitening_and_regularization <- function(
   plan(sequential)
 
   return(list(
+    "opt_wiser_obj" = wiser_cache[[
+      paste0(
+        opt_whitening_method, "_", opt_alpha_frob
+      )
+    ]],
     "opt_results" = df_opt_,
     "opt_alpha_frob" = opt_alpha_frob,
     "opt_whitening_method" = opt_whitening_method

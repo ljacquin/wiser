@@ -124,7 +124,10 @@ head(refpop_geno_data_subset)[,1:10]
 # define trait
 trait_ <- "Flowering_begin"
 
-# get optimal whitening method and regularization parameter using k-folds CV
+# increase memory size for future and get optimal whitening method and 
+# regularization parameter using k-folds CV
+options(future.globals.maxSize = 6 * 1024^3)
+
 opt_white_reg_par <- optimize_whitening_and_regularization(
   omic_df = refpop_geno_data_subset,
   raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
@@ -133,6 +136,9 @@ opt_white_reg_par <- optimize_whitening_and_regularization(
   alpha_frob_grid = c(0.01, 0.1)
 )
 print(opt_white_reg_par)
+# 📌 whitening_method = "ZCA-cor" and alpha_frob_ = 0.01 gives good results generally for 
+# estimate_wiser_phenotype(), hence using optimize_whitening_and_regularization() is not 
+# always necessary, specially for huge datasets
 
 # apply wiser estimation function using optimized whitening method and regularization parameter
 wiser_obj <- estimate_wiser_phenotype(
@@ -150,8 +156,6 @@ wiser_obj <- estimate_wiser_phenotype(
   whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
   alpha_frob_ = opt_white_reg_par$opt_alpha_frob
  )
-# 📌 whitening_method = "ZCA-cor" and alpha_frob_ = 0.01 gives good results generally, hence using 
-# optimize_whitening_and_regularization() is not always necessary, specially for huge datasets
 
 # ✅ plot and print wiser objects
 
@@ -165,6 +169,10 @@ print(wiser_obj$wiser_fixed_effect_estimates)
 
 # estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
+
+# ✅ print fundamental property of whitening, i.e. In = W*Σu*W'
+id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
+print(id_mat[1:10,1:10])
 
 ```
 

@@ -29,7 +29,8 @@
   \item{alpha_frob_}{A numeric value specifying the Frobenius norm regularization parameter. Used in \code{frobenius_norm} regularization.}
 }
 \value{
-  A numeric matrix representing the whitening matrix for \code{sig_mat_} based on the selected whitening method.
+  \item{sig_mat_}{ The numeric covariance matrix used to compute the whitening matrix \code{w_mat}.}
+  \item{w_mat}{ A numeric matrix representing the whitening matrix, based on the selected whitening method, associated to \code{sig_mat_}.}
 }
 \details{
   The function performs the following steps:

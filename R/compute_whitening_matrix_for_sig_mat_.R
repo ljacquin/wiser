@@ -37,5 +37,8 @@ compute_whitening_matrix_for_sig_mat_ <- function(whitening_method,
     }
     w_mat <- forwardsolve(L, diag(nrow(L)))
   }
-  return(w_mat)
+  return(list(
+    "sig_mat_" = sig_mat_,
+    "w_mat" = w_mat
+  ))
 }
