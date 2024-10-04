@@ -15,7 +15,7 @@
 }
 \arguments{
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data. Each row should represent an observation with multiple columns, including the trait of interest.}
-  \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, metabolites, or wavelength reflectances as columns).}
+  \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{trait_}{A character string specifying the trait of interest to filter the phenotypic data.}
   \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be retained in the filtered phenotypic data.}
   \item{random_effects_vars}{A character vector listing the random effects variables to be retained in the filtered phenotypic data.}

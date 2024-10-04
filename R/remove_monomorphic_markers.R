@@ -15,17 +15,17 @@ remove_monomorphic_markers <- function(geno_df) {
   monomorphic_marker_names <- colnames(geno_df_)[
     monomorphic_markers
   ]
-  
+
   if (length(monomorphic_markers) > 0) {
     # filter the monomorphic markers
     geno_df_filtered <- geno_df_[, !monomorphic_markers]
-    
+
     if ("Genotype" %in% colnames(geno_df)) {
       # add genotype column
       geno_df_filtered <- cbind(geno_df$Genotype, geno_df_filtered)
       colnames(geno_df_filtered)[1] <- "Genotype"
     }
-    
+
     # return the filtered data frame and the list of monomorphic markers
     return(list(
       "filtered_df" = geno_df_filtered,

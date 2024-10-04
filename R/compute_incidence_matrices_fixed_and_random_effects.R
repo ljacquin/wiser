@@ -1,3 +1,6 @@
+# function which computes incidence matrices for fixed and random effects
+# NB. column of ones is added for intercept, and is associated to first
+# fixed effect (which must be factor or numeric) during construction
 compute_incidence_matrices_fixed_and_random_effects <- function(
     fixed_effects_vars,
     fixed_effects_vars_computed_as_factor,
@@ -54,6 +57,9 @@ compute_incidence_matrices_fixed_and_random_effects <- function(
   
   # add incidence matrices for random effects to list
   for (rand_eff_var in random_effects_vars) {
+    # make sure effect is indeed a factor
+    raw_pheno_df[, rand_eff_var] <- as.factor(raw_pheno_df[, rand_eff_var])
+    # build incidence matrix for random effect rand_eff_var
     list_z_mat[[rand_eff_var]] <- model.matrix(
       as.formula(paste0("~", rand_eff_var, " - 1")),
       data = raw_pheno_df

@@ -385,8 +385,8 @@ estimations.</p>
 vector <span class="math inline">\(v = (v_1, v_2, \ldots,
 v_q)&#39;\)</span> of <span class="math inline">\(q\)</span> phenotypes,
 which approximates a vector <span class="math inline">\(u = (u_1, u_2,
-\ldots, u_q)&#39;\)</span> of genetic values for <span class="math inline">\(q\)</span> genotypes, is carried out as follows
-:</p>
+\ldots, u_q)&#39;\)</span> of genetic values for <span class="math inline">\(q\)</span> genotypes, is carried out using
+ordinary least squares (OLS) as follows :</p>
 <p><span class="math display">\[
 \hat{v} = \underset{v \in \mathbb{R}^q}{argmin} || \hat{\xi} - Zv||^2_2
 = (Z&#39;Z)^{-1}Z&#39;\hat{\xi} \ \ \ \
@@ -419,11 +419,10 @@ transformed (whitened) design matrix that links the estimated fixed
 effects, adjusted for genetic covariance in the experimental design, to
 the individual phenotypic measurements.</p></li>
 <li><p><span class="math inline">\(\hat{\beta} = (\hat{\beta}_1,
-\hat{\beta}_2, \ldots ,\hat{\beta}_l)&#39; = \underset{\beta \in
-\mathbb{R}^l}{argmin} || Y - \tilde{X}\beta||^2_2 =
-(\tilde{X}&#39;\tilde{X})^{-1}\tilde{X}&#39;Y\)</span> is the vector of
-<span class="math inline">\(l\)</span> estimated fixed effects, adjusted
-for genetic covariance between individuals in the experimental
+\hat{\beta}_2, \ldots ,\hat{\beta}_l)&#39;=
+(\tilde{X}&#39;\tilde{X})^{-1}\tilde{X}&#39;Y\)</span> is the OLS vector
+of <span class="math inline">\(l\)</span> estimated fixed effects,
+adjusted for genetic covariance between individuals in the experimental
 design.</p></li>
 <li><p><span class="math inline">\(W\)</span> is an <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> whitening matrix built using omic data
 (e.g. SNP markers, metabolites, or wavelength reflectances), which
@@ -444,9 +443,9 @@ experimental design. It is assumed that <span class="math inline">\(u
 between genotypes estimated from omic data. Define <span class="math inline">\(R_u = V^{-\frac{1}{2}} \Sigma_u
 V^{-\frac{1}{2}}\)</span> as the correlation matrix associated with
 <span class="math inline">\(\Sigma_u\)</span>, where <span class="math inline">\(V=diag(\Sigma_u)\)</span> is a diagonal matrix
-containing the variances <span class="math inline">\(\bigl
-(\sigma^2_{U_i} \bigr )_{1 \leq i \leq n}\)</span> on its diagonal.
-Since <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span> are symmetric and positive
+with the variances of <span class="math inline">\(\Sigma_u\)</span> on
+its diagonal. Since <span class="math inline">\(\Sigma_u\)</span> and
+<span class="math inline">\(R_u\)</span> are symmetric and positive
 semi-definite, they have the following spectral decompositions: <span class="math inline">\(\Sigma_u = U \Lambda U&#39;\)</span> and <span class="math inline">\(R_u = G \Theta G&#39;\)</span>, where <span class="math inline">\(U\)</span> and <span class="math inline">\(G\)</span> are orthogonal eigenvectors matrices
 for <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span>, respectively (i.e. <span class="math inline">\(UU&#39;=U&#39;U=I_n\)</span> and <span class="math inline">\(GG&#39;=G&#39;G=I_n\)</span>), while <span class="math inline">\(\Lambda\)</span> and <span class="math inline">\(\Theta\)</span> are diagonal matrices of positive
 eigenvalues for <span class="math inline">\(\Sigma_u\)</span> and <span class="math inline">\(R_u\)</span>, respectively. The inverse square
@@ -563,15 +562,21 @@ head(refpop_geno_data_subset)[,1:10]
 # define trait
 trait_ &lt;- &quot;Flowering_begin&quot;
 
-# get optimal whitening method and regularization parameter using k-folds CV
+# increase memory size for future and get optimal whitening method and 
+# regularization parameter using k-folds CV
+options(future.globals.maxSize = 16 * 1024^3)
+
 opt_white_reg_par &lt;- optimize_whitening_and_regularization(
   omic_df = refpop_geno_data_subset,
   raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-  trait_ = trait,
+  trait_ = trait_,
   whitening_method_grid = c(&quot;ZCA-cor&quot;, &quot;PCA-cor&quot;, &quot;Cholesky&quot;),
-  alpha_frob_grid = c(0.01, 0.1)
+  alpha_grid = c(0.01, 0.1)
 )
 print(opt_white_reg_par)
+# 📌 whitening_method = &quot;ZCA-cor&quot; and alpha_ = 0.01 gives good results generally for 
+# estimate_wiser_phenotype(), hence using optimize_whitening_and_regularization() is not 
+# always necessary, specially for huge datasets
 
 # apply wiser estimation function using optimized whitening method and regularization parameter
 wiser_obj &lt;- estimate_wiser_phenotype(
@@ -587,10 +592,8 @@ wiser_obj &lt;- estimate_wiser_phenotype(
   random_effects_vars = &quot;Genotype&quot;,
   kernel_type = &quot;linear&quot;,
   whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
-  alpha_frob_ = opt_white_reg_par$opt_alpha_frob
+  alpha_ = opt_white_reg_par$opt_alpha_
  )
-# 📌 whitening_method = &quot;ZCA-cor&quot; and alpha_frob_ = 0.01 gives good results generally, hence using 
-# optimize_whitening_and_regularization() is not always necessary, specially for huge datasets
 
 # ✅ plot and print wiser objects
 
@@ -604,6 +607,10 @@ print(wiser_obj$wiser_fixed_effect_estimates)
 
 # estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
+
+# ✅ print fundamental property of whitening, i.e. In = W*Σu*W&#39;
+id_mat &lt;- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
+print(id_mat[1:10,1:10])
 </code></pre>
 </div>
 </div>

@@ -1,3 +1,4 @@
+# function which computes transformed fixed variables and least squares
 compute_transformed_vars_and_ols_estimates <- function(
     omic_df, raw_pheno_df, trait_,
     fixed_effects_vars,
@@ -8,14 +9,12 @@ compute_transformed_vars_and_ols_estimates <- function(
     sigma2_u, sigma2_e, kernel_type,
     whitening_method,
     regularization_method,
-    alpha_frob_,
-    percent_eig_,
-    non_zero_precision_eig_,
+    alpha_,
     parallelized_cholesky,
     reduce_raw_dataset_size_,
-    nrow_lim_raw_dataset_zca_cor,
-    nrow_lim_raw_dataset_pca_cor,
-    nrow_lim_raw_dataset_chol) {
+    nrow_approx_lim_raw_dataset_zca_cor,
+    nrow_approx_lim_raw_dataset_pca_cor,
+    nrow_approx_lim_raw_dataset_chol) {
   tryCatch(
     {
       # get raw phenotypes and omic data based on common genotypes
@@ -31,13 +30,21 @@ compute_transformed_vars_and_ols_estimates <- function(
       omic_df <- raw_data_obj$omic_df
 
       # should raw dataset size be reduced wrt to selected whitening method ?
-      if (reduce_raw_dataset_size_) {
+      if (reduce_raw_dataset_size_ && (
+        (whitening_method == "ZCA-cor" &&
+          nrow(raw_pheno_df) > nrow_approx_lim_raw_dataset_zca_cor) ||
+          (whitening_method == "PCA-cor" &&
+            nrow(raw_pheno_df) > nrow_approx_lim_raw_dataset_pca_cor) ||
+          (whitening_method == "Cholesky" &&
+            nrow(raw_pheno_df) > nrow_approx_lim_raw_dataset_chol)
+      )
+      ) {
         raw_pheno_df <- reduce_dataset_based_on_selected_whitening(
           whitening_method,
           raw_pheno_df,
-          nrow_lim_raw_dataset_zca_cor,
-          nrow_lim_raw_dataset_pca_cor,
-          nrow_lim_raw_dataset_chol
+          nrow_approx_lim_raw_dataset_zca_cor,
+          nrow_approx_lim_raw_dataset_pca_cor,
+          nrow_approx_lim_raw_dataset_chol
         )
       }
 
@@ -57,9 +64,12 @@ compute_transformed_vars_and_ols_estimates <- function(
       k_mat <- compute_gram_matrix(omic_df, kernel_type)
 
       # remove fixed effects with no variance or unique level for factors
-      fixed_effects_vars <- find_columns_with_multiple_unique_values(
-        raw_pheno_df[, fixed_effects_vars]
-      )
+      if (!is.null(ncol(raw_pheno_df[, fixed_effects_vars])) &&
+        ncol(raw_pheno_df[, fixed_effects_vars]) > 1) {
+        fixed_effects_vars <- find_columns_with_multiple_unique_values(
+          raw_pheno_df[, fixed_effects_vars]
+        )
+      }
 
       # get incidence matrices for fixed and random effects
       # NB. column of ones is added for intercept associated to fixed effects
@@ -77,22 +87,21 @@ compute_transformed_vars_and_ols_estimates <- function(
 
       # compute the whitening matrix for Σu based on the selected
       # whitening method
-      w_mat <- compute_whitening_matrix_for_sig_mat_(
+      white_obj <- compute_whitening_matrix_for_sig_mat_(
         whitening_method,
         regularization_method,
         parallelized_cholesky,
-        sig_mat_, k_mat, sigma2_u,
-        percent_eig_,
-        non_zero_precision_eig_,
-        alpha_frob_
+        sig_mat_, alpha_
       )
+      w_mat <- white_obj$w_mat
+      sig_mat_ <- white_obj$sig_mat_
 
       # whiten x_mat using w_mat
       # NB. intercept is already present in x_mat and x_mat_tilde
       x_mat_tilde <- w_mat %*% x_mat
 
       # get raw phenotypes associated to common genotypes
-      y <- raw_pheno_df[, trait_]
+      y <- as.numeric(raw_pheno_df[, trait_])
 
       # get ols estimates for fixed effects and xi
       beta_hat <- ginv(t(x_mat_tilde) %*% x_mat_tilde) %*% t(x_mat_tilde) %*% y
