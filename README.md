@@ -126,17 +126,17 @@ trait_ <- "Flowering_begin"
 
 # increase memory size for future and get optimal whitening method and 
 # regularization parameter using k-folds CV
-options(future.globals.maxSize = 6 * 1024^3)
+options(future.globals.maxSize = 16 * 1024^3)
 
 opt_white_reg_par <- optimize_whitening_and_regularization(
   omic_df = refpop_geno_data_subset,
   raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
   trait_ = trait_,
   whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
-  alpha_frob_grid = c(0.01, 0.1)
+  alpha_grid = c(0.01, 0.1)
 )
 print(opt_white_reg_par)
-# 📌 whitening_method = "ZCA-cor" and alpha_frob_ = 0.01 gives good results generally for 
+# 📌 whitening_method = "ZCA-cor" and alpha_ = 0.01 gives good results generally for 
 # estimate_wiser_phenotype(), hence using optimize_whitening_and_regularization() is not 
 # always necessary, specially for huge datasets
 
@@ -154,7 +154,7 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype",
   kernel_type = "linear",
   whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
-  alpha_frob_ = opt_white_reg_par$opt_alpha_frob
+  alpha_ = opt_white_reg_par$opt_alpha_
  )
 
 # ✅ plot and print wiser objects

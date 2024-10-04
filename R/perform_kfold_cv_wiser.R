@@ -1,3 +1,4 @@
+# function which performs parallelized k-folds cv using several prediction methods
 perform_kfold_cv_wiser <- function(omic_df, raw_pheno_df, trait_,
                                    fixed_effects_vars,
                                    fixed_effects_vars_computed_as_factor,
@@ -5,33 +6,12 @@ perform_kfold_cv_wiser <- function(omic_df, raw_pheno_df, trait_,
                                    fixed_effects_vars_computed_as_factor_by_site,
                                    random_effects_vars,
                                    whitening_method,
-                                   reg_method, alpha_frob,
+                                   reg_method, alpha_,
                                    pred_method, k_folds,
-                                   wiser_cache) {
-  # create a unique key for the whitening_method and alpha_frob function arguments
-  cache_key <- paste(whitening_method, alpha_frob, sep = "_")
-
-  # verify if results are already available in the cache
-  if (cache_key %in% names(wiser_cache)) {
-    wiser_obj <- wiser_cache[[cache_key]]
-  } else {
-    # if not, compute and save the result in the cache
-    wiser_obj <- estimate_wiser_phenotype(
-      omic_df, raw_pheno_df, trait_,
-      fixed_effects_vars,
-      fixed_effects_vars_computed_as_factor,
-      site_var,
-      fixed_effects_vars_computed_as_factor_by_site,
-      random_effects_vars,
-      whitening_method = whitening_method,
-      regularization_method = reg_method,
-      alpha_frob_ = alpha_frob,
-      reduce_raw_dataset_size_ = FALSE
-    )
-    wiser_cache[[cache_key]] <- wiser_obj
-  }
-  omic_df <- wiser_obj$wiser_omic_data
-  v_hat <- wiser_obj$wiser_phenotypes$v_hat
+                                   wiser_obj_local) {
+  # extract the local wiser object
+  omic_df <- wiser_obj_local$wiser_omic_data
+  v_hat <- wiser_obj_local$wiser_phenotypes$v_hat
 
   # set seed for reproducibility and get set of indices
   set.seed(123)

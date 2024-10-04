@@ -1,3 +1,4 @@
+# function which computes phenotypes approximating genetic values using whitening
 estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
                                      fixed_effects_vars = c(
                                        "Envir", "Country", "Year",
@@ -12,21 +13,20 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
                                      random_effects_vars = "Genotype",
                                      init_sigma2_u = 1,
                                      init_sigma2_e = 1,
+                                     prior_scale_factor = 1e3,
                                      n_sim_abc = 100,
                                      seed_abc = 123,
                                      quantile_threshold_abc = 0.05,
                                      nb_iter_abc = 1,
                                      kernel_type = "linear",
                                      whitening_method = "ZCA-cor",
-                                     regularization_method = "frobenius_norm",
-                                     alpha_frob_ = 0.01,
-                                     percent_eig_ = 0.05,
-                                     non_zero_precision_eig_ = 1e-5,
+                                     regularization_method = "frobenius_norm_regularization",
+                                     alpha_ = 0.01,
                                      parallelized_cholesky = T,
                                      reduce_raw_dataset_size_ = T,
-                                     nrow_lim_raw_dataset_zca_cor = 20e3,
-                                     nrow_lim_raw_dataset_pca_cor = 20e3,
-                                     nrow_lim_raw_dataset_chol = 40e3) {
+                                     nrow_approx_lim_raw_dataset_zca_cor = 20e3,
+                                     nrow_approx_lim_raw_dataset_pca_cor = 20e3,
+                                     nrow_approx_lim_raw_dataset_chol = 40e3) {
   tryCatch(
     {
       # compute transformed variables associated to fixed effects and least-squares
@@ -43,14 +43,12 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
         kernel_type,
         whitening_method,
         regularization_method,
-        alpha_frob_,
-        percent_eig_,
-        non_zero_precision_eig_,
+        alpha_,
         parallelized_cholesky,
         reduce_raw_dataset_size_,
-        nrow_lim_raw_dataset_zca_cor,
-        nrow_lim_raw_dataset_pca_cor,
-        nrow_lim_raw_dataset_chol
+        nrow_approx_lim_raw_dataset_zca_cor,
+        nrow_approx_lim_raw_dataset_pca_cor,
+        nrow_approx_lim_raw_dataset_chol
       )
 
       # get an upper bound for sigma2_u et sigma2_e priors
@@ -59,7 +57,6 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
       )
 
       for (iter_ in 1:nb_iter_abc) {
-        # print(paste0('iter : ', iter_))
         # compute variance components using abc
         var_comp_abc_obj <- abc_variance_component_estimation(
           y = transform_and_ls_obj$y,
@@ -67,8 +64,14 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
           z_mat = transform_and_ls_obj$z_mat,
           k_mat = transform_and_ls_obj$k_mat,
           beta_hat = transform_and_ls_obj$beta_hat,
-          prior_sigma2_u = c(1e-2, prior_sigma2_upper_bound),
-          prior_sigma2_e = c(1e-2, prior_sigma2_upper_bound),
+          prior_sigma2_u = c(
+            ceiling(prior_sigma2_upper_bound / prior_scale_factor),
+            prior_sigma2_upper_bound
+          ),
+          prior_sigma2_e = c(
+            ceiling(prior_sigma2_upper_bound / prior_scale_factor),
+            prior_sigma2_upper_bound
+          ),
           n_sim_abc, seed_abc,
           quantile_threshold_abc
         )
@@ -85,14 +88,12 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
           kernel_type,
           whitening_method,
           regularization_method,
-          alpha_frob_,
-          percent_eig_,
-          non_zero_precision_eig_,
+          alpha_,
           parallelized_cholesky,
           reduce_raw_dataset_size_,
-          nrow_lim_raw_dataset_zca_cor,
-          nrow_lim_raw_dataset_pca_cor,
-          nrow_lim_raw_dataset_chol
+          nrow_approx_lim_raw_dataset_zca_cor,
+          nrow_approx_lim_raw_dataset_pca_cor,
+          nrow_approx_lim_raw_dataset_chol
         )
       }
 

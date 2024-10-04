@@ -3,27 +3,18 @@ abc_variance_component_estimation <- function(y, x_mat, z_mat, k_mat, beta_hat,
                                               prior_sigma2_u, prior_sigma2_e,
                                               n_sim_abc, seed_abc,
                                               quantile_threshold_abc) {
-  # register parallel backend
-  cl <- makeCluster(detectCores())
-  registerDoParallel(cl)
-
-  # compute simulated phenotypes and distances
-  df_results <- foreach(
-    sim_num = 1:n_sim_abc,
-    .export = c(
-      "simulate_y", "squared_l2_norm", "simulate_and_compute_squared_l2_norm"
-    ),
-    .packages = c("MASS"),
-    .combine = rbind
-  ) %dopar% {
-    set.seed(sim_num * seed_abc)
-    simulate_and_compute_squared_l2_norm(
-      y, x_mat, z_mat, k_mat, beta_hat, prior_sigma2_u, prior_sigma2_e
-    )
-  }
-  # stop the parallel backend
-  stopCluster(cl)
-  registerDoSEQ()
+  df_results <- future.apply::future_lapply(
+    1:n_sim_abc,
+    future.seed = T,
+    function(sim_num) {
+      set.seed(sim_num * seed_abc)
+      simulate_and_compute_squared_l2_norm(
+        y, x_mat, z_mat, k_mat, beta_hat, prior_sigma2_u, prior_sigma2_e
+      )
+    },
+    future.packages = c("MASS")
+  )
+  df_results <- do.call(rbind, df_results)
 
   # assign colnames to df_results
   df_results <- as.data.frame(df_results)

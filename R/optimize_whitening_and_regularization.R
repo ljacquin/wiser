@@ -1,3 +1,4 @@
+# function which finds the optimal whitening method and regularization parameter
 optimize_whitening_and_regularization <- function(
     omic_df, raw_pheno_df, trait_,
     fixed_effects_vars = c(
@@ -13,12 +14,13 @@ optimize_whitening_and_regularization <- function(
     random_effects_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
     whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
-    regularization_method_ = "frobenius_norm",
-    alpha_frob_grid = c(0.01, 0.1),
+    regularization_method_ = "frobenius_norm_regularization",
+    alpha_grid = c(0.01, 0.1),
     reduce_raw_dataset_size_ = T,
-    nrow_lim_raw_dataset_ = 5e3,
+    nrow_approx_lim_raw_dataset_ = 5e3,
     parallelized_cholesky = T,
-    k_folds_ = 5) {
+    k_folds_ = 5,
+    nb_cores_ = 12) {
   # remove all rows with na w.r.t to trait_
   raw_pheno_df <- raw_pheno_df %>% drop_na(all_of(trait_))
 
@@ -34,12 +36,13 @@ optimize_whitening_and_regularization <- function(
   raw_pheno_df <- na.omit(raw_pheno_df)
 
   # downsize dataset for computation time optimization purpose
-  if (reduce_raw_dataset_size_) {
+  if (reduce_raw_dataset_size_ && 
+      (nrow(raw_pheno_df) > nrow_approx_lim_raw_dataset_)) {
     set.seed(123)
     raw_pheno_df <- as.data.frame(
       reduce_dataset_based_on_genotypes(
         df_ = raw_pheno_df,
-        nrow_lim = nrow_lim_raw_dataset_
+        nrow_approx_lim = nrow_approx_lim_raw_dataset_
       )
     )
   }
@@ -48,17 +51,17 @@ optimize_whitening_and_regularization <- function(
   # prediction methods
   grid_ <- expand.grid(
     whitening_method = whitening_method_grid,
-    alpha_frob = alpha_frob_grid,
+    alpha_ = alpha_grid,
     pred_method = prediction_method
   )
 
   # pre-compute unique wiser object for unique combinations
   wiser_cache <- list()
-  unique_combinations <- unique(grid_[, c("whitening_method", "alpha_frob")])
+  unique_combinations <- unique(grid_[, c("whitening_method", "alpha_")])
 
   for (j in 1:nrow(unique_combinations)) {
     method <- unique_combinations$whitening_method[j]
-    alpha <- unique_combinations$alpha_frob[j]
+    alpha <- unique_combinations$alpha_[j]
 
     wiser_obj <- estimate_wiser_phenotype(
       omic_df, raw_pheno_df, trait_,
@@ -69,7 +72,7 @@ optimize_whitening_and_regularization <- function(
       random_effects_vars,
       whitening_method = method,
       regularization_method = regularization_method_,
-      alpha_frob_ = alpha,
+      alpha_ = alpha,
       reduce_raw_dataset_size_ = FALSE
     )
 
@@ -78,12 +81,16 @@ optimize_whitening_and_regularization <- function(
   }
 
   # configure parallelization
-  plan(multisession, workers = parallel::detectCores())
+  plan(multisession, workers = nb_cores_)
 
   df_results <- future_lapply(
     1:nrow(grid_),
     future.seed = T,
     function(i) {
+      # retrieve the precomputed wiser_obj for this combination
+      cache_key <- paste(grid_$whitening_method[i], grid_$alpha_[i], sep = "_")
+      wiser_obj_local <- wiser_cache[[cache_key]]
+
       mean_pa <- tryCatch(
         {
           perform_kfold_cv_wiser(
@@ -95,10 +102,10 @@ optimize_whitening_and_regularization <- function(
             random_effects_vars,
             whitening_method = grid_$whitening_method[i],
             reg_method = regularization_method_,
-            alpha_frob = grid_$alpha_frob[i],
+            alpha_ = grid_$alpha_[i],
             pred_method = grid_$pred_method[i],
             k_folds = k_folds_,
-            wiser_cache = wiser_cache
+            wiser_obj_local = wiser_obj_local
           )
         },
         error = function(e) {
@@ -108,7 +115,7 @@ optimize_whitening_and_regularization <- function(
       )
       data.frame(
         "whitening_method" = grid_$whitening_method[i],
-        "alpha_frob" = grid_$alpha_frob[i],
+        "alpha_" = grid_$alpha_[i],
         "prediction_method" = grid_$pred_method[i],
         "mean_pa" = mean_pa
       )
@@ -129,31 +136,26 @@ optimize_whitening_and_regularization <- function(
     ]
     df_res_method_$white_reg_combination <- paste0(
       df_res_method_$whitening_method,
-      "/", df_res_method_$alpha_frob
+      "/", df_res_method_$alpha_
     )
     df_opt_ <- rbind(
       df_opt_,
-      df_res_method_[
-        which.max(df_res_method_$mean_pa),
-      ]
+      unique(df_res_method_[
+        which.max(df_res_method_$mean_pa)[1],
+      ])
     )
   }
   opt_mode_ <- compute_vect_mode(df_opt_$white_reg_combination)
   opt_mode_ <- unlist(str_split(opt_mode_, pattern = "/"))
   opt_whitening_method <- opt_mode_[1]
-  opt_alpha_frob <- as.numeric(opt_mode_[2])
+  opt_alpha_ <- as.numeric(opt_mode_[2])
 
   # stop parallelization
   plan(sequential)
 
   return(list(
-    "opt_wiser_obj" = wiser_cache[[
-      paste0(
-        opt_whitening_method, "_", opt_alpha_frob
-      )
-    ]],
-    "opt_results" = df_opt_,
-    "opt_alpha_frob" = opt_alpha_frob,
+    "opt_results" = unique(df_opt_),
+    "opt_alpha_" = opt_alpha_,
     "opt_whitening_method" = opt_whitening_method
   ))
 }

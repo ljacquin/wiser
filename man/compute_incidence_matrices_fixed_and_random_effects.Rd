@@ -28,7 +28,7 @@
 \details{
   The function constructs incidence matrices for fixed effects and random effects as follows:
     \itemize{
-      \item For fixed effects variables, it includes an intercept column for the first fixed effect. If the first fixed effect is treated as a factor, it creates dummy variables for it. For other fixed effects, it either includes them directly or creates dummy variables if specified.
+      \item For fixed effects variables, it includes an intercept column for the first fixed effect. If the first fixed effect is treated as a factor, it creates dummy variables for it. For other fixed effects, it either includes them directly or creates dummy variables if they are specified as factors.
       \item For random effects variables, it creates incidence matrices without an intercept column.
     }
   

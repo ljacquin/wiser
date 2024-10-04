@@ -1,3 +1,4 @@
+# function which get raw phenotypes and marker based on common genotypes
 raw_pheno_and_marker_based_on_trait_common_genotypes <- function(
     raw_pheno_df,
     omic_df,
@@ -5,6 +6,7 @@ raw_pheno_and_marker_based_on_trait_common_genotypes <- function(
     fixed_effects_vars,
     random_effects_vars) {
   # remove all rows with na w.r.t to trait_
+  raw_pheno_df[, trait_] <- as.numeric(raw_pheno_df[, trait_])
   raw_pheno_df <- raw_pheno_df %>% drop_na(all_of(trait_))
   
   # define variables of interest
