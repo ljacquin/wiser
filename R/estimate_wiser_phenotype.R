@@ -13,7 +13,7 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
                                      random_effects_vars = "Genotype",
                                      init_sigma2_u = 1,
                                      init_sigma2_e = 1,
-                                     prior_scale_factor = 1e3,
+                                     prior_sigma2_lower_bound = 1e-2,
                                      n_sim_abc = 100,
                                      seed_abc = 123,
                                      quantile_threshold_abc = 0.05,
@@ -65,11 +65,11 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
           k_mat = transform_and_ls_obj$k_mat,
           beta_hat = transform_and_ls_obj$beta_hat,
           prior_sigma2_u = c(
-            ceiling(prior_sigma2_upper_bound / prior_scale_factor),
+            prior_sigma2_lower_bound,
             prior_sigma2_upper_bound
           ),
           prior_sigma2_e = c(
-            ceiling(prior_sigma2_upper_bound / prior_scale_factor),
+            prior_sigma2_lower_bound,
             prior_sigma2_upper_bound
           ),
           n_sim_abc, seed_abc,
