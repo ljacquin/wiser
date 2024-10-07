@@ -1,4 +1,4 @@
-# function which finds the optimal whitening method and regularization parameter
+# function which finds the optimal whitening method and regularization
 optimize_whitening_and_regularization <- function(
     omic_df, raw_pheno_df, trait_,
     fixed_effects_vars = c(
@@ -36,8 +36,8 @@ optimize_whitening_and_regularization <- function(
   raw_pheno_df <- na.omit(raw_pheno_df)
 
   # downsize dataset for computation time optimization purpose
-  if (reduce_raw_dataset_size_ && 
-      (nrow(raw_pheno_df) > nrow_approx_lim_raw_dataset_)) {
+  if (reduce_raw_dataset_size_ &&
+    (nrow(raw_pheno_df) > nrow_approx_lim_raw_dataset_)) {
     set.seed(123)
     raw_pheno_df <- as.data.frame(
       reduce_dataset_based_on_genotypes(
