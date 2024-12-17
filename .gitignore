@@ -4,3 +4,13 @@
 .httr-oauth
 .DS_Store
 .quarto
+.Rbuildignore
+data/apple_genomic_data.csv
+data/apple_phenotype_data.csv
+data/rice_genomic_data.csv
+data/rice_phenotype_data.csv
+data/maize_genomic_data.csv
+data/maize_phenotype_data.csv
+data/pine_genomic_data.csv
+data/pine_phenotype_data.csv
+data/create_datasets.R

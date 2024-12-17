@@ -134,8 +134,8 @@ wiser_obj <- estimate_wiser_phenotype(
                          "Row", "Position", "Management"),
   fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year",
                                              "Row", "Position", "Management"),
-  site_var = "Country",
-  fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
+  envir_var = "Country",
+  fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
   random_effects_vars = "Genotype",
   whitening_method = "ZCA-cor",
   alpha_ = 0.01
@@ -162,8 +162,8 @@ wiser_obj <- estimate_wiser_phenotype(
                          "Row", "Position", "Management"),
   fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year",
                                              "Row", "Position", "Management"),
-  site_var = "Country",
-  fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
+  envir_var = "Country",
+  fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
   random_effects_vars = "Genotype",
   whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
   alpha_ = as.numeric(opt_white_reg_par$opt_alpha_)

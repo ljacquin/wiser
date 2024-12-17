@@ -3,8 +3,8 @@ compute_transformed_vars_and_ols_estimates <- function(
     omic_df, raw_pheno_df, trait_,
     fixed_effects_vars,
     fixed_effects_vars_computed_as_factor,
-    site_var,
-    fixed_effects_vars_computed_as_factor_by_site,
+    envir_var,
+    fixed_effects_vars_computed_as_factor_by_envir,
     random_effects_vars,
     sigma2_u, sigma2_e, kernel_type,
     whitening_method,
@@ -53,8 +53,8 @@ compute_transformed_vars_and_ols_estimates <- function(
         raw_pheno_df,
         fixed_effects_vars,
         fixed_effects_vars_computed_as_factor,
-        site_var,
-        fixed_effects_vars_computed_as_factor_by_site
+        envir_var,
+        fixed_effects_vars_computed_as_factor_by_envir
       )
 
       # get omic data associated to common genotypes
