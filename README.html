@@ -560,8 +560,8 @@ wiser_obj &lt;- estimate_wiser_phenotype(
                          &quot;Row&quot;, &quot;Position&quot;, &quot;Management&quot;),
   fixed_effects_vars_computed_as_factor = c(&quot;Envir&quot;, &quot;Country&quot;, &quot;Year&quot;,
                                              &quot;Row&quot;, &quot;Position&quot;, &quot;Management&quot;),
-  site_var = &quot;Country&quot;,
-  fixed_effects_vars_computed_as_factor_by_site = c(&quot;Row&quot;, &quot;Position&quot;),
+  envir_var = &quot;Country&quot;,
+  fixed_effects_vars_computed_as_factor_by_envir = c(&quot;Row&quot;, &quot;Position&quot;),
   random_effects_vars = &quot;Genotype&quot;,
   whitening_method = &quot;ZCA-cor&quot;,
   alpha_ = 0.01
@@ -588,8 +588,8 @@ wiser_obj &lt;- estimate_wiser_phenotype(
                          &quot;Row&quot;, &quot;Position&quot;, &quot;Management&quot;),
   fixed_effects_vars_computed_as_factor = c(&quot;Envir&quot;, &quot;Country&quot;, &quot;Year&quot;,
                                              &quot;Row&quot;, &quot;Position&quot;, &quot;Management&quot;),
-  site_var = &quot;Country&quot;,
-  fixed_effects_vars_computed_as_factor_by_site = c(&quot;Row&quot;, &quot;Position&quot;),
+  envir_var = &quot;Country&quot;,
+  fixed_effects_vars_computed_as_factor_by_envir = c(&quot;Row&quot;, &quot;Position&quot;),
   random_effects_vars = &quot;Genotype&quot;,
   whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
   alpha_ = as.numeric(opt_white_reg_par$opt_alpha_)
