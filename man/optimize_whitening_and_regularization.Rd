@@ -9,8 +9,8 @@
     omic_df, raw_pheno_df, trait_,
     fixed_effects_vars = c("Envir", "Country", "Year", "Row", "Position", "Management"),
     fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year", "Row", "Position", "Management"),
-    site_var = "Country",
-    fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
+    envir_var = "Country",
+    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
     random_effects_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
     whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
@@ -29,8 +29,8 @@
   \item{trait_}{A character string specifying the target trait to be analyzed and optimized.}
   \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be included in the model. Default is \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}
   \item{fixed_effects_vars_computed_as_factor}{A character vector listing the fixed effects variables to be treated as factors during modeling. Default is \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}
-  \item{site_var}{A character string specifying the variable representing the site (e.g., country or location) to be included in the model. Default is \code{"Country"}.}
-  \item{fixed_effects_vars_computed_as_factor_by_site}{A character vector listing the fixed effects variables to be treated as factors within each site. Default is \code{c("Row", "Position")}.}
+  \item{envir_var}{A character string specifying the variable representing the environment (e.g., country or location) to be included in the model. Default is \code{"Country"}.}
+  \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector listing the fixed effects variables to be treated as factors within each environment. Default is \code{c("Row", "Position")}.}
   \item{random_effects_vars}{A character string specifying the random effects variable. Default is \code{"Genotype"}.}
   \item{prediction_method}{A character vector specifying the prediction methods to be evaluated. Default is \code{c("rf", "svr", "gblup", "rkhs", "lasso")}.}
   \item{whitening_method_grid}{A character vector specifying the whitening methods to be evaluated. Default is \code{c("ZCA-cor", "PCA-cor", "Cholesky")}.}

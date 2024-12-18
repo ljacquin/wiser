@@ -8,8 +8,8 @@
   perform_kfold_cv_wiser(omic_df, raw_pheno_df, trait_,
                          fixed_effects_vars,
                          fixed_effects_vars_computed_as_factor,
-                         site_var,
-                         fixed_effects_vars_computed_as_factor_by_site,
+                         envir_var,
+                         fixed_effects_vars_computed_as_factor_by_envir,
                          random_effects_vars,
                          whitening_method, reg_method, alpha_,
                          pred_method, k_folds, wiser_cache)
@@ -20,8 +20,8 @@
   \item{trait_}{A character string specifying the trait of interest to be analyzed.}
   \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be included in the model.}
   \item{fixed_effects_vars_computed_as_factor}{A character vector specifying the fixed effects variables that should be treated as factors during modeling.}
-  \item{site_var}{A character string specifying the site variable (e.g., "Country").}
-  \item{fixed_effects_vars_computed_as_factor_by_site}{A character vector listing the fixed effects variables that should be treated as factors within each site.}
+  \item{envir_var}{A character string specifying the environment variable (e.g., combination of "Site", "Year", "Management" and "Block").}
+  \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector listing the fixed effects variables that should be treated as factors within each environment.}
   \item{random_effects_vars}{A character string specifying the random effects variable (e.g., "Genotype").}
   \item{whitening_method}{A character string specifying the whitening method to be used in the WISER phenotype estimation (e.g., \code{"ZCA-cor"}, \code{"PCA-cor"}, or \code{"Cholesky"}).}
   \item{reg_method}{A character string specifying the regularization or shrinkage method used in conjunction with whitening (e.g., \code{"frobenius_norm_regularization"}).}
@@ -47,8 +47,8 @@
   trait <- "Flowering_begin"
   fixed_effects_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
   fixed_effects_vars_computed_as_factor <- c("Envir", "Country", "Year", "Row", "Position", "Management")
-  site_var <- "Country"
-  fixed_effects_vars_computed_as_factor_by_site <- c("Row", "Position")
+  envir_var <- "Country"
+  fixed_effects_vars_computed_as_factor_by_envir <- c("Row", "Position")
   random_effects_vars <- "Genotype"
   whitening_method <- "ZCA-cor"
   reg_method <- "frobenius_norm_shrinkage"
@@ -64,8 +64,8 @@
     trait_ = trait,
     fixed_effects_vars = fixed_effects_vars,
     fixed_effects_vars_computed_as_factor = fixed_effects_vars_computed_as_factor,
-    site_var = site_var,
-    fixed_effects_vars_computed_as_factor_by_site = fixed_effects_vars_computed_as_factor_by_site,
+    envir_var = envir_var,
+    fixed_effects_vars_computed_as_factor_by_envir = fixed_effects_vars_computed_as_factor_by_envir,
     random_effects_vars = random_effects_vars,
     whitening_method = whitening_method,
     reg_method = reg_method,
