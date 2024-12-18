@@ -15,8 +15,8 @@
      "Envir", "Country", "Year",
      "Row", "Position", "Management"
    ),
-   site_var = "Country",
-   fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
+   envir_var = "Country",
+   fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
    random_effects_vars = "Genotype",
    init_sigma2_u = 1,
    init_sigma2_e = 1,
@@ -41,8 +41,8 @@
   \item{trait_}{A character string specifying the trait of interest.}
   \item{fixed_effects_vars}{A character vector specifying the fixed effects variables. Defaults to \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}
   \item{fixed_effects_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors. Defaults to \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}. Note: declared fixed effects variables which are not specified to be computed as factors will be treated as quantitative variables.}
-  \item{site_var}{A character string specifying the site variable. Defaults to \code{"Country"} and should be set to \code{"NULL"} if there is no site variable or no variables computed as factors by site.}
-  \item{fixed_effects_vars_computed_as_factor_by_site}{A character vector specifying which fixed effects variables should be treated as factors by site. Defaults to \code{c("Row", "Position")}.}
+  \item{envir_var}{A character string specifying the environment variable. Defaults to \code{"Country"} and should be set to \code{"NULL"} if there is no environment variable.}
+  \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment. Defaults to \code{c("Row", "Position")}.}
   \item{random_effects_vars}{A character vector specifying the random effects variables. Defaults to \code{"Genotype"}.}
   \item{init_sigma2_u}{A numeric value for the initial variance component of random effects. Defaults to \code{1}.}
   \item{init_sigma2_e}{A numeric value for the initial variance component of residuals. Defaults to \code{1}.}
@@ -106,8 +106,8 @@
     trait_ = trait_,
     fixed_effects_vars = c("Envir", "Country", "Year","Row", "Position", "Management"),
     fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year","Row", "Position", "Management"),
-    site_var = "Country",
-    fixed_effects_vars_computed_as_factor_by_site = c("Row", "Position"),
+    envir_var = "Country",
+    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
     random_effects_vars = "Genotype"
   )
 
