@@ -114,12 +114,14 @@ help(package = "wiser")
 
 # -- attach datasets for random samples of 30 genotypes associated to apple, pine, maize
 # and rice
+
 # 📌 These datasets are small subsets derived from the original datasets used in 
 # Jacquin et al. (2025). They are provided for illustrative purposes with the wiser 
 # package and are not intended to represent reference populations for genomic 
 # prediction or GWAS.The datasets include genomic data and raw individual phenotypic
 # measurements for 30 randomly selected genotypes, associated with an experimental 
 # design for each of the following species: apple, pine, maize and rice.
+
 # apple
 data("apple_raw_pheno_data")
 data("apple_genomic_data")
@@ -161,12 +163,13 @@ trait_ <- "Trunk_increment"
 
 # -- apply wiser estimation function using default values for `whitening_method` (set to "ZCA-cor")
 # and `alpha_` (set to 0.01)
-# 📌 These default values typically yield satisfactory results for phenotypic
-# predictive ability. Therefore, using `optimize_whitening_and_regularization()`
-# may not always be necessary, especially for large datasets. Nevertheless,
-# these parameters should be optimized, when possible, for better results.
-# 📌 Note that rows and positions are fitted as factors by environment to account for
-# local spatial heterogeneity.
+
+# 📌 These default values typically yield satisfactory results for phenotypic predictive ability. Therefore,
+# using `optimize_whitening_and_regularization()` may not always be necessary, especially for large datasets. 
+# Nevertheless, these parameters should be optimized, when possible, for better results.
+
+# 📌 Note that rows and positions are fitted as factors by environment to account for local spatial heterogeneity.
+
 wiser_obj <- estimate_wiser_phenotype(
   omic_df = apple_genomic_data,
   raw_pheno_df = apple_raw_pheno_data,
@@ -184,10 +187,10 @@ wiser_obj <- estimate_wiser_phenotype(
 
 # -- apply the WISER estimation function using the optimized whitening method
 # and regularization parameter.
-# 📌⚠️ highly recommended: increase memory size as specified below before 
-# using optimize_whitening_and_regularization(). For optimal performance, 
-# it is strongly advised to use a high-performance computing cluster (HPC) 
-# when running this function.
+
+# 📌⚠️ highly recommended: increase memory size as specified below with options() before using optimize_whitening_and_regularization(). For optimal performance, it is strongly advised to use
+# a high-performance computing cluster (HPC) when running this function.
+
 run_example <- F
 if (run_example){
   options(future.globals.maxSize = 16 * 1024^3)
@@ -266,9 +269,11 @@ trait_ <- "H" # height
 
 # -- get fixed effect vars where latitude and longitude are fitted as quantitative
 # variables for each environment (i.e. combination of site, year and block). 
-# 📌 Note that the latitude and longitude fixed-effect variables, which are quantitative 
-# and not considered as factors, are highly correlated to each environment for which 
-# they are fitted. Hence, environment will not be fitted with wiser due to redundancy.
+
+# 📌 Note that the latitude and longitude fixed-effect variables, which are quantitative and not
+# considered as factors, are highly correlated to each environment for which they are fitted. 
+# Therefore, the environment variable will not be fitted using wiser due to redundancy.
+
 fixed_effect_vars_ <- grep("_latitude$|_longitude$", colnames(pine_raw_pheno_data),
   value = TRUE
 )
