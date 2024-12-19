@@ -165,7 +165,8 @@ trait_ <- "Trunk_increment"
 # predictive ability. Therefore, using `optimize_whitening_and_regularization()`
 # may not always be necessary, especially for large datasets. Nevertheless,
 # these parameters should be optimized, when possible, for better results.
-# 📌
+# 📌 Note that rows and positions are fitted as factors by environment to account for
+# local spatial heterogeneity.
 wiser_obj <- estimate_wiser_phenotype(
   omic_df = apple_genomic_data,
   raw_pheno_df = apple_raw_pheno_data,
