@@ -266,8 +266,9 @@ trait_ <- "H" # height
 
 # -- get fixed effect vars where latitude and longitude are fitted as quantitative
 # variables for each environment (i.e. combination of site, year and block). 
-# Note that the new fixed-effect variables, which are quantitative and not considered as factors, 
-# are highly correlated to the environment. Hence, environment will not be fitted with wiser due to redundancy.
+# 📌 Note that the latitude and longitude fixed-effect variables, which are quantitative 
+# and not considered as factors, are highly correlated to each environment for which 
+# they are fitted. Hence, environment will not be fitted with wiser due to redundancy.
 fixed_effect_vars_ <- grep("_latitude$|_longitude$", colnames(pine_raw_pheno_data),
   value = TRUE
 )
