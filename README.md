@@ -115,12 +115,10 @@ help(package = "wiser")
 # -- attach datasets for random samples of 30 genotypes associated to apple, pine, maize
 # and rice
 
-# 📌 These datasets are small subsets derived from the original datasets used in 
-# Jacquin et al. (2025). They are provided for illustrative purposes with the wiser 
-# package and are not intended to represent reference populations for genomic 
-# prediction or GWAS.The datasets include genomic data and raw individual phenotypic
-# measurements for 30 randomly selected genotypes, associated with an experimental 
-# design for each of the following species: apple, pine, maize and rice.
+# 📌 These datasets are small subsets derived from the original datasets used in Jacquin et al. (2025). 
+# They are provided for illustrative purposes with the wiser package and are not intended to represent reference populations for genomic prediction or GWAS. These datasets include genomic data and raw individual phenotypic
+# measurements for 30 randomly selected genotypes, associated with an experimental design for each of the 
+# following species: apple, pine, maize and rice.
 
 # apple
 data("apple_raw_pheno_data")
