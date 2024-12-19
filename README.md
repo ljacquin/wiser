@@ -1,4 +1,5 @@
 [<img src="img/wiser.png"/>]()
+
 # WISER: WhItening and successive least Squares Estimation Refinement for phenotype estimation
 
 ##### Licence, status and metrics
@@ -46,12 +47,13 @@ where :
 
 * $\tilde{X} = X W$ and $\xi = Zv + \varepsilon$.
 
+<br>
 In the ```wiser``` framework, the whitening matrix $W$ can be constructed using three different procedures: zero-phase component correlation analysis (```ZCA-cor```), principal component correlation analysis (```PCA-cor```) and cholesky (```Cholesky```). 
 Let $\Sigma_u = \sigma^2_uZKZ'$ represent the genetic covariance matrix for the vector $U = Zu = (U_1,U_2, \ldots, U_n)$, which corresponds to the vector of individual genetic effects in the experimental design.
-In  ```wiser```, the vector $u=(u_1,...,u_q)'$, representing the genetic values associated with $q$ genotypes, is assumed to follow the distribution $u \sim \mathcal{N}_q(0,\sigma^2_uK)$, where $K$ is the genetic covariance matrix between genotypes, estimated from omic data.
-Define $R_u = V^{-\frac{1}{2}} \Sigma_u V^{-\frac{1}{2}}$ as the correlation matrix associated with $\Sigma_u$, where $V=diag(\Sigma_u)$ is a diagonal matrix with the variances of $\Sigma_u$ on its diagonal. The matrices $\Sigma_u$ and $R_u$, which are symmetric and positive semi-definite, have the following spectral decompositions: $\Sigma_u = U \Lambda U'$ and $R_u = G \Theta G'$, where $U$ and $G$ are orthogonal eigenvectors matrices for $\Sigma_u$ and $R_u$, respectively, while $\Lambda$ and $\Theta$ are diagonal matrices of positive eigenvalues for $\Sigma_u$ and $R_u$, respectively. 
+In  ```wiser```, the vector $u=(u_1,...,u_q)'$, representing the genetic values associated with $q$ genotypes, is assumed to follow the distribution $u \sim \mathcal{N}_q(0,\sigma^2_uK)$, where $K$ is the genetic covariance matrix between genotypes, estimated from omic data.<br>
+Define $R_u = V^{-\frac{1}{2}} \Sigma_u V^{-\frac{1}{2}}$ as the correlation matrix associated with $\Sigma_u$, where $V=diag(\Sigma_u)$ is a diagonal matrix with the variances of $\Sigma_u$ on its diagonal. The matrices $\Sigma_u$ and $R_u$, which are symmetric and positive semi-definite, have the following spectral decompositions: $\Sigma_u = U \Lambda U'$ and $R_u = G \Theta G'$, where $U$ and $G$ are orthogonal eigenvectors matrices for $\Sigma_u$ and $R_u$, respectively, while $\Lambda$ and $\Theta$ are diagonal matrices of positive eigenvalues for $\Sigma_u$ and $R_u$, respectively. <br>
 The inverse square root matrices of $\Sigma_u$ and $R_u$ are given by $\Sigma_u^{-\frac{1}{2}} = U \Lambda^{-\frac{1}{2}} U'$ and $R_u^{-\frac{1}{2}} = G \Theta^{-\frac{1}{2}} G'$. These satisfy $\Sigma_u^{-1}=\Sigma_u^{-\frac{1}{2}}\Sigma_u^{-\frac{1}{2}}$ and  $R_u^{-1} = R_u^{-\frac{1}{2}}R_u^{-\frac{1}{2}}$. 
-According to Kessy *et al.* (2015), the whitening matrices associated to  ```ZCA-cor```, ```PCA-cor``` and ```Cholesky``` are given by :
+According to Kessy $\textit{et al.}$ (2015), the whitening matrices associated to  ```ZCA-cor```, ```PCA-cor``` and ```Cholesky``` are given by :
 <br><br>
 
 $$
@@ -62,13 +64,15 @@ $$
 \end{cases}
 $$
 
-where $L$ is derived from the Cholesky decomposition of $\Sigma_u = LL'$. The ```PCA-cor``` whitening procedure can be seen as standardizing variables using $V^{-\frac{1}{2}}$, followed by a rotation using the transposed correlation eigenmatrix $G'$, and then scaling using the inverted correlation singular values matrix $\Theta^{-\frac{1}{2}}$. ```ZCA-cor``` whitening extends this by applying an additional rotation $G$ to revert to the original basis of the standardized variables. Each whitening method is optimal according to specific criteria. For instance, ```ZCA-cor``` is unique in ensuring that the whitened variables retain the maximum correlation with the original variables. Details of these criteria and the optimality of each method are discussed in Kessy *et al.* (2015).
+<br>
+where $L$ is derived from the Cholesky decomposition of $\Sigma_u = LL'$. The ```PCA-cor``` whitening procedure can be seen as standardizing variables using $V^{-\frac{1}{2}}$, followed by a rotation using the transposed correlation eigenmatrix $G'$, and then scaling using the inverted correlation singular values matrix $\Theta^{-\frac{1}{2}}$. ```ZCA-cor``` whitening extends this by applying an additional rotation $G$ to revert to the original basis of the standardized variables. Each whitening method is optimal according to specific criteria. For instance, ```ZCA-cor``` is unique in ensuring that the whitened variables retain the maximum correlation with the original variables. Details of these criteria and the optimality of each method are discussed in Kessy $\textit{et al.}$ (2015).
 
-The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust fixed effect variables for population structure, is comprehensively addressed in Jacquin *et al.* (year). In contrast, the chosen approach of successive ordinary least squares (OLS) in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental.
-For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$, which can be highly undesirable.
-Crucially, the successive ordinary least squares (OLS) procedure implemented in ```wiser``` operates without such assumptions, ensuring that the estimation of $v$ remains independent of omic information or any imposed covariance structure. 
-The only assumptions in the ```wiser``` framework are $u \sim \mathcal{N}_q(0,\sigma^2_u K)$ and $\varepsilon \sim \mathcal{N}_n(0,\sigma^2_ε I_n)$, which are necessary to estimate $\sigma^2_u$ for constructing the whitening matrix $W$. In this framework, the estimation of $\sigma^2_u$ and $\sigma^2_ε$ is performed using a parallelized ABC algorithm. 
-In ```wiser```, two kernel functions are also provided to build $K$ : ```linear``` and ```identity```. The ```identity``` kernel, which is **not estimated from omic data**, is generally discouraged due to its poor performance associated with phenotypic predictive ability. The ```identity``` kernel is used solely to assess the impact of including or excluding the genetic covariance structure. The ```linear``` kernel is used by default in ```wiser```.
+The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust fixed effect variables for population structure, is comprehensively addressed in Jacquin $\textit{et al.}$ (2025). In contrast, the chosen approach of successive ordinary least squares (OLS) in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental. <br>
+For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$, which can be highly undesirable. <br>
+Crucially, the successive ordinary least squares (OLS) procedure implemented in ```wiser``` operates without such assumptions, ensuring that the estimation of $v$ remains independent of omic information or any imposed covariance structure. The only assumptions in the ```wiser``` framework are $u \sim \mathcal{N}_q(0,\sigma^2_u K)$ and $\varepsilon \sim \mathcal{N}_n(0,\sigma^2_\varepsilon I_n)$, which are necessary to estimate 
+$\sigma^2_u$ for constructing the whitening matrix $W$. In this framework, the estimation of $\sigma^2_u$ and $\sigma^2_\varepsilon$ is performed using an ABC algorithm. 
+
+In ```wiser```, two kernel functions are also provided to build $K$: ```linear``` and ```identity```. The ```identity``` kernel, which is **not estimated from omic data**, is generally discouraged due to its poor phenotypic predictive ability. The ```identity``` kernel is used solely to assess the impact of including or excluding the genetic covariance structure. The ```linear``` kernel is used by default in ```wiser```.
 
 ## Installation
 
@@ -97,75 +101,190 @@ install_github("ljacquin/wiser")
 
 ### Estimating phenotypes with WISER
 
-Here's a simple example illustrating the use of the ```estimate_wiser_phenotype``` function to estimate phenotypes :
+Here are straightforward examples demonstrating how to use the ```estimate_wiser_phenotype``` function for phenotype estimation:
 
 ```R
-## ✅ load wiser library, display package help ,and attach data subsets from the refpop dataset
+# ➡️ load wiser library, display package help ,and attach datasets associated to four species
 
-# load library 
+# -- load library
 library(wiser)
 
-# show help for library 
-help(package="wiser")
- 
-# load raw individual phenotypic measurements (for subset of 80 genotypes from refpop data)
-data("refpop_raw_indiv_pheno_data_subset")
-head(refpop_raw_indiv_pheno_data_subset)
+# -- show help for library
+help(package = "wiser")
 
-# load SNP marker data (for subset of 80 genotypes from refpop data)
-data("refpop_geno_data_subset")
-head(refpop_geno_data_subset)[,1:10]
+# -- attach datasets for random samples of 30 genotypes associated to apple, pine, maize
+# and rice
+# 📌 These datasets are small subsets derived from the original datasets used in 
+# Jacquin et al. (2025). They are provided for illustrative purposes with the wiser 
+# package and are not intended to represent reference populations for genomic 
+# prediction or GWAS.The datasets include genomic data and raw individual phenotypic
+# measurements for 30 randomly selected genotypes, associated with an experimental 
+# design for each of the following species: apple, pine, maize and rice.
+# apple
+data("apple_raw_pheno_data")
+data("apple_genomic_data")
+# pine
+data("pine_raw_pheno_data")
+data("pine_genomic_data")
+# maize
+data("maize_raw_pheno_data")
+data("maize_genomic_data")
+# rice
+data("rice_raw_pheno_data")
+data("rice_genomic_data")
 
-## ✅ estimate wiser phenotypes for a specified trait, i.e. Flowering_begin here
+# ➡️ usage examples with apple data
 
-# 📌 define trait
-trait_ <- "Flowering_begin"
+# -- display apple data 
+head(apple_raw_pheno_data)
+head(apple_genomic_data)[, 1:10]
 
-# 📌 apply wiser estimation function using default values for `whitening_method` (set to "ZCA-cor") and `alpha_` (set to 0.01). These default values typically yield satisfactory results for phenotypic predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not always be necessary, especially for large datasets. Nevertheless, these parameters should be optimized when low phenotype predictive ability is observed.
-wiser_obj <- estimate_wiser_phenotype(
-  omic_df = refpop_geno_data_subset,
-  raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-  trait_ = trait_,
-  fixed_effects_vars = c("Envir", "Country", "Year",
-                         "Row", "Position", "Management"),
-  fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year",
-                                             "Row", "Position", "Management"),
-  envir_var = "Country",
-  fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
-  random_effects_vars = "Genotype",
-  whitening_method = "ZCA-cor",
-  alpha_ = 0.01
- )
-
-# 📌 apply wiser estimation function using optimized whitening method and regularization parameter.
-# ⚠️ highly recommended: increase memory size as follows before using optimize_whitening_and_regularization()
-options(future.globals.maxSize = 16 * 1024^3)
-
-opt_white_reg_par <- optimize_whitening_and_regularization(
-  omic_df = refpop_geno_data_subset,
-  raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-  trait_ = trait_,
-  whitening_method_grid = c("ZCA-cor","Cholesky"),
-  k_folds_ = 3,
-  alpha_grid = c(0.01, 0.1)
+# -- for raw individual phenotypic data: create environment variable (combination 
+# of country, year and management) 
+apple_raw_pheno_data$Envir <- paste0(
+  apple_raw_pheno_data$Country, "_",
+  apple_raw_pheno_data$Year, "_",
+  apple_raw_pheno_data$Management
 )
 
-wiser_obj <- estimate_wiser_phenotype(
-  omic_df = refpop_geno_data_subset,
-  raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-  trait_ = trait_,
-  fixed_effects_vars = c("Envir", "Country", "Year",
-                         "Row", "Position", "Management"),
-  fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year",
-                                             "Row", "Position", "Management"),
-  envir_var = "Country",
-  fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
-  random_effects_vars = "Genotype",
-  whitening_method = as.character(opt_white_reg_par$opt_whitening_method),
-  alpha_ = as.numeric(opt_white_reg_par$opt_alpha_)
- )
+# -- for genomic data: assign genotypes as rownames to the data (if necessary) to be
+# compliant with wiser functions, and remove "Genotype" column (if present) 
+rownames(apple_genomic_data) <- apple_genomic_data$Genotype
+apple_genomic_data <- apple_genomic_data[, -match(
+  "Genotype",
+  colnames(apple_genomic_data)
+)]
 
-## ✅ plot and print wiser objects
+# -- define a trait for phenotypic estimation using wiser (note: some data should be
+# available for the trait)
+trait_ <- "Trunk_increment"
+
+# -- apply wiser estimation function using default values for `whitening_method` (set to "ZCA-cor")
+# and `alpha_` (set to 0.01)
+# 📌 These default values typically yield satisfactory results for phenotypic
+# predictive ability. Therefore, using `optimize_whitening_and_regularization()`
+# may not always be necessary, especially for large datasets. Nevertheless,
+# these parameters should be optimized, when possible, for better results.
+# 📌
+wiser_obj <- estimate_wiser_phenotype(
+  omic_df = apple_genomic_data,
+  raw_pheno_df = apple_raw_pheno_data,
+  trait_ = trait_,
+  fixed_effects_vars = c(
+    "Envir", "Row", "Position"
+  ),
+  fixed_effects_vars_computed_as_factor = c(
+    "Envir", "Row", "Position"
+  ),
+  envir_var = "Envir",
+  fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+  random_effects_vars = "Genotype"
+)
+
+# -- apply the WISER estimation function using the optimized whitening method
+# and regularization parameter.
+# 📌⚠️ highly recommended: increase memory size as specified below before 
+# using optimize_whitening_and_regularization(). For optimal performance, 
+# it is strongly advised to use a high-performance computing cluster (HPC) 
+# when running this function.
+run_example <- F
+if (run_example){
+  options(future.globals.maxSize = 16 * 1024^3)
+  
+  opt_white_reg_par <- optimize_whitening_and_regularization(
+    omic_df = apple_genomic_data,
+    raw_pheno_df = apple_raw_pheno_data,
+    trait_ = trait_,
+    whitening_method_grid = c("ZCA-cor", "Cholesky"),
+    k_folds_ = 3,
+    alpha_grid = c(0.01, 0.1)
+  )
+  print(opt_white_reg_par)
+  opt_alpha_par_ <- as.numeric(opt_white_reg_par$opt_alpha_)
+  opt_white_method_ <- as.character(opt_white_reg_par$opt_whitening_method)
+  
+  wiser_obj <- estimate_wiser_phenotype(
+    omic_df = apple_genomic_data,
+    raw_pheno_df = apple_raw_pheno_data,
+    trait_ = trait_,
+    fixed_effects_vars = c("Envir", "Row", "Position"),
+    fixed_effects_vars_computed_as_factor = c("Envir", "Row", "Position"),
+    envir_var = "Envir",
+    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+    random_effects_vars = "Genotype",
+    whitening_method = opt_white_method_,
+    alpha_ = opt_alpha_par_
+  )
+}
+
+# -- plot the density for the estimated phenotypes
+dev.new()
+plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
+
+# get the estimated fixed effects from the whitening process and OLS, and variance components from ABC
+# estimated fixed effects (from whitening and OLS)
+print(wiser_obj$wiser_fixed_effect_estimates)
+
+# estimated variance components (from ABC)
+print(wiser_obj$wiser_abc_variance_component_estimates)
+
+# print fundamental property of whitening, i.e. In = W*Σu*W'
+id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
+print(id_mat[1:5,1:5])
+
+# ➡️ usage examples with pine data
+
+# -- display pine data
+head(pine_raw_pheno_data)
+head(pine_genomic_data)[, 1:10]
+
+# -- for raw individual phenotypic data: create environment variable (combination
+# of site, year and block)
+pine_raw_pheno_data$Envir <- paste0(
+  pine_raw_pheno_data$Site, "_",
+  pine_raw_pheno_data$Year, "_",
+  pine_raw_pheno_data$Block
+)
+
+# -- generate latitude and longitude variables per environment
+pine_raw_pheno_data <- generate_latitude_longitude_variables_by_environment(
+  pine_raw_pheno_data
+)
+
+# -- for genomic data: assign genotypes as rownames to the data (if necessary) to
+# be compliant with wiser functions, and remove "Genotype" column (if present),
+# here "V1" is "Genotype" column
+rownames(pine_genomic_data) <- pine_genomic_data$V1
+pine_genomic_data <- pine_genomic_data[, -match(
+  "V1", colnames(pine_genomic_data)
+)]
+
+# -- define a trait for phenotypic estimation using wiser (note: some data should be
+# available for the trait)
+trait_ <- "H" # height
+
+# -- get fixed effect vars where latitude and longitude are fitted as quantitative
+# variables for each environment (i.e. combination of site, year and block). 
+# Note that the new fixed-effect variables, which are quantitative and not considered as factors, 
+# are highly correlated to the environment. Hence, environment will not be fitted with wiser due to redundancy.
+fixed_effect_vars_ <- grep("_latitude$|_longitude$", colnames(pine_raw_pheno_data),
+  value = TRUE
+)
+
+# -- estimate wiser phenotype
+start_time_ <- Sys.time()
+wiser_obj <- estimate_wiser_phenotype(
+  pine_genomic_data,
+  pine_raw_pheno_data, 
+  trait_,
+  fixed_effects_vars = fixed_effect_vars_,
+  fixed_effects_vars_computed_as_factor = NULL,
+  envir_var = NULL,
+  fixed_effects_vars_computed_as_factor_by_envir = NULL,
+  random_effects_vars = "Genotype"
+  )
+
+# -- plot and print wiser objects
 
 # plot the density for the estimated phenotypes
 dev.new()
@@ -178,9 +297,12 @@ print(wiser_obj$wiser_fixed_effect_estimates)
 # estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
 
-## ✅ print fundamental property of whitening, i.e. In = W*Σu*W'
+# print fundamental property of whitening, i.e. In = W*Σu*W'
 id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
-print(id_mat[1:10,1:10])
+print(id_mat[1:5, 1:5])
+
+# ➡️ usage examples with maize data
+
 
 ```
 

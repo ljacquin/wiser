@@ -8,14 +8,12 @@
   estimate_wiser_phenotype(omic_df, 
    raw_pheno_df, trait_,
    fixed_effects_vars = c(
-     "Envir", "Country", "Year",
-     "Row", "Position", "Management"
+     "Envir", "Row", "Position"
    ),
    fixed_effects_vars_computed_as_factor = c(
-     "Envir", "Country", "Year",
-     "Row", "Position", "Management"
+     "Envir", "Row", "Position"
    ),
-   envir_var = "Country",
+   envir_var = "Envir",
    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
    random_effects_vars = "Genotype",
    init_sigma2_u = 1,
@@ -39,9 +37,9 @@
   \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data.}
   \item{trait_}{A character string specifying the trait of interest.}
-  \item{fixed_effects_vars}{A character vector specifying the fixed effects variables. Defaults to \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}
-  \item{fixed_effects_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors. Defaults to \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}. Note: declared fixed effects variables which are not specified to be computed as factors will be treated as quantitative variables.}
-  \item{envir_var}{A character string specifying the environment variable. Defaults to \code{"Country"} and should be set to \code{"NULL"} if there is no environment variable.}
+  \item{fixed_effects_vars}{A character vector specifying the fixed effects variables. Defaults to \code{c("Envir", "Row", "Position")}.}
+  \item{fixed_effects_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors. Defaults to \code{c("Envir", "Row", "Position")}. Note: declared fixed effects variables which are not specified to be computed as factors will be treated as quantitative variables.}
+  \item{envir_var}{A character string specifying the environment variable. Defaults to \code{"Envir"} and should be set to \code{"NULL"} if there is no environment variable.}
   \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment. Defaults to \code{c("Row", "Position")}.}
   \item{random_effects_vars}{A character vector specifying the random effects variables. Defaults to \code{"Genotype"}.}
   \item{init_sigma2_u}{A numeric value for the initial variance component of random effects. Defaults to \code{1}.}
@@ -79,46 +77,4 @@
 }
 \author{
   Laval Jacquin, \email{jacquin.julien@gmail.com}
-}
-\examples{
-  # example usage
-
-  # -- load wiser library and data subsets from the refpop dataset
-  # load library
-  library(wiser)
-
-  # load raw individual phenotypic measurements (for subset of 80 genotypes from refpop data)
-  data("refpop_raw_indiv_pheno_data_subset")
-  head(refpop_raw_indiv_pheno_data_subset)
-
-  # load SNP marker data (for subset of 80 genotypes from refpop data)
-  data("refpop_geno_data_subset")
-  head(refpop_geno_data_subset)[,1:10]
-
-  # -- estimate wiser phenotype for a specified trait, e.g., Flowering_begin
-  # define trait
-  trait_ <- "Flowering_begin"
-
-  # apply wiser estimation function
-  wiser_obj <- estimate_wiser_phenotype(
-    omic_df = refpop_geno_data_subset,
-    raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-    trait_ = trait_,
-    fixed_effects_vars = c("Envir", "Country", "Year","Row", "Position", "Management"),
-    fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year","Row", "Position", "Management"),
-    envir_var = "Country",
-    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
-    random_effects_vars = "Genotype"
-  )
-
-  # -- plot the density for the estimated phenotypes
-  dev.new()
-  plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
-
-  # -- get the estimated fixed effects from the whitening process and OLS, and variance components from ABC
-  # estimated fixed effects (from whitening and OLS)
-  print(wiser_obj$wiser_fixed_effect_estimates)
-
-  # estimated variance components (from ABC)
-  print(wiser_obj$wiser_abc_variance_component_estimates)
 }
