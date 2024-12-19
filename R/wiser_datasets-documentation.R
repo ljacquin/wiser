@@ -1,10 +1,10 @@
 #' wiser datasets documentation
 #'
-#' These datasets are small subsets of 30 genotypes derived from the original datasets used
+#' These datasets are small subsets of 30 randomly selected genotypes derived from the original datasets used
 #' in Jacquin et al. (2025). They are provided for illustrative purposes with the wiser package
 #' and are not intended to represent reference populations for genomic prediction or GWAS.
 #' The datasets include genomic data and raw individual phenotypic measurements for the 30 selected
-#' genotypes, aligned with the experimental design for each of the following species: rice, maize, apple, and pine.
+#' genotypes, aligned with an experimental design for each of the following species: rice, maize, apple, and pine.
 #'
 #' @docType data
 #' @name wiser_datasets_description

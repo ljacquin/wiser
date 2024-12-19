@@ -1,14 +1,12 @@
 # function which computes phenotypes approximating genetic values using whitening
 estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
                                      fixed_effects_vars = c(
-                                       "Envir", "Country", "Year",
-                                       "Row", "Position", "Management"
+                                       "Envir", "Row", "Position"
                                      ),
                                      fixed_effects_vars_computed_as_factor = c(
-                                       "Envir", "Country", "Year",
-                                       "Row", "Position", "Management"
+                                       "Envir", "Row", "Position"
                                      ),
-                                     envir_var = "Country",
+                                     envir_var = "Envir",
                                      fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
                                      random_effects_vars = "Genotype",
                                      init_sigma2_u = 1,

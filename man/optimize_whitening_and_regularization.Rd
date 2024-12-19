@@ -7,9 +7,9 @@
 \usage{
   optimize_whitening_and_regularization(
     omic_df, raw_pheno_df, trait_,
-    fixed_effects_vars = c("Envir", "Country", "Year", "Row", "Position", "Management"),
-    fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year", "Row", "Position", "Management"),
-    envir_var = "Country",
+    fixed_effects_vars = c("Envir", "Row", "Position"),
+    fixed_effects_vars_computed_as_factor = c("Envir", "Row", "Position"),
+    envir_var = "Envir",
     fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
     random_effects_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
@@ -27,9 +27,9 @@
   \item{omic_df}{A data frame containing the omic data (e.g., genotypes as rows and SNPs, metabolites, or wavelength reflectances/absorbances as columns).}
   \item{raw_pheno_df}{A data frame containing raw phenotypic data with observations across different environments and conditions.}
   \item{trait_}{A character string specifying the target trait to be analyzed and optimized.}
-  \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be included in the model. Default is \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}
-  \item{fixed_effects_vars_computed_as_factor}{A character vector listing the fixed effects variables to be treated as factors during modeling. Default is \code{c("Envir", "Country", "Year", "Row", "Position", "Management")}.}
-  \item{envir_var}{A character string specifying the variable representing the environment (e.g., country or location) to be included in the model. Default is \code{"Country"}.}
+  \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be included in the model. Default is \code{c("Envir", "Row", "Position")}.}
+  \item{fixed_effects_vars_computed_as_factor}{A character vector listing the fixed effects variables to be treated as factors during modeling. Default is \code{c("Envir", "Row", "Position")}.}
+  \item{envir_var}{A character string specifying the variable representing the environment (e.g., location) to be included in the model. Default is \code{"Envir"}.}
   \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector listing the fixed effects variables to be treated as factors within each environment. Default is \code{c("Row", "Position")}.}
   \item{random_effects_vars}{A character string specifying the random effects variable. Default is \code{"Genotype"}.}
   \item{prediction_method}{A character vector specifying the prediction methods to be evaluated. Default is \code{c("rf", "svr", "gblup", "rkhs", "lasso")}.}
@@ -52,8 +52,6 @@
   Laval Jacquin, \email{jacquin.julien@gmail.com}
 }
 \examples{
-  # example usage:
-
   # define inputs
   trait <- "Flowering_begin"
   whitening_method_grid <- c("ZCA-cor", "PCA-cor", "Cholesky")
