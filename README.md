@@ -95,81 +95,62 @@ install_github("ljacquin/wiser")
     ▸ estimate_wiser_phenotype: estimates phenotypic values approximating genetic values using whitening methods.
     ▸ optimize_whitening_and_regularization: finds the optimal combination of whitening method and regularization parameter through cross-validation for phenotype prediction.
 
-## Example
+## Examples of phenotypic estimation using WISER
 
-### Estimating phenotypes with WISER
+Below are straightforward examples demonstrating the use of the ```estimate_wiser_phenotype``` function for phenotype estimation, across the following four species: apple, pine, maize and rice. The datasets used are small subsets derived from the original datasets featured in Jacquin et al. (2025). These subsets are provided for illustrative purposes within the WISER package and are not intended to serve as reference populations for genomic prediction or GWAS. They include genomic data and raw individual phenotypic measurements for 30 randomly selected genotypes associated with an experimental design specific to each one of the four species.
 
-Here are straightforward examples demonstrating how to use the ```estimate_wiser_phenotype``` function for phenotype estimation:
+### Phenotypic estimation for apple data
 
 ```R
-# ➡️ Load wiser library, display package help ,and attach datasets associated to four species
+# ➡️ Load wiser library, display package help ,and attach apple data
 
-# -- Load library
+# Load library
 library(wiser)
 
-# -- Show help for library
+# Show help for library
 help(package = "wiser")
 
-# -- Attach datasets for random samples of 30 genotypes associated to apple, pine, maize
-# and rice
-
-# 📌 These datasets are small subsets derived from the original datasets used in Jacquin et al. (2025).
-# They are provided for illustrative purposes with the wiser package and are not intended to represent
-# reference populations for genomic prediction or GWAS. These datasets include genomic data and raw
-# individual phenotypic measurements for 30 randomly selected genotypes, associated with an experimental
-# design for each of the following species: apple, pine, maize and rice.
-
-# Apple
+# Attach apple data
 data("apple_raw_pheno_data")
 data("apple_genomic_data")
-# Pine
-data("pine_raw_pheno_data")
-data("pine_genomic_data")
-# Maize
-data("maize_raw_pheno_data")
-data("maize_genomic_data")
-# Rice
-data("rice_raw_pheno_data")
-data("rice_genomic_data")
 
-# ➡️ Usage examples with apple data
-
-# -- Display apple data
+# Display apple data
 head(apple_raw_pheno_data)
 head(apple_genomic_data)[, 1:10]
 
-# -- For the individual phenotypic data, create the Envir variable in apple_raw_pheno_data
-# by combining Country, Year, and Management. This variable represents the environments (i.e., levels)
+# For the individual phenotypic data, create the Envir variable in apple_raw_pheno_data by
+# combining Country, Year, and Management. This variable represents the environments (i.e., levels)
 apple_raw_pheno_data$Envir <- paste0(
   apple_raw_pheno_data$Country, "_",
   apple_raw_pheno_data$Year, "_",
   apple_raw_pheno_data$Management
 )
 
-# -- For the genomic data, assign genotypes as row names (if necessary) to comply with wiser functions,
-# and remove the "Genotype" column (if present)
+# For the genomic data, assign genotypes as row names (if necessary) to comply with wiser
+# functions, and remove the "Genotype" column (if present)
 rownames(apple_genomic_data) <- apple_genomic_data$Genotype
 apple_genomic_data <- apple_genomic_data[, -match(
   "Genotype",
   colnames(apple_genomic_data)
 )]
 
-# -- Define a trait for phenotypic estimation using wiser (note: some data should be available for the trait)
+# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# the trait)
 trait_ <- "Trunk_increment"
 
-# -- Estimate phenotypes using wiser with its default values for whitening_method ("ZCA-cor") and alpha_ (0.01).
-# Remark that the overall mean is always fitted within the wiser framework.
+# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
+# ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
 
-# 📌 Note 1: the default values typically yield satisfactory results for phenotypic predictive ability.
-# Therefore, using `optimize_whitening_and_regularization()` may not always be necessary, especially for
-# large datasets. Nevertheless, these parameters should be optimized, when possible, for better results.
+# 📌 Note 1: default values for whitening_method and alpha_ typically yield satisfactory results for phenotypic 
+# predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not always be necessary, 
+# especially for large datasets. Nevertheless, these parameters should be optimized, when possible, for better
+# results.
 
-# 📌 Note 2: here, rows and positions are modeled as factors within the variable Envir to account for local
-# spatial heterogeneity. For each environment (i.e., each level of Envir), with multiple rows and positions,
-# a row or position level (i.e., row or position number dummy) is reasonably not highly correlated with the
-# corresponding environment. Therefore, Envir is also fitted separately to capture the global environmental
-# effects.
+# 📌 Note 2: rows and positions are modeled as factors within the variable Envir to account for local spatial
+# heterogeneity. For each environment (i.e., each level of Envir), with multiple rows and positions, a row or 
+# position level (i.e., row or position number dummy) is reasonably not strongly correlated with the corresponding environment. Therefore, Envir is also fitted separately to capture the global environmental effects.
 
+# Estimate "Trunk_increment" (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype() 
 wiser_obj <- estimate_wiser_phenotype(
   omic_df = apple_genomic_data,
   raw_pheno_df = apple_raw_pheno_data,
@@ -185,7 +166,8 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# -- Estimate phenotypes using wiser with optimized values for whitening_method and alpha_
+# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with optimized values for whitening_method 
+# and alpha_
 
 # 📌⚠️ Highly recommended: increase memory size as specified below with options() before using
 # optimize_whitening_and_regularization(). For optimal performance, it is strongly advised to use
@@ -221,57 +203,76 @@ if (run_example) {
   )
 }
 
-# -- Plot the density for the estimated phenotypes
+# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
+
+# Plot the density for the estimated phenotypes
 dev.new()
 plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
 
-# -- Print the fixed-effect estimates computed from the whitening process and OLS
+# Print the fixed-effect estimates computed from the whitening process and OLS
 print(wiser_obj$wiser_fixed_effect_estimates)
 
-# -- Print the estimated variance components (from ABC)
+# Print the estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
 
-# -- Print the fundamental whitening property, i.e. In = W*Σu*W'
+# Print the fundamental whitening property, i.e. In = W*Σu*W'
 id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])
+```
 
-# ➡️ Usage examples with pine data
+### Phenotypic estimation for pine data
 
-# -- Display pine data
+```R
+# ➡️ Load wiser library, display package help ,and attach pine data
+
+# Load library
+library(wiser)
+
+# Show help for library
+help(package = "wiser")
+
+# Attach pine data
+data("pine_raw_pheno_data")
+data("pine_genomic_data")
+
+# Display pine data
 head(pine_raw_pheno_data)
 head(pine_genomic_data)[, 1:10]
 
-# -- Generate latitude and longitude variables per environment (i.e. combination of Site, Year and Block
-# in pine_raw_pheno_data)
+# Generate latitude and longitude variables per environment (i.e. combination of Site, Year
+and Block in pine_raw_pheno_data)
 
-# 📌 Note: here, the Envir variable is not created in pine_raw_pheno_data. Indeed, the two fixed-effect variables
-# latitude and longitude, which are quantitative and not considered as factors with levels, are highly correlated
-# to each environment for which they are fitted. Therefore, it is not necessary to create and fit the Envir variable
-# due to strong redundancy and multicolinearity.
+# 📌 Note: the Envir variable is not created in pine_raw_pheno_data. Indeed, the two fixed-effect variables
+# latitude and longitude, which are quantitative and not considered as factors with levels, are highly 
+# correlated to each environment for which they are fitted. Therefore, it is not necessary to create and fit
+# the Envir variable due to strong redundancy and multicolinearity.
 
 pine_raw_pheno_data <- generate_latitude_longitude_variables_by_environment(
   pine_raw_pheno_data
 )
 
-# -- For the genomic data, assign genotypes as row names (if necessary) to comply with wiser functions,
-# and remove the "Genotype" column (if present). Note that "V1" corresponds to "Genotype" column here.
+# For the genomic data, assign genotypes as row names (if necessary) to comply with wiser 
+# functions, and remove the "Genotype" column (if present). Note that "V1" corresponds to 
+# "Genotype" column here.
 rownames(pine_genomic_data) <- pine_genomic_data$V1
 pine_genomic_data <- pine_genomic_data[, -match(
   "V1", colnames(pine_genomic_data)
 )]
 
-# -- Define a trait for phenotypic estimation using wiser (note: some data should be available
-# for the trait)
+# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# the trait)
 trait_ <- "H" # height
 
-# -- Get fixed-effect variables, latitude and longitude, which are fitted as quantitative variables for
-# each environment (i.e. combination of Site, Year and Block in pine_raw_pheno_data) using wiser
+# Get fixed-effect variables, latitude and longitude, which are fitted with wiser as quantitative
+# variables for each environment (i.e. combination of Site, Year and Block in pine_raw_pheno_data) 
 fixed_effect_vars_ <- grep("_latitude$|_longitude$", colnames(pine_raw_pheno_data),
   value = TRUE
 )
 
-# -- Estimate phenotypes using wiser with its default values for whitening_method ("ZCA-cor") and alpha_ (0.01)
-start_time_ <- Sys.time()
+# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
+# ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+
+# Estimate "H" (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj <- estimate_wiser_phenotype(
   pine_genomic_data,
   pine_raw_pheno_data,
@@ -283,57 +284,74 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# -- Plot and print wiser objects
+# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
 plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
 
-# -- Print the fixed-effect estimates computed from the whitening process and OLS
+# Pint the fixed-effect estimates computed from the whitening process and OLS
 print(wiser_obj$wiser_fixed_effect_estimates)
 
-# -- Print the estimated variance components (from ABC)
+# Print the estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
 
-# -- Print the fundamental whitening property, i.e. In = W*Σu*W'
+# Print the fundamental whitening property, i.e. In = W*Σu*W'
 id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])
+```
 
-# ➡️ Usage examples with maize data
+### Phenotypic estimation for maize data
 
-# -- Display maize data
+```R
+# ➡️ Load wiser library, display package help ,and attach maize data
+
+# Load library
+library(wiser)
+
+# Show help for library
+help(package = "wiser")
+
+# Attach maize data
+data("maize_raw_pheno_data")
+data("maize_genomic_data")
+
+# Display maize data
 head(maize_raw_pheno_data)
 head(maize_genomic_data)[, 1:10]
 
-# -- Generate row and column variables per environment (i.e. combination of Site, year, Management and block
-# in maize_genomic_data)
+# Generate row and column variables per environment (i.e. combination of Site, year, Management
+# and block in maize_genomic_data)
 
-# 📌 Note: here, the Envir variable is not created in maize_genomic_data. Indeed, the two fixed-effect variables
-# row and column number are fitted as quantitative variables, per environment, to limit the number of fixed-effect
-# variables. Hence, they are strongly correlated to each environment for which they are fitted. Therefore, it is
-# not necessary to create and fit the Envir variable using  wiser due to strong redundancy and multicolinearity.
+# 📌 Note: the Envir variable is not created in maize_genomic_data. Indeed, the two fixed-effect variables,
+# row and column number, are fitted with wiser as quantitative variables per environment to limit the high
+# number of fixed-effect variables (see Jacquin et al. 2025). Hence, they are strongly correlated to each 
+# environment for which they are fitted. Therefore, it is not necessary to create and fit the Envir variable
+# due to strong redundancy and multicolinearity.
 
 maize_raw_pheno_data <- generate_row_column_variables_by_environment(
   maize_raw_pheno_data
 )
 
-# -- For the genomic data, assign genotypes as row names (if necessary) to comply with wiser functions,
+# For the genomic data, assign genotypes as row names (if necessary) to comply with wiser functions,
 # and remove the "Genotype" column (if present). Note that "V1" corresponds to "Genotype" column here.
 rownames(maize_genomic_data) <- maize_genomic_data$V1
 maize_genomic_data <- maize_genomic_data[, -match(
   "V1", colnames(maize_genomic_data)
 )]
 
-# -- Define a trait for phenotypic estimation using wiser (note: some data should be available
-# for the trait)
+# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# the trait)
 trait_ <- "anthesis"
 
-# -- Get fixed-effect variables, row and column, which are fitted as quantitative variables for each environment
-# (i.e. combination of Site, year, Management and block in maize_genomic_data) using wiser
+# Get fixed-effect variables, row and column, which are fitted as quantitative variables for each
+# environment (i.e. combination of Site, year, Management and block in maize_genomic_data) 
 fixed_effect_vars_ <- grep("_row$|_column$", colnames(maize_raw_pheno_data), value = TRUE)
 
-# -- Estimate phenotypes using wiser with its default values for whitening_method ("ZCA-cor") and alpha_ (0.01)
-start_time_ <- Sys.time()
+# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
+# ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+
+# Estimate "anthesis" (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj <- estimate_wiser_phenotype(
   maize_genomic_data,
   maize_raw_pheno_data,
@@ -345,29 +363,43 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# -- Plot and print wiser objects
+# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
 plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
 
-# -- Print the fixed-effect estimates computed from the whitening process and OLS
+# Print the fixed-effect estimates computed from the whitening process and OLS
 print(wiser_obj$wiser_fixed_effect_estimates)
 
-# -- Print the estimated variance components (from ABC)
+# Print the estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
 
-# -- Print the fundamental whitening property, i.e. In = W*Σu*W'
+# Print the fundamental whitening property, i.e. In = W*Σu*W'
 id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])
+```
 
-# ➡️ Usage examples with rice data
+### Phenotypic estimation for rice data
 
-# -- Display rice data
+```R
+# ➡️ Load wiser library, display package help ,and attach rice data
+
+# Load library
+library(wiser)
+
+# Show help for library
+help(package = "wiser")
+
+# Attach rice data
+data("rice_raw_pheno_data")
+data("rice_genomic_data")
+
+# Display rice data
 head(rice_raw_pheno_data)
 head(rice_genomic_data)[, 1:10]
 
-# -- For the individual phenotypic data, create the Envir variable in rice_raw_pheno_data by
+# For the individual phenotypic data, create the Envir variable in rice_raw_pheno_data by
 # combining TRIAL, BLOC, and GENERATION. This variable represents the environments (i.e., levels)
 rice_raw_pheno_data$Envir <- paste0(
   rice_raw_pheno_data$TRIAL, "_",
@@ -375,22 +407,24 @@ rice_raw_pheno_data$Envir <- paste0(
   rice_raw_pheno_data$GENERATION.
 )
 
-# -- For the genomic data, assign genotypes as row names (if necessary) to comply with wiser functions,
+# For the genomic data, assign genotypes as row names (if necessary) to comply with wiser functions,
 # and remove the "Genotype" column (if present). Note that "V1" corresponds to "Genotype" column here.
 rownames(rice_genomic_data) <- rice_genomic_data$V1
 rice_genomic_data <- rice_genomic_data[, -match(
   "V1", colnames(rice_genomic_data)
 )]
 
-# -- Define a trait for phenotypic estimation using wiser (note: some data should be available
-# for the trait)
+# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# the trait)
 trait_ <- "ZN" # Zinc concentration
 
-# 📌 Note : here, no spatial information is available in rice_genomic_data. Hence, obly Envir is fitted as a
+# 📌 Note : no spatial information is available in rice_genomic_data. Hence, obly Envir is fitted as a 
 # fixed-effect factor
 
-# -- Estimate phenotypes using wiser with its default values for whitening_method ("ZCA-cor") and alpha_ (0.01)
-start_time_ <- Sys.time()
+# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
+# ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+
+# Estimate "ZN" (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj <- estimate_wiser_phenotype(
   rice_genomic_data,
   rice_raw_pheno_data,
@@ -402,19 +436,19 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# -- Plot and print wiser objects
+# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
 plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, " v_hat"))
 
-# -- Print the fixed-effect estimates computed from the whitening process and OLS
+# Print the fixed-effect estimates computed from the whitening process and OLS
 print(wiser_obj$wiser_fixed_effect_estimates)
 
-# -- Print the estimated variance components (from ABC)
+# Print the estimated variance components (from ABC)
 print(wiser_obj$wiser_abc_variance_component_estimates)
 
-# -- Print the fundamental whitening property, i.e. In = W*Σu*W'
+# Print the fundamental whitening property, i.e. In = W*Σu*W'
 id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])
 ```
