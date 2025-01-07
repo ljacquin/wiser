@@ -6,7 +6,7 @@
 .quarto
 .Rbuildignore
 README_PDF.md
-README_.md
+README_PDF.html
 header.tex
 pandoc_commands.txt
 data/apple_genomic_data.csv
