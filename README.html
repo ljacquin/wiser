@@ -512,16 +512,25 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 </div>
 <div id="key-features" class="section level2">
 <h2>Key Features</h2>
-<pre><code>▸ Phenotype estimation: estimate phenotypic values that approximate genetic values, by applying whitening methods to correct for genetic covariance structure in experimental designs (i.e., population structure correction).
-▸ Whitening methods: implement various whitening techniques, such as ZCA-cor, PCA-cor, and Cholesky, to effectively correct for population structure.
-▸ Genetic covariance matrix regularization: ensure the stability of genetic covariance matrices, by applying regularization and shrinkage techniques which ensure positive definiteness.
-▸ Optimal whitening and regularization: automatically determine the best whitening method and regularization parameter optimizing phenotypic predictive ability, through k-fold cross-validation using a subset of the data.
-▸ Fast and stable variance component estimation: use a parallelized ABC algorithm to achieve fast and stable variance component estimation in large datasets associated to complex experimental designs.</code></pre>
+<pre><code>▸ Phenotype estimation: estimate phenotypic values that approximate genetic values, by applying 
+whitening methods to correct for genetic covariance structure in experimental designs (i.e., 
+population structure correction).
+▸ Whitening methods: implement various whitening techniques, such as ZCA-cor, PCA-cor, and Cholesky,
+to effectively correct for population structure.
+▸ Genetic covariance matrix regularization: ensure the stability of genetic covariance matrices, 
+by applying regularization and shrinkage techniques which ensure positive definiteness.
+▸ Optimal whitening and regularization: automatically determine the best whitening method and 
+regularization parameter optimizing phenotypic predictive ability, through k-fold cross-validation 
+using a subset of the data.
+▸ Fast and stable variance component estimation: use a parallelized ABC algorithm to achieve fast and 
+stable variance component estimation in large datasets associated to complex experimental designs.</code></pre>
 </div>
 <div id="main-functions" class="section level2">
 <h2>Main Functions</h2>
-<pre><code>▸ estimate_wiser_phenotype: estimates phenotypic values approximating genetic values using whitening methods.
-▸ optimize_whitening_and_regularization: finds the optimal combination of whitening method and regularization parameter through cross-validation for phenotype prediction.</code></pre>
+<pre><code>▸ estimate_wiser_phenotype: estimates phenotypic values approximating genetic values using whitening 
+methods.
+▸ optimize_whitening_and_regularization: finds the optimal combination of whitening method and 
+regularization parameter through cross-validation for phenotype prediction.</code></pre>
 </div>
 <div id="examples-of-phenotypic-estimation-using-wiser" class="section level2">
 <h2>Examples of phenotypic estimation using WISER</h2>
@@ -529,14 +538,15 @@ install_github(&quot;ljacquin/wiser&quot;)</code></pre>
 <code>estimate_wiser_phenotype</code> function for phenotype estimation,
 across the following four species: apple, pine, maize and rice. The
 datasets used are small subsets derived from the original datasets
-featured in Jacquin et al. (2025). These subsets are provided for
-illustrative purposes within the WISER package and are not intended to
-serve as reference populations for genomic prediction or GWAS. They
-include genomic data and raw individual phenotypic measurements for 30
-randomly selected genotypes associated with an experimental design
-specific to each one of the four species.</p>
-<div id="phenotypic-estimation-for-apple-data" class="section level3">
-<h3>Phenotypic estimation for apple data</h3>
+featured in Jacquin <span class="math inline">\(\textit{et al.}\)</span>
+(2025). These subsets are provided for illustrative purposes within the
+WISER package and are not intended to serve as reference populations for
+genomic prediction or GWAS. They include genomic data and raw individual
+phenotypic measurements for 30 randomly selected genotypes associated
+with an experimental design specific to each one of the four
+species.</p>
+<div id="phenotypic-estimation-for-apple-data-jung-et-al.-2020" class="section level3">
+<h3>Phenotypic estimation for apple data (Jung et al., 2020)</h3>
 <pre class="r"><code># ➡️ Load wiser library, display package help ,and attach apple data
 
 # Load library
@@ -553,8 +563,8 @@ data(&quot;apple_genomic_data&quot;)
 head(apple_raw_pheno_data)
 head(apple_genomic_data)[, 1:10]
 
-# For the individual phenotypic data, create the Envir variable in apple_raw_pheno_data by
-# combining Country, Year, and Management. This variable represents the environments (i.e., levels)
+# For the individual phenotypic data, create the Envir variable in apple_raw_pheno_data by combining 
+# Country, Year, and Management. This variable represents the environments (i.e., levels)
 apple_raw_pheno_data$Envir &lt;- paste0(
   apple_raw_pheno_data$Country, &quot;_&quot;,
   apple_raw_pheno_data$Year, &quot;_&quot;,
@@ -574,16 +584,18 @@ apple_genomic_data &lt;- apple_genomic_data[, -match(
 trait_ &lt;- &quot;Trunk_increment&quot;
 
 # ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
-# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
+# framework
 
-# 📌 Note 1: default values for whitening_method and alpha_ typically yield satisfactory results for phenotypic 
-# predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not always be necessary, 
-# especially for large datasets. Nevertheless, these parameters should be optimized, when possible, for better
-# results.
+# 📌 Note 1: default values for whitening_method and alpha_ typically yield satisfactory results for 
+# phenotypic predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not 
+# always be necessary, especially for large datasets. Nevertheless, these parameters should be 
+# optimized, when possible, for better results.
 
-# 📌 Note 2: rows and positions are modeled as factors within the variable Envir to account for local spatial
-# heterogeneity. For each environment (i.e., each level of Envir), with multiple rows and positions, a row or 
-# position level (i.e., row or position number dummy) is reasonably not strongly correlated with the corresponding environment. Therefore, Envir is also fitted separately to capture the global environmental effects.
+# 📌 Note 2: rows and positions are modeled as factors within the variable Envir to account for local 
+# spatial heterogeneity. For each environment (i.e., each level of Envir), with multiple rows and 
+# positions, a row or position level (i.e., row or position number dummy) will capture only a local 
+# effect. Therefore, Envir is also fitted separately to capture the global environmental effects.
 
 # Estimate &quot;Trunk_increment&quot; (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype() 
 wiser_obj &lt;- estimate_wiser_phenotype(
@@ -607,7 +619,6 @@ wiser_obj &lt;- estimate_wiser_phenotype(
 # 📌⚠️ Highly recommended: increase memory size as specified below with options() before using
 # optimize_whitening_and_regularization(). For optimal performance, it is strongly advised to use
 # a high-performance computing cluster (HPC) when running this function.
-
 run_example &lt;- F
 if (run_example) {
   options(future.globals.maxSize = 16 * 1024^3)
@@ -654,8 +665,8 @@ print(wiser_obj$wiser_abc_variance_component_estimates)
 id_mat &lt;- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])</code></pre>
 </div>
-<div id="phenotypic-estimation-for-pine-data" class="section level3">
-<h3>Phenotypic estimation for pine data</h3>
+<div id="phenotypic-estimation-for-pine-data-perry-et-al.-2022" class="section level3">
+<h3>Phenotypic estimation for pine data (Perry et al., 2022)</h3>
 <pre class="r"><code># ➡️ Load wiser library, display package help ,and attach pine data
 
 # Load library
@@ -673,13 +684,12 @@ head(pine_raw_pheno_data)
 head(pine_genomic_data)[, 1:10]
 
 # Generate latitude and longitude variables per environment (i.e. combination of Site, Year
-and Block in pine_raw_pheno_data)
+# and Block in pine_raw_pheno_data)
 
-# 📌 Note: the Envir variable is not created in pine_raw_pheno_data. Indeed, the two fixed-effect variables
-# latitude and longitude, which are quantitative and not considered as factors with levels, are highly 
-# correlated to each environment for which they are fitted. Therefore, it is not necessary to create and fit
-# the Envir variable due to strong redundancy and multicolinearity.
-
+# 📌 Note: the Envir variable is not created in pine_raw_pheno_data. Indeed, the two fixed-effect 
+# variables latitude and longitude, which are quantitative and not considered as factors with levels,
+# are highly correlated to each environment for which they are fitted. Therefore, it is not necessary
+# to create and fit the Envir variable due to strong redundancy and multicolinearity.
 pine_raw_pheno_data &lt;- generate_latitude_longitude_variables_by_environment(
   pine_raw_pheno_data
 )
@@ -703,7 +713,8 @@ fixed_effect_vars_ &lt;- grep(&quot;_latitude$|_longitude$&quot;, colnames(pine_
 )
 
 # ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
-# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
+# framework
 
 # Estimate &quot;H&quot; (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj &lt;- estimate_wiser_phenotype(
@@ -733,8 +744,8 @@ print(wiser_obj$wiser_abc_variance_component_estimates)
 id_mat &lt;- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])</code></pre>
 </div>
-<div id="phenotypic-estimation-for-maize-data" class="section level3">
-<h3>Phenotypic estimation for maize data</h3>
+<div id="phenotypic-estimation-for-maize-data-millet-et-al.-2019" class="section level3">
+<h3>Phenotypic estimation for maize data (Millet et al., 2019)</h3>
 <pre class="r"><code># ➡️ Load wiser library, display package help ,and attach maize data
 
 # Load library
@@ -754,12 +765,11 @@ head(maize_genomic_data)[, 1:10]
 # Generate row and column variables per environment (i.e. combination of Site, year, Management
 # and block in maize_genomic_data)
 
-# 📌 Note: the Envir variable is not created in maize_genomic_data. Indeed, the two fixed-effect variables,
-# row and column number, are fitted with wiser as quantitative variables per environment to limit the high
-# number of fixed-effect variables (see Jacquin et al. 2025). Hence, they are strongly correlated to each 
-# environment for which they are fitted. Therefore, it is not necessary to create and fit the Envir variable
-# due to strong redundancy and multicolinearity.
-
+# 📌 Note: the Envir variable is not created in maize_genomic_data. Indeed, the two fixed-effect 
+# variables, row and column number, are fitted with wiser as quantitative variables per environment 
+# to limit the high number of fixed-effect variables (see Jacquin et al. 2025). Hence, they are 
+# strongly correlated to each environment for which they are fitted. Therefore, it is not necessary
+# to create and fit the Envir variable due to strong redundancy and multicolinearity.
 maize_raw_pheno_data &lt;- generate_row_column_variables_by_environment(
   maize_raw_pheno_data
 )
@@ -780,7 +790,8 @@ trait_ &lt;- &quot;anthesis&quot;
 fixed_effect_vars_ &lt;- grep(&quot;_row$|_column$&quot;, colnames(maize_raw_pheno_data), value = TRUE)
 
 # ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
-# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
+# framework
 
 # Estimate &quot;anthesis&quot; (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj &lt;- estimate_wiser_phenotype(
@@ -810,8 +821,8 @@ print(wiser_obj$wiser_abc_variance_component_estimates)
 id_mat &lt;- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])</code></pre>
 </div>
-<div id="phenotypic-estimation-for-rice-data" class="section level3">
-<h3>Phenotypic estimation for rice data</h3>
+<div id="phenotypic-estimation-for-rice-data-baerstchi-et-al.-2021" class="section level3">
+<h3>Phenotypic estimation for rice data (Baerstchi et al., 2021)</h3>
 <pre class="r"><code># ➡️ Load wiser library, display package help ,and attach rice data
 
 # Load library
@@ -851,7 +862,8 @@ trait_ &lt;- &quot;ZN&quot; # Zinc concentration
 # fixed-effect factor
 
 # ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
-# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser framework
+# (&quot;ZCA-cor&quot;) and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
+# framework
 
 # Estimate &quot;ZN&quot; (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj &lt;- estimate_wiser_phenotype(
@@ -882,8 +894,8 @@ id_mat &lt;- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])</code></pre>
 </div>
 </div>
-<div id="authors-and-references" class="section level2">
-<h2>Authors and References</h2>
+<div id="author" class="section level2">
+<h2>Author</h2>
 <ul>
 <li>Author : Laval Jacquin</li>
 <li>Maintainer : Laval Jacquin <a href="mailto:jacquin.julien@gmail.com" class="email">jacquin.julien@gmail.com</a></li>
@@ -891,8 +903,28 @@ print(id_mat[1:5, 1:5])</code></pre>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p>Kessy, A., Lewin, A., &amp; Strimmer, K. (2018). Optimal whitening
-and decorrelation. The American Statistician, 72(4), 309-314.</p>
+<ul>
+<li><p>Kessy, A., Lewin, A., &amp; Strimmer, K. (2018). Optimal
+whitening and decorrelation. The American Statistician, 72(4),
+309-314.</p></li>
+<li><p>Jung, M., Roth, M., Aranzana, M. J., Auwerkerken, A., Bink, M.,
+Denancé, C., … &amp; Muranty, H. (2020). The apple REFPOP—a reference
+population for genomics-assisted breeding in apple. Horticulture
+research, 7.</p></li>
+<li><p>Perry, A., Wachowiak, W., Beaton, J., Iason, G., Cottrell, J.,
+&amp; Cavers, S. (2022). Identifying and testing marker–trait
+associations for growth and phenology in three pine species:
+Implications for genomic prediction. Evolutionary Applications, 15(2),
+330-348.</p></li>
+<li><p>Millet, E. J., Kruijer, W., Coupel-Ledru, A., Alvarez Prado, S.,
+Cabrera-Bosquet, L., Lacube, S., … &amp; Tardieu, F. (2019). Genomic
+prediction of maize yield across European environmental conditions.
+Nature genetics, 51(6), 952-956.</p></li>
+<li><p>Baertschi, C., Cao, T. V., Bartholomé, J., Ospina, Y., Quintero,
+C., Frouin, J., … &amp; Grenier, C. (2021). Impact of early genomic
+prediction for recurrent selection in an upland rice synthetic
+population. G3, 11(12), jkab320.</p></li>
+</ul>
 </div>
 </div>
 
