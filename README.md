@@ -71,6 +71,13 @@ Crucially, the successive OLS estimation procedure implemented in ```wiser``` op
 
 In ```wiser```, two kernel functions are also provided to build $K$: ```linear``` and ```identity```. The ```identity``` kernel, which is **not estimated from omic data**, is generally discouraged due to its poor associated phenotypic predictive ability. The ```identity``` kernel can be used solely to assess the impact of including or excluding the genetic covariance structure. The ```linear``` kernel is used by default in ```wiser```.
 
+## Expected results
+
+The blue, yellow, and green curves in the figures below represent the median predictive abilities (PA) for phenotypes estimated using WISER, least-squares means (LS-means), and BLUP, respectively, as reported by Jacquin $\textit{et al.}$ (2025). These median PA values were computed for 34 traits across four species: rice, maize, apple, and pine. For each trait, the distribution of predictive abilities used to calculate the median PA was estimated using a 5-fold cross-validation (CV) scheme, with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—relative to LS-means (the second-best approach)—was **0.22**, highlighting WISER’s superior accuracy in phenotypic estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER phenotypes, compared to those estimated with LS-means
+
+[<img src="img/wiser_ls_means_blup.jpg"/>]()
+
+
 ## Installation
 
 You can install the latest version of the ```wiser``` package with :
@@ -80,6 +87,10 @@ install.packages("devtools")
 library(devtools)
 install_github("ljacquin/wiser")
 ```
+
+## PDF documentation
+
+The PDF version of WISER's documentation can be downloaded [here](https://github.com/ljacquin/wiser/blob/main/README.pdf)
 
 ## Key Features
 
@@ -427,7 +438,7 @@ rice_genomic_data <- rice_genomic_data[, -match(
 # the trait)
 trait_ <- "ZN" # Zinc concentration
 
-# 📌 Note : no spatial information is available in rice_genomic_data. Hence, obly Envir is fitted as a 
+# 📌 Note : no spatial information is available in rice_genomic_data. Hence, only Envir is fitted as a 
 # fixed-effect factor
 
 # ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
