@@ -5,6 +5,9 @@
 .DS_Store
 .quarto
 .Rbuildignore
+README_.md
+header.tex
+pandoc_commands.txt
 data/apple_genomic_data.csv
 data/apple_phenotype_data.csv
 data/rice_genomic_data.csv
