@@ -464,7 +464,7 @@ id_mat <- wiser_obj$w_mat %*% wiser_obj$sig_mat_u %*% t(wiser_obj$w_mat)
 print(id_mat[1:5, 1:5])
 ```
 
-## Author
+## Author and maintainer
 
 * Author : Laval Jacquin
 * Maintainer : Laval Jacquin jacquin.julien@gmail.com
