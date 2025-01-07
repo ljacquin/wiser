@@ -5,6 +5,7 @@
 .DS_Store
 .quarto
 .Rbuildignore
+README_PDF.md
 README_.md
 header.tex
 pandoc_commands.txt

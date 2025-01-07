@@ -471,36 +471,37 @@ these criteria and the optimality of each method are discussed in Kessy
 into <span class="math inline">\(\tilde{X}\)</span> through whitening,
 to adjust fixed effect variables for population structure, is
 comprehensively addressed in Jacquin <span class="math inline">\(\textit{et al.}\)</span> (2025). In contrast, the
-chosen approach of successive ordinary least squares (OLS) in
-<code>wiser</code> avoids making assumptions about the properties of
-<span class="math inline">\(\beta\)</span> and <span class="math inline">\(v\)</span>. Specifically, <code>wiser</code> does
+chosen approach of successive OLS estimation in <code>wiser</code>
+avoids making assumptions about the properties of <span class="math inline">\(\beta\)</span> and <span class="math inline">\(v\)</span>. Specifically, <code>wiser</code> does
 not assume that <span class="math inline">\(v\)</span> is a random
 vector drawn from a distribution with a specified covariance matrix.
 This approach prevents enforcing an unnecessary covariance structure
 during the estimation of <span class="math inline">\(v\)</span>, which
-could be detrimental. <br> For example, assuming <span class="math inline">\(v \sim \mathcal{N}_q(0,\sigma^2_vI_q)\)</span> is
+could be detrimental. For example, assuming <span class="math inline">\(v \sim \mathcal{N}_q(0,\sigma^2_vI_q)\)</span> is
 often unrealistic and would lead to using a decorrelated covariance
-structure in the best linear unbiased predictor (BLUP) of <span class="math inline">\(v\)</span>, which can be highly undesirable. <br>
-Crucially, the successive ordinary least squares (OLS) procedure
-implemented in <code>wiser</code> operates without such assumptions,
-ensuring that the estimation of <span class="math inline">\(v\)</span>
-remains independent of omic information or any imposed covariance
-structure. The only assumptions in the <code>wiser</code> framework are
-<span class="math inline">\(u \sim \mathcal{N}_q(0,\sigma^2_u
-K)\)</span> and <span class="math inline">\(\varepsilon \sim
-\mathcal{N}_n(0,\sigma^2_e I_n)\)</span>, which are necessary to
-estimate <span class="math inline">\(\sigma^2_u\)</span> for
-constructing the whitening matrix <span class="math inline">\(W\)</span>. In this framework, the estimation of
-<span class="math inline">\(\sigma^2_u\)</span> and <span class="math inline">\(\sigma^2_e\)</span> is performed using an ABC
+structure in the best linear unbiased predictor (BLUP) of <span class="math inline">\(v\)</span>, which can be highly
+undesirable—particularly in the context of imbalanced genotype
+frequencies (Holland and Phiepho, 2024). This issue is nearly
+inevitable, even in carefully balanced experimental designs, due to
+missing data or incomplete block designs.</p>
+<p>Crucially, the successive OLS estimation procedure implemented in
+<code>wiser</code> operates without such assumptions, ensuring that the
+estimation of <span class="math inline">\(v\)</span> remains independent
+of omic information or any imposed covariance structure. The only
+assumptions in the <code>wiser</code> framework are <span class="math inline">\(u \sim \mathcal{N}_q(0,\sigma^2_u K)\)</span> and
+<span class="math inline">\(\varepsilon \sim \mathcal{N}_n(0,\sigma^2_e
+I_n)\)</span>, which are necessary to estimate <span class="math inline">\(\sigma^2_u\)</span> for constructing the whitening
+matrix <span class="math inline">\(W\)</span>. In this framework, the
+estimation of <span class="math inline">\(\sigma^2_u\)</span> and <span class="math inline">\(\sigma^2_e\)</span> is performed using an ABC
 algorithm.</p>
 <p>In <code>wiser</code>, two kernel functions are also provided to
 build <span class="math inline">\(K\)</span>: <code>linear</code> and
 <code>identity</code>. The <code>identity</code> kernel, which is
 <strong>not estimated from omic data</strong>, is generally discouraged
-due to its poor phenotypic predictive ability. The <code>identity</code>
-kernel is used solely to assess the impact of including or excluding the
-genetic covariance structure. The <code>linear</code> kernel is used by
-default in <code>wiser</code>.</p>
+due to its poor associated phenotypic predictive ability. The
+<code>identity</code> kernel can be used solely to assess the impact of
+including or excluding the genetic covariance structure. The
+<code>linear</code> kernel is used by default in <code>wiser</code>.</p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
@@ -734,7 +735,7 @@ wiser_obj &lt;- estimate_wiser_phenotype(
 dev.new()
 plot(density(wiser_obj$wiser_phenotypes$v_hat), main = paste0(trait_, &quot; v_hat&quot;))
 
-# Pint the fixed-effect estimates computed from the whitening process and OLS
+# Print the fixed-effect estimates computed from the whitening process and OLS
 print(wiser_obj$wiser_fixed_effect_estimates)
 
 # Print the estimated variance components (from ABC)
@@ -898,7 +899,7 @@ print(id_mat[1:5, 1:5])</code></pre>
 <h2>Author and maintainer</h2>
 <ul>
 <li>Author : Laval Jacquin</li>
-<li>Maintainer : Laval Jacquin <a href="mailto:jacquin.julien@gmail.com" class="email">jacquin.julien@gmail.com</a></li>
+<li>Maintainer : Laval Jacquin, email : <a href="mailto:jacquin.julien@gmail.com" class="email">jacquin.julien@gmail.com</a></li>
 </ul>
 </div>
 <div id="references" class="section level2">
@@ -907,6 +908,8 @@ print(id_mat[1:5, 1:5])</code></pre>
 <li><p>Kessy, A., Lewin, A., &amp; Strimmer, K. (2018). Optimal
 whitening and decorrelation. The American Statistician, 72(4),
 309-314.</p></li>
+<li><p>Holland, J. B., &amp; Phiepho, H. P. (2024). Don’t BLUP Twice.
+G3: Genes, Genomes, Genetics, jkae250.</p></li>
 <li><p>Jung, M., Roth, M., Aranzana, M. J., Auwerkerken, A., Bink, M.,
 Denancé, C., … &amp; Muranty, H. (2020). The apple REFPOP—a reference
 population for genomics-assisted breeding in apple. Horticulture
