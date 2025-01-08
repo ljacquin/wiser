@@ -6,17 +6,17 @@
 }
 \usage{
   compute_incidence_matrices_fixed_and_random_effects(
-    fixed_effects_vars,
-    fixed_effects_vars_computed_as_factor,
+    fixed_effect_vars,
+    fixed_effect_vars_computed_as_factor,
     random_effects_vars,
     raw_pheno_df
   )
 }
 \arguments{
-  \item{fixed_effects_vars}{A character vector of column names in \code{raw_pheno_df} that represent fixed effects variables.}
-  \item{fixed_effects_vars_computed_as_factor}{A character vector of column names in \code{raw_pheno_df} that should be treated as factors when creating incidence matrices.}
+  \item{fixed_effect_vars}{A character vector of column names in \code{raw_pheno_df} that represent fixed effects variables.}
+  \item{fixed_effect_vars_computed_as_factor}{A character vector of column names in \code{raw_pheno_df} that should be treated as factors when creating incidence matrices.}
   \item{random_effects_vars}{A character vector of column names in \code{raw_pheno_df} that represent random effects variables.}
-  \item{raw_pheno_df}{A data frame containing the raw phenotypic data. The columns specified in \code{fixed_effects_vars} and \code{random_effects_vars} must be present in this data frame.}
+  \item{raw_pheno_df}{A data frame containing the raw phenotypic data. The columns specified in \code{fixed_effect_vars} and \code{random_effects_vars} must be present in this data frame.}
 }
 \value{
   A list with two elements:
@@ -45,14 +45,14 @@
   data("refpop_raw_indiv_pheno_data_subset")
   
   # define fixed and random effects variables
-  fixed_effects_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
-  fixed_effects_vars_computed_as_factor <- c("Envir", "Country", "Year", "Row", "Position", "Management")
+  fixed_effect_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
+  fixed_effect_vars_computed_as_factor <- c("Envir", "Country", "Year", "Row", "Position", "Management")
   random_effects_vars <- c("Genotype")
   
   # compute incidence matrices
   incidence_matrices <- compute_incidence_matrices_fixed_and_random_effects(
-    fixed_effects_vars = fixed_effects_vars,
-    fixed_effects_vars_computed_as_factor = fixed_effects_vars_computed_as_factor,
+    fixed_effect_vars = fixed_effect_vars,
+    fixed_effect_vars_computed_as_factor = fixed_effect_vars_computed_as_factor,
     random_effects_vars = random_effects_vars,
     raw_pheno_df = refpop_raw_indiv_pheno_data_subset
   )

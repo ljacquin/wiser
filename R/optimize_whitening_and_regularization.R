@@ -1,14 +1,14 @@
 # function which finds the optimal whitening method and regularization
 optimize_whitening_and_regularization <- function(
     omic_df, raw_pheno_df, trait_,
-    fixed_effects_vars = c(
+    fixed_effect_vars = c(
       "Envir", "Row", "Position"
     ),
-    fixed_effects_vars_computed_as_factor = c(
+    fixed_effect_vars_computed_as_factor = c(
       "Envir", "Row", "Position"
     ),
     envir_var = "Envir",
-    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+    fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
     random_effects_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
     whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
@@ -27,7 +27,7 @@ optimize_whitening_and_regularization <- function(
   omic_df <- omic_df[rownames(omic_df) %in% raw_pheno_df$Genotype, ]
 
   # define variables of interest
-  sel_vars_ <- c(fixed_effects_vars, random_effects_vars, trait_)
+  sel_vars_ <- c(fixed_effect_vars, random_effects_vars, trait_)
 
   # get only variables of interest from raw_pheno_df
   raw_pheno_df <- raw_pheno_df[, sel_vars_]
@@ -63,10 +63,10 @@ optimize_whitening_and_regularization <- function(
 
     wiser_obj <- estimate_wiser_phenotype(
       omic_df, raw_pheno_df, trait_,
-      fixed_effects_vars,
-      fixed_effects_vars_computed_as_factor,
+      fixed_effect_vars,
+      fixed_effect_vars_computed_as_factor,
       envir_var,
-      fixed_effects_vars_computed_as_factor_by_envir,
+      fixed_effect_vars_computed_as_factor_by_envir,
       random_effects_vars,
       whitening_method = method,
       regularization_method = regularization_method_,
@@ -93,10 +93,10 @@ optimize_whitening_and_regularization <- function(
         {
           perform_kfold_cv_wiser(
             omic_df, raw_pheno_df, trait_,
-            fixed_effects_vars,
-            fixed_effects_vars_computed_as_factor,
+            fixed_effect_vars,
+            fixed_effect_vars_computed_as_factor,
             envir_var,
-            fixed_effects_vars_computed_as_factor_by_envir,
+            fixed_effect_vars_computed_as_factor_by_envir,
             random_effects_vars,
             whitening_method = grid_$whitening_method[i],
             reg_method = regularization_method_,

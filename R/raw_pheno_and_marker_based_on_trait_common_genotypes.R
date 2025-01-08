@@ -3,14 +3,14 @@ raw_pheno_and_marker_based_on_trait_common_genotypes <- function(
     raw_pheno_df,
     omic_df,
     trait_,
-    fixed_effects_vars,
+    fixed_effect_vars,
     random_effects_vars) {
   # remove all rows with na w.r.t to trait_
   raw_pheno_df[, trait_] <- as.numeric(raw_pheno_df[, trait_])
   raw_pheno_df <- raw_pheno_df %>% drop_na(all_of(trait_))
   
   # define variables of interest
-  sel_vars_ <- c(fixed_effects_vars, random_effects_vars, trait_)
+  sel_vars_ <- c(fixed_effect_vars, random_effects_vars, trait_)
   
   # get only variables of interest from raw_pheno_df
   raw_pheno_df <- raw_pheno_df[, sel_vars_]

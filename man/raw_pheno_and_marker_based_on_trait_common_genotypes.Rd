@@ -9,7 +9,7 @@
     raw_pheno_df,
     omic_df,
     trait_,
-    fixed_effects_vars,
+    fixed_effect_vars,
     random_effects_vars
   )
 }
@@ -17,7 +17,7 @@
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data. Each row should represent an observation with multiple columns, including the trait of interest.}
   \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{trait_}{A character string specifying the trait of interest to filter the phenotypic data.}
-  \item{fixed_effects_vars}{A character vector listing the fixed effects variables to be retained in the filtered phenotypic data.}
+  \item{fixed_effect_vars}{A character vector listing the fixed effects variables to be retained in the filtered phenotypic data.}
   \item{random_effects_vars}{A character vector listing the random effects variables to be retained in the filtered phenotypic data.}
 }
 \value{
@@ -37,7 +37,7 @@
   
   # define parameters
   trait <- "Flowering_begin"
-  fixed_effects_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
+  fixed_effect_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
   random_effects_vars <- "Genotype"
   
   # filter raw phenotypic and genomic data based on common genotypes
@@ -45,7 +45,7 @@
     raw_pheno_df = example_raw_pheno_df,
     omic_df = example_omic_df,
     trait_ = trait,
-    fixed_effects_vars = fixed_effects_vars,
+    fixed_effect_vars = fixed_effect_vars,
     random_effects_vars = random_effects_vars
   )
   
