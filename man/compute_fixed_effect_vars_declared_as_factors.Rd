@@ -7,18 +7,18 @@
 \usage{
   compute_fixed_effect_vars_declared_as_factors(
     raw_pheno_df,
-    fixed_effects_vars,
-    fixed_effects_vars_computed_as_factor,
+    fixed_effect_vars,
+    fixed_effect_vars_computed_as_factor,
     envir_var,
-    fixed_effects_vars_computed_as_factor_by_envir
+    fixed_effect_vars_computed_as_factor_by_envir
   )
 }
 \arguments{
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data.}
-  \item{fixed_effects_vars}{A character vector listing all fixed effects variables in the data frame.}
-  \item{fixed_effects_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be converted to factors.}
+  \item{fixed_effect_vars}{A character vector listing all fixed effects variables in the data frame.}
+  \item{fixed_effect_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be converted to factors.}
   \item{envir_var}{A character string specifying the environment variable to be used for creating environment-specific factors.}
-  \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector listing the fixed effects variables that should be converted to factors by environment.}
+  \item{fixed_effect_vars_computed_as_factor_by_envir}{A character vector listing the fixed effects variables that should be converted to factors by environment.}
 }
 \value{
   A data frame with the fixed effects variables converted to factors according to the specified criteria. The levels of factors that are not present in the data are also dropped.
@@ -37,18 +37,18 @@
   head(refpop_raw_indiv_pheno_data_subset)
   
   # define parameters
-  fixed_effects_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
-  fixed_effects_vars_computed_as_factor <- c("Envir", "Country", "Year", "Row", "Position", "Management")
+  fixed_effect_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
+  fixed_effect_vars_computed_as_factor <- c("Envir", "Country", "Year", "Row", "Position", "Management")
   envir_var <- "Country"
-  fixed_effects_vars_computed_as_factor_by_envir <- c("Row", "Position")
+  fixed_effect_vars_computed_as_factor_by_envir <- c("Row", "Position")
   
   # convert fixed effects variables to factors
   processed_data <- compute_fixed_effect_vars_declared_as_factors(
     raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
-    fixed_effects_vars = fixed_effects_vars,
-    fixed_effects_vars_computed_as_factor = fixed_effects_vars_computed_as_factor,
+    fixed_effect_vars = fixed_effect_vars,
+    fixed_effect_vars_computed_as_factor = fixed_effect_vars_computed_as_factor,
     envir_var = envir_var,
-    fixed_effects_vars_computed_as_factor_by_envir = fixed_effects_vars_computed_as_factor_by_envir
+    fixed_effect_vars_computed_as_factor_by_envir = fixed_effect_vars_computed_as_factor_by_envir
   )
   
   # print the structure of the processed data

@@ -2,18 +2,18 @@
 # NB. column of ones is added for intercept, and is associated to first
 # fixed effect (which must be factor or numeric) during construction
 compute_incidence_matrices_fixed_and_random_effects <- function(
-    fixed_effects_vars,
-    fixed_effects_vars_computed_as_factor,
+    fixed_effect_vars,
+    fixed_effect_vars_computed_as_factor,
     random_effects_vars,
     raw_pheno_df) {
   # define list of incidence matrices for fixed effects
-  list_x_mat <- vector("list", length(fixed_effects_vars))
-  names(list_x_mat) <- fixed_effects_vars
+  list_x_mat <- vector("list", length(fixed_effect_vars))
+  names(list_x_mat) <- fixed_effect_vars
   
   # add incidence matrix for first fixed effect to list of matrices
-  fix_eff_var_ <- fixed_effects_vars[1]
-  if ((length(fixed_effects_vars_computed_as_factor) > 0) &&
-      (fix_eff_var_ %in% fixed_effects_vars_computed_as_factor)
+  fix_eff_var_ <- fixed_effect_vars[1]
+  if ((length(fixed_effect_vars_computed_as_factor) > 0) &&
+      (fix_eff_var_ %in% fixed_effect_vars_computed_as_factor)
   ) {
     list_x_mat[[fix_eff_var_]] <- model.matrix(
       as.formula(paste0("~", fix_eff_var_)),
@@ -31,9 +31,9 @@ compute_incidence_matrices_fixed_and_random_effects <- function(
     colnames(list_x_mat[[fix_eff_var_]]) <- c("Intercept", fix_eff_var_)
   }
   # add incidence matrices (without intercept) for other fixed effects to list
-  for (fix_eff_var_ in fixed_effects_vars[-1]) {
-    if ((length(fixed_effects_vars_computed_as_factor) > 0) &&
-        (fix_eff_var_ %in% fixed_effects_vars_computed_as_factor)
+  for (fix_eff_var_ in fixed_effect_vars[-1]) {
+    if ((length(fixed_effect_vars_computed_as_factor) > 0) &&
+        (fix_eff_var_ %in% fixed_effect_vars_computed_as_factor)
     ) {
       list_x_mat[[fix_eff_var_]] <- model.matrix(
         as.formula(paste0("~", fix_eff_var_, " - 1")),

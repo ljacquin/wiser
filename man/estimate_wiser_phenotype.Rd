@@ -7,14 +7,14 @@
 \usage{
   estimate_wiser_phenotype(omic_df, 
    raw_pheno_df, trait_,
-   fixed_effects_vars = c(
+   fixed_effect_vars = c(
      "Envir", "Row", "Position"
    ),
-   fixed_effects_vars_computed_as_factor = c(
+   fixed_effect_vars_computed_as_factor = c(
      "Envir", "Row", "Position"
    ),
    envir_var = "Envir",
-   fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+   fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
    random_effects_vars = "Genotype",
    init_sigma2_u = 1,
    init_sigma2_e = 1,
@@ -37,10 +37,10 @@
   \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data.}
   \item{trait_}{A character string specifying the trait of interest.}
-  \item{fixed_effects_vars}{A character vector specifying the fixed effects variables. Defaults to \code{c("Envir", "Row", "Position")}.}
-  \item{fixed_effects_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors. Defaults to \code{c("Envir", "Row", "Position")}. Note: declared fixed effects variables which are not specified to be computed as factors will be treated as quantitative variables.}
+  \item{fixed_effect_vars}{A character vector specifying the fixed effects variables. Defaults to \code{c("Envir", "Row", "Position")}.}
+  \item{fixed_effect_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors. Defaults to \code{c("Envir", "Row", "Position")}. Note: declared fixed effects variables which are not specified to be computed as factors will be treated as quantitative variables.}
   \item{envir_var}{A character string specifying the environment variable. Defaults to \code{"Envir"} and should be set to \code{"NULL"} if there is no environment variable.}
-  \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment. Defaults to \code{c("Row", "Position")}.}
+  \item{fixed_effect_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment. Defaults to \code{c("Row", "Position")}.}
   \item{random_effects_vars}{A character vector specifying the random effects variables. Defaults to \code{"Genotype"}.}
   \item{init_sigma2_u}{A numeric value for the initial variance component of random effects. Defaults to \code{1}.}
   \item{init_sigma2_e}{A numeric value for the initial variance component of residuals. Defaults to \code{1}.}

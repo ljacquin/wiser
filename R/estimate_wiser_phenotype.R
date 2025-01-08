@@ -1,13 +1,13 @@
 # function which computes phenotypes approximating genetic values using whitening
 estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
-                                     fixed_effects_vars = c(
+                                     fixed_effect_vars = c(
                                        "Envir", "Row", "Position"
                                      ),
-                                     fixed_effects_vars_computed_as_factor = c(
+                                     fixed_effect_vars_computed_as_factor = c(
                                        "Envir", "Row", "Position"
                                      ),
                                      envir_var = "Envir",
-                                     fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+                                     fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
                                      random_effects_vars = "Genotype",
                                      init_sigma2_u = 1,
                                      init_sigma2_e = 1,
@@ -31,10 +31,10 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
       # to estimate these
       transform_and_ls_obj <- compute_transformed_vars_and_ols_estimates(
         omic_df, raw_pheno_df, trait_,
-        fixed_effects_vars,
-        fixed_effects_vars_computed_as_factor,
+        fixed_effect_vars,
+        fixed_effect_vars_computed_as_factor,
         envir_var,
-        fixed_effects_vars_computed_as_factor_by_envir,
+        fixed_effect_vars_computed_as_factor_by_envir,
         random_effects_vars,
         sigma2_u = init_sigma2_u,
         sigma2_e = init_sigma2_e,
@@ -76,10 +76,10 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
         # compute variance components again with abc using new estimates
         transform_and_ls_obj <- compute_transformed_vars_and_ols_estimates(
           omic_df, raw_pheno_df, trait_,
-          fixed_effects_vars,
-          fixed_effects_vars_computed_as_factor,
+          fixed_effect_vars,
+          fixed_effect_vars_computed_as_factor,
           envir_var,
-          fixed_effects_vars_computed_as_factor_by_envir,
+          fixed_effect_vars_computed_as_factor_by_envir,
           random_effects_vars,
           sigma2_u = var_comp_abc_obj$sigma2_u_hat_mean,
           sigma2_e = var_comp_abc_obj$sigma2_e_hat_mean,

@@ -176,14 +176,14 @@ wiser_obj <- estimate_wiser_phenotype(
   omic_df = apple_genomic_data,
   raw_pheno_df = apple_raw_pheno_data,
   trait_ = trait_,
-  fixed_effects_vars = c(
+  fixed_effect_vars = c(
     "Envir", "Row", "Position"
   ),
-  fixed_effects_vars_computed_as_factor = c(
+  fixed_effect_vars_computed_as_factor = c(
     "Envir", "Row", "Position"
   ),
   envir_var = "Envir",
-  fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+  fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
   random_effects_vars = "Genotype"
 )
 
@@ -213,10 +213,10 @@ if (run_example) {
     omic_df = apple_genomic_data,
     raw_pheno_df = apple_raw_pheno_data,
     trait_ = trait_,
-    fixed_effects_vars = c("Envir", "Row", "Position"),
-    fixed_effects_vars_computed_as_factor = c("Envir", "Row", "Position"),
+    fixed_effect_vars = c("Envir", "Row", "Position"),
+    fixed_effect_vars_computed_as_factor = c("Envir", "Row", "Position"),
     envir_var = "Envir",
-    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+    fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
     random_effects_vars = "Genotype",
     whitening_method = opt_white_method_,
     alpha_ = opt_alpha_par_
@@ -297,10 +297,10 @@ wiser_obj <- estimate_wiser_phenotype(
   pine_genomic_data,
   pine_raw_pheno_data,
   trait_,
-  fixed_effects_vars = fixed_effect_vars_,
-  fixed_effects_vars_computed_as_factor = NULL,
+  fixed_effect_vars = fixed_effect_vars_,
+  fixed_effect_vars_computed_as_factor = NULL,
   envir_var = NULL,
-  fixed_effects_vars_computed_as_factor_by_envir = NULL,
+  fixed_effect_vars_computed_as_factor_by_envir = NULL,
   random_effects_vars = "Genotype"
 )
 
@@ -376,10 +376,10 @@ wiser_obj <- estimate_wiser_phenotype(
   maize_genomic_data,
   maize_raw_pheno_data,
   trait_,
-  fixed_effects_vars = fixed_effect_vars_,
-  fixed_effects_vars_computed_as_factor = NULL,
+  fixed_effect_vars = fixed_effect_vars_,
+  fixed_effect_vars_computed_as_factor = NULL,
   envir_var = NULL,
-  fixed_effects_vars_computed_as_factor_by_envir = NULL,
+  fixed_effect_vars_computed_as_factor_by_envir = NULL,
   random_effects_vars = "Genotype"
 )
 
@@ -450,10 +450,10 @@ wiser_obj <- estimate_wiser_phenotype(
   rice_genomic_data,
   rice_raw_pheno_data,
   trait_,
-  fixed_effects_vars = "Envir",
-  fixed_effects_vars_computed_as_factor = "Envir",
+  fixed_effect_vars = "Envir",
+  fixed_effect_vars_computed_as_factor = "Envir",
   envir_var = NULL,
-  fixed_effects_vars_computed_as_factor_by_envir = NULL,
+  fixed_effect_vars_computed_as_factor_by_envir = NULL,
   random_effects_vars = "Genotype"
 )
 

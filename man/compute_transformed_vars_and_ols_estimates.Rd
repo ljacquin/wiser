@@ -7,8 +7,8 @@
 \usage{
 compute_transformed_vars_and_ols_estimates(
   omic_df, raw_pheno_df, trait_,
-  fixed_effects_vars, fixed_effects_vars_computed_as_factor,
-  envir_var, fixed_effects_vars_computed_as_factor_by_envir,
+  fixed_effect_vars, fixed_effect_vars_computed_as_factor,
+  envir_var, fixed_effect_vars_computed_as_factor_by_envir,
   random_effects_vars, sigma2_u, sigma2_e, kernel_type,
   whitening_method, regularization_method, alpha_,
   parallelized_cholesky, reduce_raw_dataset_size_,
@@ -21,10 +21,10 @@ compute_transformed_vars_and_ols_estimates(
   \item{omic_df}{A data frame containing the omic data (e.g., genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{raw_pheno_df}{A data frame containing the raw phenotypic data.}
   \item{trait_}{A character string specifying the trait of interest.}
-  \item{fixed_effects_vars}{A character vector specifying the fixed effects variables.}
-  \item{fixed_effects_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors.}
+  \item{fixed_effect_vars}{A character vector specifying the fixed effects variables.}
+  \item{fixed_effect_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors.}
   \item{envir_var}{A character string specifying the environment variable.}
-  \item{fixed_effects_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment.}
+  \item{fixed_effect_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment.}
   \item{random_effects_vars}{A character vector specifying the random effects variables.}
   \item{sigma2_u}{A numeric value specifying the variance component for random effects.}
   \item{sigma2_e}{A numeric value specifying the variance component for residuals.}
@@ -77,10 +77,10 @@ if(requireNamespace("wiser", quietly = TRUE)) {
     omic_df = refpop_geno_data_subset,
     raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
     trait_ = trait_,
-    fixed_effects_vars = c("Envir", "Country", "Year", "Row", "Position", "Management"),
-    fixed_effects_vars_computed_as_factor = c("Envir", "Country", "Year"),
+    fixed_effect_vars = c("Envir", "Country", "Year", "Row", "Position", "Management"),
+    fixed_effect_vars_computed_as_factor = c("Envir", "Country", "Year"),
     envir_var = "Country",
-    fixed_effects_vars_computed_as_factor_by_envir = c("Row", "Position"),
+    fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
     random_effects_vars = "Genotype",
     sigma2_u = 1, 
     sigma2_e = 1,
