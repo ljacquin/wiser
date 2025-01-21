@@ -73,9 +73,9 @@ In ```wiser```, two kernel functions are also provided to build $K$: ```linear``
 
 ## Expected results
 
-The blue, yellow, and green curves in the figures below represent the median predictive abilities (PA) for phenotypes estimated using WISER, least-squares means (LS-means), and BLUP, respectively, as reported by Jacquin $\textit{et al.}$ (2025). These median PA values were computed for 34 traits across four species: rice, maize, apple, and pine. For each trait, the distribution of predictive abilities used to calculate the median PA was estimated using a 5-fold cross-validation (CV) scheme, with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—relative to LS-means (the second-best approach)—was **0.22**, highlighting WISER’s superior accuracy in phenotypic estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER phenotypes, compared to those estimated with LS-means
+The blue, yellow, and green box and violin plots in the figures below represent the distributions of predictive abilities (PA) for phenotypes estimated using WISER, least-squares means (LS-means), and BLUP, respectively, as reported by Jacquin $\textit{et al.}$ (2025). These distributions of PA values were computed for 33 traits across four species: rice, maize, apple, and pine. For each trait, the distributions of PA for phenotypes estimated using WISER, LS-means, and BLUP, were estimated using a 5-fold cross-validation (CV) scheme with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—when using WISER compared to LS-means (the second-best approach)—was **0.22**, highlighting WISER’s superior accuracy in phenotypic estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER phenotypes, compared to those estimated with LS-means
 
-[<img src="img/wiser_ls_means_blup.jpg"/>]()
+[<img src="img/wiser_ls_means_blup.png"/>]()
 
 
 ## Installation
