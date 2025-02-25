@@ -135,7 +135,8 @@ estimate_wiser_phenotype <- function(omic_df, raw_pheno_df, trait_,
         "wiser_x_mat_tilde" = transform_and_ls_obj$x_mat_tilde,
         "wiser_xi_hat" = transform_and_ls_obj$xi_hat,
         "wiser_y_hat" = transform_and_ls_obj$y_hat,
-        "wiser_y" = transform_and_ls_obj$y
+        "wiser_y" = transform_and_ls_obj$y,
+        "wiser_xi_phenotypes" <- transform_and_ls_obj$xi_phenotypes
       ))
     },
     error = function(e) {
