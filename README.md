@@ -4,7 +4,7 @@
 
 ##### Licence, status and metrics
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)]()
+[![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-00cc00)]()
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ljacquin/wiser)
 ![GitHub language count](https://img.shields.io/github/languages/count/ljacquin/wiser)
@@ -118,7 +118,7 @@ The PDF version of WISER's documentation can be downloaded [here](https://github
 
 Below are straightforward examples demonstrating the use of the ```estimate_wiser_phenotype``` function for phenotype estimation, across the following four species: apple, pine, maize and rice. The datasets used are small subsets derived from the original datasets featured in Jacquin $\textit{et al.}$ (2025). These subsets are provided for illustrative purposes within the WISER package and are not intended to serve as reference populations for genomic prediction or GWAS. They include genomic data and raw individual phenotypic measurements for 30 randomly selected genotypes associated with an experimental design specific to each one of the four species.
 
-### Phenotypic estimation for apple data (Jung et al., 2020)
+### Phenotypic estimation for apple data (Jung et al., 2022)
 
 ```R
 # ➡️ Load wiser library, display package help ,and attach apple data
@@ -485,7 +485,7 @@ print(id_mat[1:5, 1:5])
 
 * Holland, J. B., & Phiepho, H. P. (2024). Don't BLUP Twice. G3: Genes, Genomes, Genetics, jkae250.
 
-* Jung, M., Roth, M., Aranzana, M. J., Auwerkerken, A., Bink, M., Denancé, C., ... & Muranty, H. (2020). The apple REFPOP—a reference population for genomics-assisted breeding in apple. Horticulture research, 7.
+* Jung, M., Keller, B., Roth, M., Aranzana, M. J., Auwerkerken, A., Guerra, W., Al-Rifaï, M., Lewandowski, M., Sanin, N., Rymenants, M., Didelot, F., Dujak, C., Font I Forcada, C., Knauf, A., Laurens, F., Studer, B., Muranty, H., & Patocchi, A. (2022). Genetic architecture and genomic predictive ability of apple quantitative traits across environments. Horticulture Research, 9, uhac028. https://doi.org/10.1093/hr/uhac028 
 
 * Perry, A., Wachowiak, W., Beaton, J., Iason, G., Cottrell, J., & Cavers, S. (2022). Identifying and testing marker–trait associations for growth and phenology in three pine species: Implications for genomic prediction. Evolutionary Applications, 15(2), 330-348. 
 
