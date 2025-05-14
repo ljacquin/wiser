@@ -18,9 +18,10 @@
 
 ## Overview
 
-The ```wiser``` package offers *user-friendly* advanced tools for more accurate phenotypic estimation, by leveraging genetic covariance information to correct for population structure in experimental designs. By employing a whitening transformation followed by successive ordinary least squares (OLS) estimation, ```wiser``` refines fixed effect estimates and eliminates biases, leading to improved phenotypic estimation. This approach is particularly beneficial in complex experimental designs where genetic and environmental factors are intricately linked. ```wiser``` includes methods for computing whitening matrices, fixed effects, residuals, and estimating phenotypes. Additionally, the package provides fast and stable variance component estimation using a parallelized approximate Bayesian computation (ABC) algorithm, specifically designed for large datasets associated with complex experimental designs.
+The ```wiser``` package offers *user-friendly* advanced tools for more accurate phenotypic estimation, by adjusting fixed effects (e.g. environmental effects) for the experimental design population structure—or simply called population structure—to eliminate confounding factors between fixed and genetic effects. 
+By employing a whitening transformation followed by successive ordinary least squares (OLS) estimation, ```wiser``` improves genetic values estimation, called WISER-estimated phenotypes. This approach is particularly beneficial in complex experimental designs where genetic and environmental factors are intricately linked. ```wiser``` includes methods for computing whitening matrices, fixed effects, residuals, and estimating phenotypes. Additionally, the package provides fast and stable variance component estimation using a parallelized approximate Bayesian computation (ABC) algorithm, specifically designed for large datasets associated with complex experimental designs.
 
-For an experimental design, ```wiser``` solves the following model, in order to estimate a vector $v=(v_1,...,v_q)'$ of $q$ phenotypes which approximate the genetic values associated to $q$ genotypes: 
+For an experimental design, ```wiser``` solves the following model, in order to estimate a vector $v=(v_1,...,v_q)'$ of $q$ genetic values, which are treated as fixed effects and referred to as the WISER-estimated phenotypes:
 <br><br>
 
 $$
@@ -31,17 +32,17 @@ $$
 
 where :
 
-* $Y \ (n \times 1)$ is the vector of individual phenotypic measurements, with values repeated for each genotype.
+* $Y \ (n \times 1)$ is the vector of raw phenotypic measurements, with values possibly repeated for each genotype across one or more environments.
 
-* $W \ (n \times n)$ is a whitening matrix built using omic data (e.g., SNP markers, metabolites, or wavelength reflectances), which corrects the fixed effects variables for population structure.
+* $W \ (n \times n)$ is a whitening matrix built using omic data (e.g., SNP markers, metabolites, or wavelength reflectances), which adjust the fixed effects variables for the experimental design population structure.
 
-* $X \ (n \times l)$ is the incidence matrix linking fixed effects to individual phenotypic measurements.
+* $X \ (n \times l)$ is the design matrix linking fixed effects to raw phenotypic measurements.
 
 * $\beta \ (l \times 1)$ is the vector of fixed effects.
 
-* $v \ (q \times 1)$ corresponds to a vector of $q$ phenotypes approximating the genetic values associated with $q$ genotypes.
+* $v \ (q \times 1)$ corresponds to the vector of $q$ WISER-estimated phenotypes.
 
-* $Z \ (n \times q)$ corresponds to the design matrix which links the q phenotypes to the individual phenotypic values in the experimental design.
+* $Z \ (n \times q)$ corresponds to the design matrix linking genetic values to raw phenotypic values in the experimental design.
 
 * $\varepsilon \ (n \times 1)$ is the vector of residuals.
 
@@ -65,7 +66,7 @@ $$
 
 where $L$ is derived from the Cholesky decomposition of $\Sigma_u = LL'$. The ```PCA-cor``` whitening procedure can be seen as standardizing variables using $V^{-\frac{1}{2}}$, followed by a rotation using the transposed correlation eigenmatrix $G'$, and then scaling using the inverted correlation singular values matrix $\Theta^{-\frac{1}{2}}$. ```ZCA-cor``` whitening extends this by applying an additional rotation $G$ to revert to the original basis of the standardized variables. Each whitening method is optimal according to specific criteria. For instance, ```ZCA-cor``` is unique in ensuring that the whitened variables retain the maximum correlation with the original variables. Details of these criteria and the optimality of each method are discussed in Kessy $\textit{et al.}$ (2015).
 
-The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust fixed effect variables for population structure, is comprehensively addressed in Jacquin $\textit{et al.}$ (2025). In contrast, the chosen approach of successive OLS estimation in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental. For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$, which can be highly undesirable—particularly in the context of imbalanced genotype frequencies (Holland and Phiepho, 2024). This issue is nearly inevitable, even in carefully balanced experimental designs, due to missing data or incomplete block designs.
+The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust fixed effect variables for the experimental design population structure, is comprehensively addressed in Jacquin $\textit{et al.}$ (2025). In contrast, the chosen approach of successive OLS estimation in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental. For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$, which can be highly undesirable—particularly in the context of imbalanced genotype frequencies (Holland and Phiepho, 2024). This issue is nearly inevitable, even in carefully balanced experimental designs, due to missing data or incomplete block designs.
 
 Crucially, the successive OLS estimation procedure implemented in ```wiser``` operates without such assumptions, ensuring that the estimation of $v$ remains independent of omic information or any imposed covariance structure. The only assumptions in the ```wiser``` framework are $u \sim \mathcal{N}_q(0,\sigma^2_u K)$ and $\varepsilon \sim \mathcal{N}_n(0,\sigma^2_e I_n)$, which are necessary to estimate $\sigma^2_u$ for constructing the whitening matrix $W$. In this framework, the estimation of $\sigma^2_u$ and $\sigma^2_e$ is performed using an ABC algorithm. 
 
@@ -73,7 +74,7 @@ In ```wiser```, two kernel functions are also provided to build $K$: ```linear``
 
 ## Expected results
 
-The blue, yellow, and green box and violin plots in the figures below represent the distributions of predictive abilities (PA) for phenotypes estimated using WISER, least-squares means (LS-means), and BLUP, respectively, as reported by Jacquin $\textit{et al.}$ (2025). These distributions of PA values were computed for 33 traits across four species: rice, maize, apple, and pine. For each trait, the distributions of PA for phenotypes estimated using WISER, LS-means, and BLUP, were estimated using a 5-fold cross-validation (CV) scheme with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—when using WISER compared to LS-means (the second-best approach)—was **0.22**, highlighting WISER’s superior accuracy in phenotypic estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER phenotypes, compared to those estimated with LS-means.
+The blue, yellow, violet, and green box and violin plots in the figures below represent the distributions of predictive abilities (PA) for phenotypes estimated using WISER, least-squares means (LS-means), BLUP, and BLUP-PCA respectively, as reported by Jacquin $\textit{et al.}$ (2025). These distributions of PA values were computed for 33 traits across four species: rice, maize, apple, and pine. For each trait, the distributions of PA for phenotypes estimated using WISER, LS-means, BLUP, and BLUP-PCA were estimated using a 5-fold cross-validation (CV) scheme with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—when using WISER compared to LS-means and BLUP—was **0.21**, highlighting WISER’s superior accuracy in phenotypic estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER phenotypes, compared to those estimated with LS-means and BLUP.
 
 [<img src="img/wiser_ls_means_blup.png"/>]()
 
@@ -94,29 +95,28 @@ The PDF version of WISER's documentation can be downloaded [here](https://github
 
 ## Key Features
 
-    ▸ Phenotype estimation: estimate phenotypic values that approximate genetic values, by applying 
-    whitening methods to correct for genetic covariance structure in experimental designs (i.e., 
+    ▸ Phenotype estimation: estimate genetic values which are referred as WISER-estimated phenotypes, by applying 
+    whitening methods to adjust for the genetic covariance structure in experimental designs (i.e., 
     population structure correction).
     ▸ Whitening methods: implement various whitening techniques, such as ZCA-cor, PCA-cor, and Cholesky,
-    to effectively correct for population structure.
+    to effectively adjust for population structure.
     ▸ Genetic covariance matrix regularization: ensure the stability of genetic covariance matrices, 
     by applying regularization and shrinkage techniques which ensure positive definiteness.
     ▸ Optimal whitening and regularization: automatically determine the best whitening method and 
-    regularization parameter optimizing phenotypic predictive ability, through k-fold cross-validation 
+    regularization parameter minimizing mean squared error (MSE), through k-fold cross-validation 
     using a subset of the data.
     ▸ Fast and stable variance component estimation: use a parallelized ABC algorithm to achieve fast and 
     stable variance component estimation in large datasets associated to complex experimental designs.
   
 ## Main Functions
 
-    ▸ estimate_wiser_phenotype: estimates phenotypic values approximating genetic values using whitening 
-    methods.
+    ▸ estimate_wiser_phenotype: computes WISER-estimated phenotypes.
     ▸ optimize_whitening_and_regularization: finds the optimal combination of whitening method and 
-    regularization parameter through cross-validation for phenotype prediction.
+    regularization parameter through cross-validation minimizing MSE.
 
 ## Examples of phenotypic estimation using WISER
 
-Below are straightforward examples demonstrating the use of the ```estimate_wiser_phenotype``` function for phenotype estimation, across the following four species: apple, pine, maize and rice. The datasets used are small subsets derived from the original datasets featured in Jacquin $\textit{et al.}$ (2025). These subsets are provided for illustrative purposes within the WISER package and are not intended to serve as reference populations for genomic prediction or GWAS. They include genomic data and raw individual phenotypic measurements for 30 randomly selected genotypes associated with an experimental design specific to each one of the four species.
+Below are straightforward examples demonstrating the use of the ```estimate_wiser_phenotype``` function to compute WISER-estimated phenotypes, across the following four species: apple, pine, maize and rice. The datasets used are small subsets derived from the original datasets featured in Jacquin $\textit{et al.}$ (2025). These subsets are provided for illustrative purposes within the WISER package and are not intended to serve as reference populations for genomic prediction or GWAS. They include genomic data and raw phenotypic measurements for 30 randomly selected genotypes associated with an experimental design specific to each one of the four species.
 
 ### Phenotypic estimation for apple data (Jung et al., 2022)
 
@@ -137,7 +137,7 @@ data("apple_genomic_data")
 head(apple_raw_pheno_data)
 head(apple_genomic_data)[, 1:10]
 
-# For the individual phenotypic data, create the Envir variable in apple_raw_pheno_data by combining 
+# For the raw phenotypic data, create the Envir variable in apple_raw_pheno_data by combining 
 # Country, Year, and Management. This variable represents the environments (i.e., levels)
 apple_raw_pheno_data$Envir <- paste0(
   apple_raw_pheno_data$Country, "_",
@@ -157,9 +157,9 @@ apple_genomic_data <- apple_genomic_data[, -match(
 # the trait)
 trait_ <- "Trunk_increment"
 
-# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
-# ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
-# framework
+# ➡️ Compute WISER-estimated phenotypes using estimate_wiser_phenotype() with its default values for 
+# whitening_method ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within
+# the wiser framework
 
 # 📌 Note 1: default values for whitening_method and alpha_ typically yield satisfactory results for 
 # phenotypic predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not 
@@ -187,8 +187,8 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with optimized values for whitening_method 
-# and alpha_
+# ➡️ Compute WISER-estimated phenotypes using estimate_wiser_phenotype() with optimized values for
+# whitening_method and alpha_
 
 # 📌⚠️ Highly recommended: increase memory size as specified below with options() before using
 # optimize_whitening_and_regularization(). For optimal performance, it is strongly advised to use
@@ -223,7 +223,8 @@ if (run_example) {
   )
 }
 
-# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
+# ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates (i.e.
+# Envir, etc.), and verify the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
@@ -288,9 +289,9 @@ fixed_effect_vars_ <- grep("_latitude$|_longitude$", colnames(pine_raw_pheno_dat
   value = TRUE
 )
 
-# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
-# ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
-# framework
+# ➡️ Compute WISER-estimated phenotypes using estimate_wiser_phenotype() with its default values for
+# whitening_method ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within
+# the wiser framework
 
 # Estimate "H" (i.e. trait_) phenotypes for genotypes using estimate_wiser_phenotype()
 wiser_obj <- estimate_wiser_phenotype(
@@ -304,7 +305,8 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
+# ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates, and verify
+# the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
@@ -367,7 +369,7 @@ trait_ <- "anthesis"
 # environment (i.e. combination of Site, year, Management and block in maize_genomic_data) 
 fixed_effect_vars_ <- grep("_row$|_column$", colnames(maize_raw_pheno_data), value = TRUE)
 
-# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
+# ➡️ Compute WISER-estimated phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
 # ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
 # framework
 
@@ -383,7 +385,7 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
+# ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates, and verify the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
@@ -419,7 +421,7 @@ data("rice_genomic_data")
 head(rice_raw_pheno_data)
 head(rice_genomic_data)[, 1:10]
 
-# For the individual phenotypic data, create the Envir variable in rice_raw_pheno_data by
+# For the raw phenotypic data, create the Envir variable in rice_raw_pheno_data by
 # combining TRIAL, BLOC, and GENERATION. This variable represents the environments (i.e., levels)
 rice_raw_pheno_data$Envir <- paste0(
   rice_raw_pheno_data$TRIAL, "_",
@@ -441,7 +443,7 @@ trait_ <- "ZN" # Zinc concentration
 # 📌 Note : no spatial information is available in rice_genomic_data. Hence, only Envir is fitted as a 
 # fixed-effect factor
 
-# ➡️ Estimate phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
+# ➡️ Compute WISER-estimated phenotypes using estimate_wiser_phenotype() with its default values for whitening_method 
 # ("ZCA-cor") and alpha_ (0.01). Remark that the overall mean is always fitted within the wiser 
 # framework
 
@@ -457,7 +459,7 @@ wiser_obj <- estimate_wiser_phenotype(
   random_effects_vars = "Genotype"
 )
 
-# ➡️ Plot phenotype density, display wiser estimates, and verify the whitening property
+# ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates, and verify the whitening property
 
 # Plot the density for the estimated phenotypes
 dev.new()
