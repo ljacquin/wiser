@@ -9,7 +9,7 @@ compute_transformed_vars_and_ols_estimates(
   omic_df, raw_pheno_df, trait_,
   fixed_effect_vars, fixed_effect_vars_computed_as_factor,
   envir_var, fixed_effect_vars_computed_as_factor_by_envir,
-  random_effects_vars, sigma2_u, sigma2_e, kernel_type,
+  random_effect_vars, sigma2_u, sigma2_e, kernel_type,
   whitening_method, regularization_method, alpha_,
   parallelized_cholesky, reduce_raw_dataset_size_,
   nrow_approx_lim_raw_dataset_zca_cor,
@@ -25,7 +25,7 @@ compute_transformed_vars_and_ols_estimates(
   \item{fixed_effect_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors.}
   \item{envir_var}{A character string specifying the environment variable.}
   \item{fixed_effect_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment.}
-  \item{random_effects_vars}{A character vector specifying the random effects variables.}
+  \item{random_effect_vars}{A character vector specifying the random effects variables.}
   \item{sigma2_u}{A numeric value specifying the variance component for random effects.}
   \item{sigma2_e}{A numeric value specifying the variance component for residuals.}
   \item{kernel_type}{A character string specifying the type of kernel used in computing the Gram matrix. Can be \code{"linear"} or \code{"identity"}.}
@@ -61,7 +61,7 @@ if(requireNamespace("wiser", quietly = TRUE)) {
   # load the wiser library and example data subsets from the refpop dataset
   library(wiser)
 
-  # load raw individual phenotypic measurements (subset of 80 genotypes from refpop data)
+  # load raw phenotypic measurements (subset of 80 genotypes from refpop data)
   data("refpop_raw_indiv_pheno_data_subset")
   head(refpop_raw_indiv_pheno_data_subset)
 
@@ -81,7 +81,7 @@ if(requireNamespace("wiser", quietly = TRUE)) {
     fixed_effect_vars_computed_as_factor = c("Envir", "Country", "Year"),
     envir_var = "Country",
     fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
-    random_effects_vars = "Genotype",
+    random_effect_vars = "Genotype",
     sigma2_u = 1, 
     sigma2_e = 1,
     kernel_type = "linear",

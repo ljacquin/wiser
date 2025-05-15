@@ -1,8 +1,8 @@
 \name{estimate_wiser_phenotype}
 \alias{estimate_wiser_phenotype}
-\title{Estimate phenotypes approximating genetic values using whitening, successive OLS, and ABC}
+\title{Estimate WISER phenotypes values using whitening, successive OLS, and ABC}
 \description{
-  Estimates phenotypes that approximate genetic values by applying a combination of whitening, successive ordinary least squares (OLS), and approximate Bayesian computation (ABC) for variance component estimation. The function iteratively refines variance component and phenotypic value estimates through multiple rounds of ABC.
+  Estimate WISER phenotypes by applying a combination of whitening, successive ordinary least squares (OLS), and approximate Bayesian computation (ABC) for variance component estimation. The function iteratively refines variance component and phenotypic value estimates through multiple rounds of ABC.
 }
 \usage{
   estimate_wiser_phenotype(omic_df, 
@@ -15,7 +15,7 @@
    ),
    envir_var = "Envir",
    fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
-   random_effects_vars = "Genotype",
+   random_effect_vars = "Genotype",
    init_sigma2_u = 1,
    init_sigma2_e = 1,
    prior_sigma2_lower_bound = 1e-2,
@@ -41,7 +41,7 @@
   \item{fixed_effect_vars_computed_as_factor}{A character vector specifying which fixed effects variables should be treated as factors. Defaults to \code{c("Envir", "Row", "Position")}. Note: declared fixed effects variables which are not specified to be computed as factors will be treated as quantitative variables.}
   \item{envir_var}{A character string specifying the environment variable. Defaults to \code{"Envir"} and should be set to \code{"NULL"} if there is no environment variable.}
   \item{fixed_effect_vars_computed_as_factor_by_envir}{A character vector specifying which fixed effects variables should be treated as factors by environment. Defaults to \code{c("Row", "Position")}.}
-  \item{random_effects_vars}{A character vector specifying the random effects variables. Defaults to \code{"Genotype"}.}
+  \item{random_effect_vars}{A character vector specifying the random effects variables. Defaults to \code{"Genotype"}.}
   \item{init_sigma2_u}{A numeric value for the initial variance component of random effects. Defaults to \code{1}.}
   \item{init_sigma2_e}{A numeric value for the initial variance component of residuals. Defaults to \code{1}.}
   \item{prior_sigma2_lower_bound}{A numeric value specifying the lower bound for the prior distribution of the variance components (\eqn{\sigma_u^2} and \eqn{\sigma_e^2}) in ABC estimation. Defaults to \code{1e-2}.}

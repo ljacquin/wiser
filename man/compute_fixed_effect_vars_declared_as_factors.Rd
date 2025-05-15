@@ -32,7 +32,7 @@
   # load wiser library and example data subsets from the refpop dataset
   library(wiser)
 
-  # load raw individual phenotypic measurements (for a subset of 80 genotypes from refpop data)
+  # load raw phenotypic measurements (for a subset of 80 genotypes from refpop data)
   data("refpop_raw_indiv_pheno_data_subset")
   head(refpop_raw_indiv_pheno_data_subset)
   

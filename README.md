@@ -184,7 +184,7 @@ wiser_obj <- estimate_wiser_phenotype(
   ),
   envir_var = "Envir",
   fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
-  random_effects_vars = "Genotype"
+  random_effect_vars = "Genotype"
 )
 
 # ➡️ Compute WISER-estimated phenotypes using estimate_wiser_phenotype() with optimized values for
@@ -217,7 +217,7 @@ if (run_example) {
     fixed_effect_vars_computed_as_factor = c("Envir", "Row", "Position"),
     envir_var = "Envir",
     fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
-    random_effects_vars = "Genotype",
+    random_effect_vars = "Genotype",
     whitening_method = opt_white_method_,
     alpha_ = opt_alpha_par_
   )
@@ -302,7 +302,7 @@ wiser_obj <- estimate_wiser_phenotype(
   fixed_effect_vars_computed_as_factor = NULL,
   envir_var = NULL,
   fixed_effect_vars_computed_as_factor_by_envir = NULL,
-  random_effects_vars = "Genotype"
+  random_effect_vars = "Genotype"
 )
 
 # ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates, and verify
@@ -382,7 +382,7 @@ wiser_obj <- estimate_wiser_phenotype(
   fixed_effect_vars_computed_as_factor = NULL,
   envir_var = NULL,
   fixed_effect_vars_computed_as_factor_by_envir = NULL,
-  random_effects_vars = "Genotype"
+  random_effect_vars = "Genotype"
 )
 
 # ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates, and verify the whitening property
@@ -456,7 +456,7 @@ wiser_obj <- estimate_wiser_phenotype(
   fixed_effect_vars_computed_as_factor = "Envir",
   envir_var = NULL,
   fixed_effect_vars_computed_as_factor_by_envir = NULL,
-  random_effects_vars = "Genotype"
+  random_effect_vars = "Genotype"
 )
 
 # ➡️ Plot WISER-estimated phenotypes density, display wiser fixed-effect estimates, and verify the whitening property

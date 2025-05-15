@@ -10,7 +10,7 @@
     omic_df,
     trait_,
     fixed_effect_vars,
-    random_effects_vars
+    random_effect_vars
   )
 }
 \arguments{
@@ -18,7 +18,7 @@
   \item{omic_df}{A data frame containing the omic data (e.g. genotypes as rows and SNPs, or metabolites, or wavelength reflectances/absorbances as columns).}
   \item{trait_}{A character string specifying the trait of interest to filter the phenotypic data.}
   \item{fixed_effect_vars}{A character vector listing the fixed effects variables to be retained in the filtered phenotypic data.}
-  \item{random_effects_vars}{A character vector listing the random effects variables to be retained in the filtered phenotypic data.}
+  \item{random_effect_vars}{A character vector listing the random effects variables to be retained in the filtered phenotypic data.}
 }
 \value{
   A list with two elements:
@@ -38,7 +38,7 @@
   # define parameters
   trait <- "Flowering_begin"
   fixed_effect_vars <- c("Envir", "Country", "Year", "Row", "Position", "Management")
-  random_effects_vars <- "Genotype"
+  random_effect_vars <- "Genotype"
   
   # filter raw phenotypic and genomic data based on common genotypes
   filtered_data <- raw_pheno_and_marker_based_on_trait_common_genotypes(
@@ -46,7 +46,7 @@
     omic_df = example_omic_df,
     trait_ = trait,
     fixed_effect_vars = fixed_effect_vars,
-    random_effects_vars = random_effects_vars
+    random_effect_vars = random_effect_vars
   )
   
   # print dimensions of the filtered datasets
