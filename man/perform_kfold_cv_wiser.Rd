@@ -2,8 +2,9 @@
 \alias{perform_kfold_cv_wiser}
 \title{Perform K-fold cross-validation using WISER-estimated phenotypes}
 \description{
-  This function performs k-fold cross-validation (CV) to evaluate the predictive ability of a model based on phenotypes estimated using the WISER method. It computes WISER phenotypes for a specific combination of whitening method and regularization parameter, and then applies K-fold cross-validation to assess model predictive ability.
-}
+  This function performs k-fold cross-validation (CV) to evaluate the mean squared error (MSE) of a model based on phenotypes estimated using the WISER method. 
+  The WISER-estimated phenotypes used are computed beforehand using a specific combination of whitening method and regularization parameter.
+  }
 \usage{
   perform_kfold_cv_wiser(omic_df, raw_pheno_df, trait_,
                          fixed_effect_vars,
@@ -31,7 +32,7 @@
   \item{wiser_cache}{A list used to store precomputed WISER phenotypes to avoid redundant computations and speed up the k-fold cross-validation process.}
 }
 \value{
-  A numeric value representing the mean predictive ability (PA) across all folds, calculated as the mean Pearson correlation coefficient between predicted and observed phenotypic values in the validation sets.
+  A numeric value representing the MSE across all folds, calculated as the MSE between predicted and observed phenotypic values in the validation sets.
 }
 \author{
   Laval Jacquin, \email{jacquin.julien@gmail.com}
@@ -58,7 +59,7 @@
   wiser_cache <- list()
 
   # perform k-fold cross-validation using WISER phenotypes
-  mean_pa <- perform_kfold_cv_wiser(
+  mse <- perform_kfold_cv_wiser(
     omic_df = refpop_geno_data_subset,
     raw_pheno_df = refpop_raw_indiv_pheno_data_subset,
     trait_ = trait,
@@ -75,6 +76,6 @@
     wiser_cache = wiser_cache
   )
 
-  # print the mean predictive ability
-  print(mean_pa)
+  # print the MSE
+  print(mse)
 }

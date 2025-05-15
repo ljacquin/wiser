@@ -4,7 +4,7 @@
 compute_incidence_matrices_fixed_and_random_effects <- function(
     fixed_effect_vars,
     fixed_effect_vars_computed_as_factor,
-    random_effects_vars,
+    random_effect_vars,
     raw_pheno_df) {
   # define list of incidence matrices for fixed effects
   list_x_mat <- vector("list", length(fixed_effect_vars))
@@ -52,11 +52,11 @@ compute_incidence_matrices_fixed_and_random_effects <- function(
   x_mat <- apply(x_mat, 2, as.numeric)
   
   # define list of incidence matrices for random effects
-  list_z_mat <- vector("list", length(random_effects_vars))
-  names(list_z_mat) <- random_effects_vars
+  list_z_mat <- vector("list", length(random_effect_vars))
+  names(list_z_mat) <- random_effect_vars
   
   # add incidence matrices for random effects to list
-  for (rand_eff_var in random_effects_vars) {
+  for (rand_eff_var in random_effect_vars) {
     # make sure effect is indeed a factor
     raw_pheno_df[, rand_eff_var] <- as.factor(raw_pheno_df[, rand_eff_var])
     # build incidence matrix for random effect rand_eff_var

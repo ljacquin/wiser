@@ -5,7 +5,7 @@ compute_transformed_vars_and_ols_estimates <- function(
     fixed_effect_vars_computed_as_factor,
     envir_var,
     fixed_effect_vars_computed_as_factor_by_envir,
-    random_effects_vars,
+    random_effect_vars,
     sigma2_u, sigma2_e, kernel_type,
     whitening_method,
     regularization_method,
@@ -24,7 +24,7 @@ compute_transformed_vars_and_ols_estimates <- function(
           omic_df,
           trait_,
           fixed_effect_vars,
-          random_effects_vars
+          random_effect_vars
         )
       raw_pheno_df <- raw_data_obj$raw_pheno_df
       omic_df <- raw_data_obj$omic_df
@@ -76,7 +76,7 @@ compute_transformed_vars_and_ols_estimates <- function(
       incid_obj <- compute_incidence_matrices_fixed_and_random_effects(
         fixed_effect_vars,
         fixed_effect_vars_computed_as_factor,
-        random_effects_vars,
+        random_effect_vars,
         raw_pheno_df
       )
       x_mat <- incid_obj$x_mat

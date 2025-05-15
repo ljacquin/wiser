@@ -9,7 +9,7 @@ optimize_whitening_and_regularization <- function(
     ),
     envir_var = "Envir",
     fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
-    random_effects_vars = "Genotype",
+    random_effect_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
     whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
     regularization_method_ = "frobenius_norm_regularization",
@@ -27,7 +27,7 @@ optimize_whitening_and_regularization <- function(
   omic_df <- omic_df[rownames(omic_df) %in% raw_pheno_df$Genotype, ]
 
   # define variables of interest
-  sel_vars_ <- c(fixed_effect_vars, random_effects_vars, trait_)
+  sel_vars_ <- c(fixed_effect_vars, random_effect_vars, trait_)
 
   # get only variables of interest from raw_pheno_df
   raw_pheno_df <- raw_pheno_df[, sel_vars_]
@@ -67,7 +67,7 @@ optimize_whitening_and_regularization <- function(
       fixed_effect_vars_computed_as_factor,
       envir_var,
       fixed_effect_vars_computed_as_factor_by_envir,
-      random_effects_vars,
+      random_effect_vars,
       whitening_method = method,
       regularization_method = regularization_method_,
       alpha_ = alpha,
@@ -89,7 +89,7 @@ optimize_whitening_and_regularization <- function(
       cache_key <- paste(grid_$whitening_method[i], grid_$alpha_[i], sep = "_")
       wiser_obj_local <- wiser_cache[[cache_key]]
 
-      mean_pa <- tryCatch(
+      mse <- tryCatch(
         {
           perform_kfold_cv_wiser(
             omic_df, raw_pheno_df, trait_,
@@ -97,7 +97,7 @@ optimize_whitening_and_regularization <- function(
             fixed_effect_vars_computed_as_factor,
             envir_var,
             fixed_effect_vars_computed_as_factor_by_envir,
-            random_effects_vars,
+            random_effect_vars,
             whitening_method = grid_$whitening_method[i],
             reg_method = regularization_method_,
             alpha_ = grid_$alpha_[i],
@@ -115,7 +115,7 @@ optimize_whitening_and_regularization <- function(
         "whitening_method" = grid_$whitening_method[i],
         "alpha_" = grid_$alpha_[i],
         "prediction_method" = grid_$pred_method[i],
-        "mean_pa" = mean_pa
+        "mse" = mse
       )
     }, future.packages = c(
       "ranger", "KRMM", "kernlab",
@@ -139,7 +139,7 @@ optimize_whitening_and_regularization <- function(
     df_opt_ <- rbind(
       df_opt_,
       unique(df_res_method_[
-        which.max(df_res_method_$mean_pa)[1],
+        which.max(df_res_method_$mse)[1],
       ])
     )
   }

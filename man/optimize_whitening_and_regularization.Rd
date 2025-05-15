@@ -11,7 +11,7 @@
     fixed_effect_vars_computed_as_factor = c("Envir", "Row", "Position"),
     envir_var = "Envir",
     fixed_effect_vars_computed_as_factor_by_envir = c("Row", "Position"),
-    random_effects_vars = "Genotype",
+    random_effect_vars = "Genotype",
     prediction_method = c("rf", "svr", "gblup", "rkhs", "lasso"),
     whitening_method_grid = c("ZCA-cor", "PCA-cor", "Cholesky"),
     regularization_method_ = "frobenius_norm_regularization",
@@ -31,7 +31,7 @@
   \item{fixed_effect_vars_computed_as_factor}{A character vector listing the fixed effects variables to be treated as factors during modeling. Default is \code{c("Envir", "Row", "Position")}.}
   \item{envir_var}{A character string specifying the variable representing the environment (e.g., location) to be included in the model. Default is \code{"Envir"}.}
   \item{fixed_effect_vars_computed_as_factor_by_envir}{A character vector listing the fixed effects variables to be treated as factors within each environment. Default is \code{c("Row", "Position")}.}
-  \item{random_effects_vars}{A character string specifying the random effects variable. Default is \code{"Genotype"}.}
+  \item{random_effect_vars}{A character string specifying the random effects variable. Default is \code{"Genotype"}.}
   \item{prediction_method}{A character vector specifying the prediction methods to be evaluated. Default is \code{c("rf", "svr", "gblup", "rkhs", "lasso")}.}
   \item{whitening_method_grid}{A character vector specifying the whitening methods to be evaluated. Default is \code{c("ZCA-cor", "PCA-cor", "Cholesky")}.}
   \item{regularization_method_}{A character string specifying the regularization or shrinkage method. Default is \code{"frobenius_norm_regularization"}.}
