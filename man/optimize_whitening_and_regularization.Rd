@@ -1,8 +1,8 @@
 \name{optimize_whitening_and_regularization}
 \alias{optimize_whitening_and_regularization}
-\title{Optimization of whitening and regularization for WISER phenotype estimation}
+\title{Optimization of whitening and regularization for WISER breeding value estimation}
 \description{
-  This function optimizes the selection of whitening methods and regularization parameters for phenotype estimation using the WISER method. It performs a grid search over specified combinations of whitening methods, regularization parameters, and prediction methods, using k-fold cross-validation to evaluate and identify the best-performing combination of whitening methods and regularization parameters. It allows parallel execution for faster computation.
+  This function optimizes the selection of whitening methods and regularization parameters for breeding value estimation using the WISER method. It performs a grid search over specified combinations of whitening methods, regularization parameters, and prediction methods, using k-fold cross-validation to evaluate and identify the best-performing combination of whitening methods and regularization parameters. It allows parallel execution for faster computation.
 }
 \usage{
   optimize_whitening_and_regularization(

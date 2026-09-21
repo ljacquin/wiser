@@ -108,7 +108,7 @@ compute_transformed_vars_and_ols_estimates <- function(
       y_hat <- x_mat_tilde %*% beta_hat
       xi_hat <- y - y_hat
       
-      # add the individual estimated phenotype with fixed effects eliminated
+      # add the individual estimated breeding value with fixed effects eliminated
       # and corrected for the genetic covariance structure.
       raw_pheno_df$xi_hat <- xi_hat
 

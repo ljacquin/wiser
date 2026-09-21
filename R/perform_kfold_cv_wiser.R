@@ -11,7 +11,7 @@ perform_kfold_cv_wiser <- function(omic_df, raw_pheno_df, trait_,
                                    wiser_obj_local) {
   # extract the local wiser object
   omic_df <- wiser_obj_local$wiser_omic_data
-  v_hat <- wiser_obj_local$wiser_phenotypes$v_hat
+  v_hat <- wiser_obj_local$wiser_breeding_values$v_hat
 
   # set seed for reproducibility and get set of indices
   set.seed(123)

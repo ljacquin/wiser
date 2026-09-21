@@ -61,7 +61,7 @@ optimize_whitening_and_regularization <- function(
     method <- unique_combinations$whitening_method[j]
     alpha <- unique_combinations$alpha_[j]
 
-    wiser_obj <- estimate_wiser_phenotype(
+    wiser_obj <- estimate_wiser_breeding_value(
       omic_df, raw_pheno_df, trait_,
       fixed_effect_vars,
       fixed_effect_vars_computed_as_factor,
