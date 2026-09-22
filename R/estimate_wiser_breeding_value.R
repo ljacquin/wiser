@@ -103,7 +103,7 @@ estimate_wiser_breeding_value <- function(omic_df, raw_pheno_df, trait_,
       # extract estimated fixed effects
       beta_hat <- transform_and_ls_obj$beta_hat
 
-      # compute phenotypic values using ols
+      # compute breeding value values using ols
       v_hat <- ginv(t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$z_mat) %*%
         t(transform_and_ls_obj$z_mat) %*% transform_and_ls_obj$xi_hat
 
@@ -136,7 +136,7 @@ estimate_wiser_breeding_value <- function(omic_df, raw_pheno_df, trait_,
         "wiser_xi_hat" = transform_and_ls_obj$xi_hat,
         "wiser_y_hat" = transform_and_ls_obj$y_hat,
         "wiser_y" = transform_and_ls_obj$y,
-        "wiser_xi_phenotypes" <- transform_and_ls_obj$xi_phenotypes
+        "wiser_xi_phenotypes" = transform_and_ls_obj$xi_phenotypes
       ))
     },
     error = function(e) {

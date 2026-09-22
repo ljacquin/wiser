@@ -32,7 +32,7 @@
   \item{wiser_cache}{A list used to store precomputed WISER breeding values to avoid redundant computations and speed up the k-fold cross-validation process.}
 }
 \value{
-  A numeric value representing the MSE across all folds, calculated as the MSE between predicted and observed phenotypic values in the validation sets.
+  A numeric value representing the MSE across all folds, calculated as the MSE between predicted and wiser breeding values in the validation sets.
 }
 \author{
   Laval Jacquin, \email{jacquin.julien@gmail.com}

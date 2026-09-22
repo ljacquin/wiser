@@ -1,4 +1,4 @@
-# function to simulate phenotype data
+# function to simulate phenotypic data
 simulate_y <- function(x_mat, z_mat, beta_hat, sigma2_u, sigma2_e, k_mat) {
   # get incidence matrices dimensions
   n <- nrow(x_mat)

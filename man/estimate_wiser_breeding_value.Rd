@@ -2,7 +2,7 @@
 \alias{estimate_wiser_breeding_value}
 \title{Estimate WISER breeding values values using whitening, successive OLS, and ABC}
 \description{
-  Estimate WISER breeding values by applying a combination of whitening, successive ordinary least squares (OLS), and approximate Bayesian computation (ABC) for variance component estimation. The function iteratively refines variance component and phenotypic value estimates through multiple rounds of ABC.
+  Estimate WISER breeding values by applying a combination of whitening, successive ordinary least squares (OLS), and approximate Bayesian computation (ABC) for variance component estimation. The function iteratively refines variance component and breeding value estimates through multiple rounds of ABC.
 }
 \usage{
   estimate_wiser_breeding_value(omic_df, 
@@ -67,7 +67,7 @@
   \item{w_mat}{The transformation matrix from the whitening process.}
   \item{wiser_fixed_effect_estimates}{A data frame of the estimated fixed effects.}
   \item{wiser_abc_variance_component_estimates}{The results of the ABC variance component estimation.}
-  \item{wiser_breeding_values}{A data frame containing the estimated phenotypic values (i.e. \code{v_hat}), for the genotypes, from the second OLS regression.}
+  \item{wiser_breeding_values}{A data frame containing the estimated breeding value values (i.e. \code{v_hat}), for the genotypes, from the second OLS regression.}
   \item{wiser_z_mat}{The design matrix for the genetic effects.}
   \item{wiser_x_mat}{The design matrix for the fixed effects.}
   \item{wiser_x_mat_tilde}{The transformed design matrix after whitening.}

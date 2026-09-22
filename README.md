@@ -18,7 +18,7 @@
 
 ## Overview
 
-The ```wiser``` package offers *user-friendly* advanced tools for more accurate phenotypic estimation, by adjusting fixed effects (e.g. environmental effects) for the experimental design population structure—or simply called population structure—to eliminate confounding factors between fixed and genetic effects. 
+The ```wiser``` package offers *user-friendly* advanced tools for more accurate breeding value estimation, by adjusting fixed effects (e.g. environmental effects) for the experimental design population structure—or simply called population structure—to eliminate confounding factors between fixed and genetic effects. 
 By employing a whitening transformation followed by successive ordinary least squares (OLS) estimation, ```wiser``` improves genetic values estimation, called WISER-estimated breeding values. This approach is particularly beneficial in complex experimental designs where genetic and environmental factors are intricately linked. ```wiser``` includes methods for computing whitening matrices, fixed effects, residuals, and estimating breeding values. Additionally, the package provides fast and stable variance component estimation using a parallelized approximate Bayesian computation (ABC) algorithm, specifically designed for large datasets associated with complex experimental designs.
 
 For an experimental design, ```wiser``` solves the following model, in order to estimate a vector $v=(v_1,...,v_q)'$ of $q$ genetic values, which are treated as fixed effects and referred to as the WISER-estimated breeding values:
@@ -40,7 +40,7 @@ where :
 
 * $\beta \ (l \times 1)$ is the vector of fixed effects.
 
-* $v \ (q \times 1)$ corresponds to the vector of $q$ WISER-estimated breeding values.
+* $v \ (q \times 1)$ corresponds to the vector of $q$ WISER breeding values.
 
 * $Z \ (n \times q)$ corresponds to the design matrix linking genetic values to raw phenotypic values in the experimental design.
 
@@ -66,15 +66,15 @@ $$
 
 where $L$ is derived from the Cholesky decomposition of $\Sigma_u = LL'$. The ```PCA-cor``` whitening procedure can be seen as standardizing variables using $V^{-\frac{1}{2}}$, followed by a rotation using the transposed correlation eigenmatrix $G'$, and then scaling using the inverted correlation singular values matrix $\Theta^{-\frac{1}{2}}$. ```ZCA-cor``` whitening extends this by applying an additional rotation $G$ to revert to the original basis of the standardized variables. Each whitening method is optimal according to specific criteria. For instance, ```ZCA-cor``` is unique in ensuring that the whitened variables retain the maximum correlation with the original variables. Details of these criteria and the optimality of each method are discussed in Kessy $\textit{et al.}$ (2015).
 
-The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust fixed effect variables for the experimental design population structure, is comprehensively addressed in Jacquin $\textit{et al.}$ (2025). In contrast, the chosen approach of successive OLS estimation in ```wiser``` avoids making assumptions about the properties of $\beta$ and $v$. Specifically, ```wiser``` does not assume that $v$ is a random vector drawn from a distribution with a specified covariance matrix. This approach prevents enforcing an unnecessary covariance structure during the estimation of $v$, which could be detrimental. For example, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ is often unrealistic and would lead to using a decorrelated covariance structure in the best linear unbiased predictor (BLUP) of $v$, which can be highly undesirable—particularly in the context of imbalanced genotype frequencies (Holland and Phiepho, 2024). This issue is nearly inevitable, even in carefully balanced experimental designs, due to missing data or incomplete block designs.
+The rationale for transforming $X$ into $\tilde{X}$ through whitening, to adjust fixed effect variables for the experimental design population structure, is comprehensively addressed in Jacquin $\textit{et al.}$ (2025). In contrast, the chosen approach of successive OLS estimation in ```wiser``` avoids imposing distributional assumptions on $\beta$ or $v$. In particular, $v$ is treated as a vector of fixed genotype effects rather than as a random vector with a prespecified covariance structure. This avoids imposing potentially inappropriate assumptions on the genetic effects during their estimation. For instance, assuming $v \sim \mathcal{N}_q(0,\sigma^2_vI_q)$ treats genotype effects as mutually uncorrelated random effects and induces shrinkage in their BLUPs. Importantly, in unbalanced experimental designs, the magnitude of this shrinkage may differ among genotypes according to the amount of information available for their estimation. Consequently, differences among estimated genotype effects may partly reflect unequal shrinkage rather than genetic differences alone, which can be undesirable when these estimates are subsequently used as phenotypes in downstream analyses. Such imbalance is common in practice and may arise even in otherwise carefully designed experiments because of missing observations, unequal genotype replication, or incomplete-block designs. This provides an additional rationale for estimating genotype effects as fixed rather than random effects at this stage, consistent with the recommendations of Holland and Piepho (2024).
 
-Crucially, the successive OLS estimation procedure implemented in ```wiser``` operates without such assumptions, ensuring that the estimation of $v$ remains independent of omic information or any imposed covariance structure. The only assumptions in the ```wiser``` framework are $u \sim \mathcal{N}_q(0,\sigma^2_u K)$ and $\varepsilon \sim \mathcal{N}_n(0,\sigma^2_e I_n)$, which are necessary to estimate $\sigma^2_u$ for constructing the whitening matrix $W$. In this framework, the estimation of $\sigma^2_u$ and $\sigma^2_e$ is performed using an ABC algorithm. 
+Crucially, the successive OLS estimation procedure implemented in ```wiser``` operates without such assumptions, ensuring that, unlike BLUP-based approaches, the vector $v$ of breeding values is not assumed to be sampled from a predefined probability distribution and is not estimated as a linear or non-linear function of omic effects. The only assumptions in the ```wiser``` framework are $u \sim \mathcal{N}_q(0,\sigma^2_u K)$ and $\varepsilon \sim \mathcal{N}_n(0,\sigma^2_e I_n)$, which are necessary to estimate $\sigma^2_u$ for constructing the whitening matrix $W$. In this framework, the estimation of $\sigma^2_u$ and $\sigma^2_e$ is performed using an ABC algorithm. 
 
-In ```wiser```, two kernel functions are also provided to build $K$: ```linear``` and ```identity```. The ```identity``` kernel, which is **not estimated from omic data**, is generally discouraged due to its poor associated phenotypic predictive ability. The ```identity``` kernel can be used solely to assess the impact of including or excluding the genetic covariance structure. The ```linear``` kernel is used by default in ```wiser```.
+In ```wiser```, two kernel functions are also provided to build $K$: ```linear``` and ```identity```. The ```identity``` kernel, which is **not estimated from omic data**, is generally discouraged due to its poor associated breeding value predictive ability. The ```identity``` kernel can be used solely to assess the impact of including or excluding the genetic covariance structure. The ```linear``` kernel is used by default in ```wiser```.
 
 ## Expected results
 
-The blue, yellow, violet, and green box and violin plots in the figures below represent the distributions of predictive abilities (PA) for breeding values estimated using WISER, least-squares means (LS-means), BLUP, and BLUP-PCA respectively, as reported by Jacquin $\textit{et al.}$ (2025). These distributions of PA values were computed for 33 traits across four species: rice, maize, apple, and pine. For each trait, the distributions of PA for breeding values estimated using WISER, LS-means, BLUP, and BLUP-PCA were estimated using a 5-fold cross-validation (CV) scheme with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—when using WISER compared to LS-means and BLUP—was **0.21**, highlighting WISER’s superior accuracy in phenotypic estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER breeding values, compared to those estimated with LS-means and BLUP.
+The blue, yellow, violet, and green box and violin plots in the figures below represent the distributions of predictive abilities (PA) for breeding values estimated using WISER, least-squares means (LS-means), BLUP, and BLUP-PCA respectively, as reported by Jacquin $\textit{et al.}$ (2025). These distributions of PA values were computed for 33 traits across four species: rice, maize, apple, and pine. For each trait, the distributions of PA for breeding values estimated using WISER, LS-means, BLUP, and BLUP-PCA were estimated using a 5-fold cross-validation (CV) scheme with 20 random shufflings of the datasets. As described by Jacquin $\textit{et al.}$ (2025), the average increase in median PA across all species and traits—when using WISER compared to LS-means and BLUP—was **0.21**, highlighting WISER’s superior accuracy in breeding value estimation. Additionally, Jacquin $\textit{et al.}$ (2025) reported a general improvement in genomic heritability estimation when using WISER breeding values, compared to those estimated with LS-means and BLUP.
 
 [<img src="img/wiser_ls_means_blup.png"/>]()
 
@@ -114,7 +114,7 @@ The PDF version of WISER's documentation can be downloaded [here](https://github
     ▸ optimize_whitening_and_regularization: finds the optimal combination of whitening method and 
     regularization parameter through cross-validation minimizing MSE.
 
-## Examples of phenotypic estimation using WISER
+## Examples of breeding value estimation using WISER
 
 Below are straightforward examples demonstrating the use of the ```estimate_wiser_breeding_value``` function to compute WISER-estimated breeding values, across the following four species: apple, pine, maize and rice. The datasets used are small subsets derived from the original datasets featured in Jacquin $\textit{et al.}$ (2025). These subsets are provided for illustrative purposes within the WISER package and are not intended to serve as reference populations for genomic prediction or GWAS. They include genomic data and raw phenotypic measurements for 30 randomly selected genotypes associated with an experimental design specific to each one of the four species.
 
@@ -153,7 +153,7 @@ apple_genomic_data <- apple_genomic_data[, -match(
   colnames(apple_genomic_data)
 )]
 
-# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# Define a trait for breeding value estimation using wiser (note: some data should be available for
 # the trait)
 trait_ <- "Trunk_increment"
 
@@ -162,7 +162,7 @@ trait_ <- "Trunk_increment"
 # the wiser framework
 
 # 📌 Note 1: default values for whitening_method and alpha_ typically yield satisfactory results for 
-# phenotypic predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not 
+# breeding value predictive ability. Therefore, using `optimize_whitening_and_regularization()` may not 
 # always be necessary, especially for large datasets. Nevertheless, these parameters should be 
 # optimized, when possible, for better results.
 
@@ -279,7 +279,7 @@ pine_genomic_data <- pine_genomic_data[, -match(
   "V1", colnames(pine_genomic_data)
 )]
 
-# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# Define a trait for breeding value estimation using wiser (note: some data should be available for
 # the trait)
 trait_ <- "H" # height
 
@@ -361,7 +361,7 @@ maize_genomic_data <- maize_genomic_data[, -match(
   "V1", colnames(maize_genomic_data)
 )]
 
-# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# Define a trait for breeding value estimation using wiser (note: some data should be available for
 # the trait)
 trait_ <- "anthesis"
 
@@ -436,7 +436,7 @@ rice_genomic_data <- rice_genomic_data[, -match(
   "V1", colnames(rice_genomic_data)
 )]
 
-# Define a trait for phenotypic estimation using wiser (note: some data should be available for
+# Define a trait for breeding value estimation using wiser (note: some data should be available for
 # the trait)
 trait_ <- "ZN" # Zinc concentration
 
