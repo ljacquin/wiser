@@ -3,7 +3,7 @@
 # WISER: WhItening and successive least Squares Estimation Refinement for breeding value estimation
 
 ##### Licence, status and metrics
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23343967.svg)](https://doi.org/10.5281/zenodo.23343967)
+[![DOI](https://zenodo.org/badge/832049001.svg)](https://doi.org/10.5281/zenodo.23343866)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-00cc00)]()
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
